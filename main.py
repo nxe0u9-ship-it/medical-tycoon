@@ -13,6 +13,74 @@ ANIMALS = [
     {"name": "보리", "species": "🐱 고양이", "story": "구조 후 안정을 찾고 있어. 천천히 친해질 시간이 필요해."},
 ]
 
+# Supabase 인증: 로그인한 계정만 게임 화면에 접근할 수 있다.
+from supabase import create_client
+
+if "supabase_client" not in st.session_state:
+    try:
+        st.session_state.supabase_client = create_client(
+            st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"]
+        )
+    except (KeyError, FileNotFoundError):
+        st.error("Streamlit Secrets에 SUPABASE_URL과 SUPABASE_KEY를 등록해 줘.")
+        st.stop()
+
+supabase = st.session_state.supabase_client
+
+if "logged_in_user" not in st.session_state:
+    st.session_state.logged_in_user = None
+
+if st.session_state.logged_in_user is None:
+    st.title("🐾 동물보호소 타이쿤")
+    st.caption("내 보호소를 운영하려면 로그인하거나 새 계정을 만들어 줘.")
+    tab_login, tab_signup = st.tabs(["로그인", "회원가입"])
+
+    with tab_login:
+        with st.form("login_form"):
+            login_email = st.text_input("이메일", key="login_email")
+            login_password = st.text_input("비밀번호", type="password", key="login_password")
+            login_submit = st.form_submit_button("로그인", use_container_width=True)
+        if login_submit:
+            try:
+                result = supabase.auth.sign_in_with_password({
+                    "email": login_email.strip(), "password": login_password
+                })
+                if result.user and result.session:
+                    st.session_state.logged_in_user = result.user.id
+                    st.rerun()
+                else:
+                    st.error("로그인할 수 없어. 이메일 인증 상태를 확인해 줘.")
+            except Exception:
+                st.error("로그인에 실패했어. 이메일, 비밀번호, 이메일 인증 여부를 확인해 줘.")
+
+    with tab_signup:
+        with st.form("signup_form"):
+            signup_email = st.text_input("이메일", key="signup_email")
+            signup_password = st.text_input("비밀번호 (6자 이상)", type="password", key="signup_password")
+            signup_submit = st.form_submit_button("회원가입", use_container_width=True)
+        if signup_submit:
+            if len(signup_password) < 6:
+                st.warning("비밀번호는 6자 이상으로 설정해 줘.")
+            else:
+                try:
+                    result = supabase.auth.sign_up({
+                        "email": signup_email.strip(), "password": signup_password
+                    })
+                    st.success("회원가입 요청이 완료됐어. 이메일 인증이 활성화돼 있다면 메일함에서 인증한 뒤 로그인해 줘.")
+                except Exception:
+                    st.error("회원가입에 실패했어. 입력값과 Supabase 인증 설정을 확인해 줘.")
+    st.stop()
+
+with st.sidebar:
+    st.caption("로그인한 계정으로 플레이 중")
+    if st.button("로그아웃", use_container_width=True):
+        try:
+            supabase.auth.sign_out()
+        finally:
+            # 이전 사용자의 진행 상황이 다음 계정에 남지 않도록 초기화한다.
+            st.session_state.clear()
+            st.rerun()
+
 INITIAL = {
     "coins": 700,
     "reputation": 0,
@@ -27,72 +95,4 @@ for key, value in INITIAL.items():
     if key not in st.session_state:
         st.session_state[key] = value.copy() if isinstance(value, list) else value
 
-st.markdown("""
-<style>
-.stApp {background:linear-gradient(130deg,#effaf4,#fff9f1)}
-.block-container {max-width:1150px;padding-top:1.8rem}
-.room {background:#fff;border:2px solid #c9e5d4;border-radius:18px;
-       text-align:center;padding:25px 8px;min-height:132px;box-shadow:0 4px 14px #00000008}
-.room-icon {font-size:38px}.room-name {font-size:18px;font-weight:700;color:#39534a}
-.room-sub {font-size:13px;color:#77857f;margin-top:6px}
-</style>
-""", unsafe_allow_html=True)
-
-
-def shelter_level():
-    return st.session_state.reputation // 30 + 1
-
-
-def room(icon, name, detail):
-    st.markdown(
-        f'<div class="room"><div class="room-icon">{icon}</div>'
-        f'<div class="room-name">{name}</div>'
-        f'<div class="room-sub">{detail}</div></div>',
-        unsafe_allow_html=True,
-    )
-
-
-st.title("🐾 동물보호소 타이쿤")
-st.caption("작은 보호소에서 시작해 동물들이 새로운 가족을 만날 수 있도록 도와줘!")
-
-cols = st.columns(5)
-cols[0].metric("💰 보유 코인", f"{st.session_state.coins:,} C")
-cols[1].metric("🌿 보호소 레벨", f"Lv.{shelter_level()}")
-cols[2].metric("🐕 보호 중", f"{len(st.session_state.animals)}/{st.session_state.capacity}")
-cols[3].metric("🚑 누적 구조", st.session_state.rescued)
-cols[4].metric("🏡 누적 입양", st.session_state.adopted)
-
-if st.session_state.message:
-    st.success(st.session_state.message)
-    st.session_state.message = ""
-
-st.subheader("🏡 우리 보호소")
-a, b, c = st.columns(3)
-with a:
-    room("🛎️", "접수·구조 센터", "새로운 동물 입소")
-with b:
-    room("🧺", "생활 공간", f"수용 가능 {st.session_state.capacity}마리")
-with c:
-    room("🧸", "놀이 공간", "돌봄으로 행복도 올리기")
-st.write("")
-a, b, c = st.columns(3)
-with a:
-    room("🥣", "급식실", "식사 제공")
-with b:
-    room("💌", "입양 상담실", "입양 조건 확인")
-with c:
-    room("🔨", "시설 확장", f"시설 {st.session_state.facility_level}단계")
-
-st.divider()
-st.subheader("🚑 동물 구조·입소")
-st.write("구조 요청을 받아 동물을 보호소로 데려와. 보호 공간에 빈자리가 있어야 입소할 수 있어.")
-if st.button("새로운 동물 구조하기", use_container_width=True):
-    if len(st.session_state.animals) >= st.session_state.capacity:
-        st.warning("보호 공간이 가득 찼어. 입양을 진행하거나 시설을 확장해 줘.")
-    else:
-        picked = random.choice(ANIMALS).copy()
-        picked["id"] = st.session_state.rescued + 1
-        picked["happiness"] = 30
-        picked["health"] = 60
-        st.session_state.animals.append(picked)
 90
