@@ -1,113 +1,98 @@
-c.metric("🐾 누적 진료", f"{st.session_state.treated}마리")
-d.metric("🏥 진료실 등급", f"{st.session_state.room_level}단계")
 
-st.progress(
-    (st.session_state.exp % 30) / 30,
-    text=f"다음 레벨까지 경험치 {30 - st.session_state.exp % 30}"
-)
+import random
+import streamlit as st
 
-st.divider()
+st.set_page_config(page_title="동물보호소 타이쿤", page_icon="🐾", layout="wide")
 
-# 병원 내부 화면
-st.subheader("🏡 우리 동물병원")
+# 정식 게임 이름은 추후 결정. 현재는 동물보호소 경영 기능을 우선 구현한다.
+ANIMALS = [
+    {"name": "콩이", "species": "🐶 강아지", "story": "길가에서 구조되었어. 사람을 좋아하지만 조금 긴장했어."},
+    {"name": "나비", "species": "🐱 고양이", "story": "공원에서 발견되었어. 조용한 공간을 좋아해."},
+    {"name": "토토", "species": "🐰 토끼", "story": "보호소로 인계되었어. 새로운 환경에 적응하는 중이야."},
+    {"name": "초코", "species": "🐶 강아지", "story": "동네 주민이 발견해 신고했어. 활발하고 장난기가 많아."},
+    {"name": "보리", "species": "🐱 고양이", "story": "구조 후 안정을 찾고 있어. 천천히 친해질 시간이 필요해."},
+]
 
-def room(icon, name, locked=False):
-    extra = " locked" if locked else ""
-    return f"""
-    <div class="room{extra}">
-        <div class="room-icon">{icon}</div>
-        <div class="room-name">{name}</div>
-    </div>
-    """
+INITIAL = {
+    "coins": 700,
+    "reputation": 0,
+    "rescued": 0,
+    "adopted": 0,
+    "capacity": 2,
+    "facility_level": 1,
+    "animals": [],
+    "message": "",
+}
+for key, value in INITIAL.items():
+    if key not in st.session_state:
+        st.session_state[key] = value.copy() if isinstance(value, list) else value
 
-left, middle, right = st.columns(3)
+st.markdown("""
+<style>
+.stApp {background:linear-gradient(130deg,#effaf4,#fff9f1)}
+.block-container {max-width:1150px;padding-top:1.8rem}
+.room {background:#fff;border:2px solid #c9e5d4;border-radius:18px;
+       text-align:center;padding:25px 8px;min-height:132px;box-shadow:0 4px 14px #00000008}
+.room-icon {font-size:38px}.room-name {font-size:18px;font-weight:700;color:#39534a}
+.room-sub {font-size:13px;color:#77857f;margin-top:6px}
+</style>
+""", unsafe_allow_html=True)
 
-with left:
-    st.markdown(room("🛎️", "접수대"), unsafe_allow_html=True)
 
-with middle:
-    st.markdown(room("🐕", "대기실"), unsafe_allow_html=True)
+def shelter_level():
+    return st.session_state.reputation // 30 + 1
 
-with right:
+
+def room(icon, name, detail):
     st.markdown(
-        room("🩺", f"진료실 Lv.{st.session_state.room_level}"),
-        unsafe_allow_html=True
+        f'<div class="room"><div class="room-icon">{icon}</div>'
+        f'<div class="room-name">{name}</div>'
+        f'<div class="room-sub">{detail}</div></div>',
+        unsafe_allow_html=True,
     )
 
-st.write("")
 
-left, middle, right = st.columns(3)
+st.title("🐾 동물보호소 타이쿤")
+st.caption("작은 보호소에서 시작해 동물들이 새로운 가족을 만날 수 있도록 도와줘!")
 
-with left:
-    st.markdown(room("💊", "약품 보관실"), unsafe_allow_html=True)
-
-with middle:
-    st.markdown(room("🔬", "검사실 · 준비 중", True), unsafe_allow_html=True)
-
-with right:
-    st.markdown(room("🏥", "일반 병원 · 잠김", True), unsafe_allow_html=True)
-
-st.divider()
-
-# 환자 진료 시스템
-st.subheader("🐾 환자 진료")
+cols = st.columns(5)
+cols[0].metric("💰 보유 코인", f"{st.session_state.coins:,} C")
+cols[1].metric("🌿 보호소 레벨", f"Lv.{shelter_level()}")
+cols[2].metric("🐕 보호 중", f"{len(st.session_state.animals)}/{st.session_state.capacity}")
+cols[3].metric("🚑 누적 구조", st.session_state.rescued)
+cols[4].metric("🏡 누적 입양", st.session_state.adopted)
 
 if st.session_state.message:
     st.success(st.session_state.message)
     st.session_state.message = ""
 
-if st.session_state.patient is None:
-    st.info("현재 대기 중인 환자가 없어. 새로운 환자를 접수해 봐!")
-
-    if st.button("🐾 새로운 환자 접수", use_container_width=True):
-        st.session_state.patient = random.choice(PATIENTS).copy()
-        st.rerun()
-
-else:
-    patient = st.session_state.patient
-
-    st.markdown(f"### {patient['animal']} · {patient['name']}")
-    st.write(f"**방문 사유:** {patient['symptom']}")
-    st.write(f"**예상 진료 수익:** {patient['reward']} 코인")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if st.button("🩺 진료 완료", type="primary", use_container_width=True):
-            reward = patient["reward"] + (st.session_state.room_level - 1) * 30
-
-            st.session_state.money += reward
-            st.session_state.exp += 10
-            st.session_state.treated += 1
-            st.session_state.patient = None
-            st.session_state.message = (
-                f"진료 완료! {reward}코인과 경험치 10을 획득했어."
-            )
-            st.rerun()
-
-    with col2:
-        if st.button("↩️ 접수 취소", use_container_width=True):
-            st.session_state.patient = None
-            st.rerun()
+st.subheader("🏡 우리 보호소")
+a, b, c = st.columns(3)
+with a:
+    room("🛎️", "접수·구조 센터", "새로운 동물 입소")
+with b:
+    room("🧺", "생활 공간", f"수용 가능 {st.session_state.capacity}마리")
+with c:
+    room("🧸", "놀이 공간", "돌봄으로 행복도 올리기")
+st.write("")
+a, b, c = st.columns(3)
+with a:
+    room("🥣", "급식실", "식사 제공")
+with b:
+    room("💌", "입양 상담실", "입양 조건 확인")
+with c:
+    room("🔨", "시설 확장", f"시설 {st.session_state.facility_level}단계")
 
 st.divider()
-
-# 시설 업그레이드 시스템
-st.subheader("🔧 병원 업그레이드")
-
-st.write(f"현재 진료실 등급: **{st.session_state.room_level}단계**")
-st.write(f"다음 업그레이드 비용: **{upgrade_cost:,} 코인**")
-st.caption("진료실을 업그레이드하면 환자 한 명당 얻는 코인이 증가해.")
-
-if st.button("⬆️ 진료실 업그레이드", use_container_width=True):
-    if st.session_state.money >= upgrade_cost:
-        st.session_state.money -= upgrade_cost
-        st.session_state.room_level += 1
-        st.session_state.message = "진료실 업그레이드 성공!"
-        st.rerun()
+st.subheader("🚑 동물 구조·입소")
+st.write("구조 요청을 받아 동물을 보호소로 데려와. 보호 공간에 빈자리가 있어야 입소할 수 있어.")
+if st.button("새로운 동물 구조하기", use_container_width=True):
+    if len(st.session_state.animals) >= st.session_state.capacity:
+        st.warning("보호 공간이 가득 찼어. 입양을 진행하거나 시설을 확장해 줘.")
     else:
-        st.warning("코인이 부족해! 환자를 더 진료해 봐.")
-
-st.divider()
-
-st.caption("메디타운 | 동물병원 경영 시뮬레이션")
+        picked = random.choice(ANIMALS).copy()
+        picked["id"] = st.session_state.rescued + 1
+        picked["happiness"] = 30
+        picked["health"] = 60
+        st.session_state.animals.append(picked)
+90
