@@ -19,7 +19,7 @@ st.markdown("""
 [data-testid="stAppViewContainer"] {
     background:#1e2637;
 }
-iframe {display:block; border:0;}
+iframe {display:block;border:0;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -27,8 +27,8 @@ components.html(r"""
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <style>
 *{box-sizing:border-box}
 html,body{
@@ -44,7 +44,9 @@ button:active{transform:translateY(2px) scale(.98)}
 .game{
     position:relative;isolation:isolate;width:100%;
     height:900px;overflow:hidden;
-    background:linear-gradient(#5578a0 0%,#a0d6dc 46%,#dfb985 100%)
+    background:linear-gradient(
+        #5578a0 0%,#a0d6dc 46%,#dfb985 100%
+    )
 }
 .backdrop{
     position:absolute;inset:0;z-index:-2;
@@ -73,7 +75,8 @@ button:active{transform:translateY(2px) scale(.98)}
 .hud{
     max-width:1370px;margin:auto;display:flex;
     justify-content:space-between;align-items:center;
-    gap:12px;padding:13px 18px;position:relative;z-index:4
+    gap:8px;padding:13px 18px;
+    position:relative;z-index:4
 }
 .logo{
     padding:8px 15px;background:#fff4d9e8;
@@ -82,25 +85,29 @@ button:active{transform:translateY(2px) scale(.98)}
     font-weight:900;font-size:20px;color:#963c25;
     white-space:nowrap
 }
-.hud-right{display:flex;gap:9px;align-items:center}
+.hud-right{display:flex;gap:8px;align-items:center}
 .hud-box{
     border:3px solid #fff5c8;background:#784d3bec;
-    border-radius:16px;min-width:103px;
-    padding:8px 12px;color:#fff7dd;text-align:center;
+    border-radius:16px;min-width:91px;
+    padding:8px 10px;color:#fff7dd;text-align:center;
     box-shadow:0 5px 0 #56322377;
-    font-weight:900;font-size:19px
+    font-weight:900;font-size:18px
 }
 .hud-box small{
     display:block;font-size:10px;
     letter-spacing:.05em;opacity:.95
 }
 .timer{
-    background:#b84742;font-size:25px;min-width:110px
+    background:#b84742;
+    font-size:25px;min-width:108px
 }
-.timer.low{animation:pulse .35s infinite alternate}
+.timer.low{
+    animation:pulse .35s infinite alternate
+}
 @keyframes pulse{
     to{background:#fa322f;transform:scale(1.04)}
 }
+.hearts{color:#ff8087;white-space:nowrap}
 .sign{
     position:relative;width:max-content;
     margin:-1px auto 2px;padding:5px 40px;
@@ -112,21 +119,25 @@ button:active{transform:translateY(2px) scale(.98)}
     text-shadow:1px 2px #5a271a
 }
 .customers{
-    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
     gap:13px;max-width:1140px;margin:22px auto 0;
     padding:0 15px;position:relative;z-index:2;
     min-height:185px
 }
 .customer{
     position:relative;border:4px solid #d79554;
-    border-radius:20px;background:linear-gradient(#fff6df,#fff0d1);
+    border-radius:20px;
+    background:linear-gradient(#fff6df,#fff0d1);
     box-shadow:0 9px 0 #845d3e8a,0 13px 22px #3e2c2850;
     min-height:167px;padding:13px 10px 10px;
-    display:flex;flex-direction:column;align-items:center;
-    gap:5px;transition:transform .12s
+    display:flex;flex-direction:column;
+    align-items:center;gap:5px;
+    transition:transform .12s
 }
 .customer:hover{
-    transform:translateY(-3px);border-color:#edac4d
+    transform:translateY(-3px);
+    border-color:#edac4d
 }
 .avatar{
     position:absolute;left:11px;top:-38px;font-size:56px;
@@ -134,9 +145,15 @@ button:active{transform:translateY(2px) scale(.98)}
     animation:bob 1.8s infinite alternate;
     pointer-events:none
 }
-@keyframes bob{to{transform:translateY(-5px)}}
-.ordername{font-weight:900;font-size:13px;color:#a35b31}
-.orderfood{font-size:34px;line-height:1.2;white-space:nowrap}
+@keyframes bob{
+    to{transform:translateY(-5px)}
+}
+.ordername{
+    font-weight:900;font-size:13px;color:#a35b31
+}
+.orderfood{
+    font-size:34px;line-height:1.2;white-space:nowrap
+}
 .ordertext{
     font-size:13px;font-weight:900;text-align:center;
     color:#663e2a;white-space:nowrap
@@ -150,7 +167,9 @@ button:active{transform:translateY(2px) scale(.98)}
     display:block;height:100%;background:#64ae60;
     width:100%;transition:width .09s linear
 }
-.servehint{font-size:11px;color:#875e45;font-weight:800}
+.servehint{
+    font-size:11px;color:#875e45;font-weight:800
+}
 .counter{
     position:relative;max-width:1280px;margin:13px auto 0;
     border:9px solid #9e5732;
@@ -202,28 +221,37 @@ button:active{transform:translateY(2px) scale(.98)}
     gap:5px;width:min(110px,90%);margin-bottom:9px
 }
 .ball{
-    aspect-ratio:1;border-radius:50%;background:#13171c;
-    border:3px solid #15191e;
+    aspect-ratio:1;border-radius:50%;
+    background:#13171c;border:3px solid #15191e;
     box-shadow:inset 0 3px 4px #040609;
-    display:flex;align-items:center;justify-content:center;
-    font-size:19px
+    display:flex;align-items:center;
+    justify-content:center;font-size:19px
 }
 .ball.cooking{
-    background:radial-gradient(circle at 35% 27%,#f9dd8e,#d2a55c);
-    border-color:#b48047;animation:fry .8s infinite alternate
+    background:radial-gradient(
+        circle at 35% 27%,#f9dd8e,#d2a55c
+    );
+    border-color:#b48047;
+    animation:fry .8s infinite alternate
 }
 .ball.ready{
-    background:radial-gradient(circle at 30% 25%,#f8d37b,#a76127);
+    background:radial-gradient(
+        circle at 30% 25%,#f8d37b,#a76127
+    );
     border-color:#6d3919
 }
 .ball.burnt{
-    background:radial-gradient(circle at 30% 25%,#735138,#291a13);
+    background:radial-gradient(
+        circle at 30% 25%,#735138,#291a13
+    );
     border-color:#1b1510
 }
 @keyframes fry{
     to{filter:brightness(1.12);transform:scale(1.05)}
 }
-.grill-name{font-size:13px;font-weight:900;text-align:center}
+.grill-name{
+    font-size:13px;font-weight:900;text-align:center
+}
 .cookbar{
     height:8px;width:83%;margin:6px 0;
     background:#151719;border-radius:8px;overflow:hidden
@@ -239,7 +267,8 @@ button:active{transform:translateY(2px) scale(.98)}
     text-align:center;min-height:199px;
     box-shadow:inset 0 4px #fff9ee,0 5px #815634;
     display:flex;align-items:center;
-    justify-content:space-evenly;flex-direction:column;padding:8px
+    justify-content:space-evenly;
+    flex-direction:column;padding:8px
 }
 .plating b{font-size:16px;color:#935127}
 .plate{
@@ -249,14 +278,17 @@ button:active{transform:translateY(2px) scale(.98)}
     );
     border-radius:50%;
     box-shadow:0 6px 0 #bba482,0 8px 12px #4f393955;
-    display:flex;flex-direction:column;align-items:center;
-    justify-content:center;font-size:40px;margin:2px
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    font-size:40px;margin:2px
 }
 .plate small{
-    font-size:11px;font-weight:900;color:#7b432b;
-    max-width:115px
+    font-size:11px;font-weight:900;
+    color:#7b432b;max-width:115px
 }
-.plate-note{font-size:12px;color:#8e5d3a;font-weight:800}
+.plate-note{
+    font-size:12px;color:#8e5d3a;font-weight:800
+}
 .supply{
     max-width:1260px;margin:22px auto 0;padding:0 12px;
     display:grid;grid-template-columns:1fr 1fr;
@@ -273,7 +305,8 @@ button:active{transform:translateY(2px) scale(.98)}
 }
 .choices{display:flex;gap:8px}
 .choice{
-    flex:1;background:#fff9ec;border:3px solid #f3c895;
+    flex:1;background:#fff9ec;
+    border:3px solid #f3c895;
     border-radius:14px;color:#6c4127;
     min-height:64px;font-weight:900;font-size:14px;
     box-shadow:0 4px 0 #af814f;white-space:nowrap
@@ -282,13 +315,16 @@ button:active{transform:translateY(2px) scale(.98)}
     border-color:#e9673e;background:#ffddb0;
     box-shadow:0 4px 0 #b6593f
 }
-.choice .emoji{display:block;font-size:25px;margin-bottom:1px}
+.choice .emoji{
+    display:block;font-size:25px;margin-bottom:1px
+}
 .tips{
     position:relative;z-index:2;text-align:center;
     font-weight:900;font-size:13px;color:#fff5d7;
-    text-shadow:0 2px 4px #4d2e29;margin:17px auto 0;
-    padding:5px 16px;background:#6b3e30c9;
-    width:max-content;max-width:98%;border-radius:15px
+    text-shadow:0 2px 4px #4d2e29;
+    margin:17px auto 0;padding:5px 16px;
+    background:#6b3e30c9;width:max-content;
+    max-width:98%;border-radius:15px
 }
 .toast{
     position:absolute;left:50%;bottom:118px;
@@ -296,9 +332,9 @@ button:active{transform:translateY(2px) scale(.98)}
     background:#392823e8;color:#fff6dd;
     font-weight:900;border:2px solid #f6cb84;
     border-radius:13px;padding:10px 20px;z-index:8;
-    text-align:center;white-space:nowrap;max-width:90%;
-    font-size:15px;opacity:0;pointer-events:none;
-    transition:opacity .15s
+    text-align:center;white-space:nowrap;
+    max-width:90%;font-size:15px;opacity:0;
+    pointer-events:none;transition:opacity .15s
 }
 .toast.show{opacity:1}
 .overlay{
@@ -313,18 +349,27 @@ button:active{transform:translateY(2px) scale(.98)}
     box-shadow:0 16px 0 #5c351db8;
     padding:29px;text-align:center
 }
-.result h2{font-size:33px;margin:5px;color:#ab5228}
-.result p{font-size:19px;font-weight:800}
+.result h2{
+    font-size:33px;margin:5px;color:#ab5228
+}
+.result p{
+    font-size:19px;font-weight:800;line-height:1.8
+}
 .result .replay{
     border:0;border-radius:16px;background:#d85e42;
     color:white;font-size:21px;font-weight:900;
     padding:15px 35px;box-shadow:0 6px #9e3c2b
 }
 @media(max-width:780px){
-    .logo{font-size:14px;padding:8px}
-    .hud-box{min-width:60px;font-size:15px;padding:7px}
-    .hud-box small{font-size:9px}
-    .timer{font-size:19px;min-width:75px}
+    .logo{font-size:13px;padding:7px}
+    .hud{padding:9px 4px;gap:3px}
+    .hud-right{gap:3px}
+    .hud-box{
+        min-width:48px;font-size:12px;
+        padding:6px 4px;border-width:2px
+    }
+    .hud-box small{font-size:8px}
+    .timer{font-size:17px;min-width:57px}
     .sign{font-size:17px;padding:7px 21px}
     .customers{gap:6px;margin-top:35px}
     .customer{min-height:157px;padding:15px 3px 7px}
@@ -332,7 +377,9 @@ button:active{transform:translateY(2px) scale(.98)}
     .orderfood{font-size:24px}
     .ordertext{font-size:10px;white-space:normal}
     .ordername,.servehint{font-size:10px}
-    .counter{margin:15px 8px 0;padding:9px;border-width:6px}
+    .counter{
+        margin:15px 8px 0;padding:9px;border-width:6px
+    }
     .worktop{
         grid-template-columns:minmax(0,1.2fr) minmax(120px,.7fr);
         gap:7px
@@ -352,7 +399,9 @@ button:active{transform:translateY(2px) scale(.98)}
     .supply-box{padding:7px 5px;border-width:3px}
     .supply-title{font-size:11px}
     .choices{gap:3px}
-    .choice{font-size:10px;min-height:55px;padding:1px}
+    .choice{
+        font-size:10px;min-height:55px;padding:1px
+    }
     .choice .emoji{font-size:18px}
     .tips{font-size:10px;white-space:normal}
 }
@@ -415,9 +464,17 @@ button:active{transform:translateY(2px) scale(.98)}
 <div class="hud">
   <div class="logo">🐙 타코야끼 대소동!</div>
   <div class="hud-right">
+    <div class="hud-box">
+      <small>현재 레벨</small>
+      LV.<span id="level">1</span> / 5
+    </div>
     <div class="hud-box timer" id="timer">
       <small>남은 시간</small>
-      <span id="time">75</span>초
+      <span id="time">90</span>초
+    </div>
+    <div class="hud-box">
+      <small>목숨</small>
+      <span class="hearts" id="lives">❤️❤️❤️</span>
     </div>
     <div class="hud-box">
       <small>매출 점수</small>
@@ -467,16 +524,16 @@ button:active{transform:translateY(2px) scale(.98)}
 </div>
 
 <div class="tips">
-  ③ 주문이 완성되면 손님 카드를 클릭해서 서빙!
-  · 늦으면 주문 취소!
+  ③ 주문에 맞는 손님을 눌러 서빙!
+  · 주문 실패 시 목숨 -1
 </div>
 
 <div class="toast" id="toast"></div>
 
 <div class="overlay hidden" id="overlay">
   <div class="result">
-    <div style="font-size:56px">🏆</div>
-    <h2>영업 종료!</h2>
+    <div id="result-icon" style="font-size:56px">🏆</div>
+    <h2 id="result-title">게임 종료</h2>
     <p id="result-text"></p>
     <button class="replay" onclick="restart()">
       🔄 다시 도전하기
@@ -487,30 +544,30 @@ button:active{transform:translateY(2px) scale(.98)}
 </div>
 
 <script>
-const DURATION = 75;
-const COOK_MS = 2700;
-const BURN_MS = 6700;
+const LEVEL_TIMES=[90,120,120,150,150];
+const COOK_MS=2700;
+const BURN_MS=6700;
 
-const fillings = [
+const fillings=[
     {name:'문어',emoji:'🐙'},
     {name:'치즈',emoji:'🧀'},
     {name:'새우',emoji:'🦐'}
 ];
 
-const toppings = [
+const toppings=[
     {name:'소스',emoji:'🍯'},
     {name:'마요네즈',emoji:'🥛'},
     {name:'가쓰오부시',emoji:'🍥'}
 ];
 
-const faces = ['🐱','🐰','🐻','🦊','🐼','🐸'];
+const faces=['🐱','🐰','🐻','🦊','🐼','🐸'];
 
 let game;
 let toastTimer;
 
-const el = id => document.getElementById(id);
-const pick = arr => arr[Math.floor(Math.random()*arr.length)];
-const now = () => performance.now();
+const el=id=>document.getElementById(id);
+const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
+const now=()=>performance.now();
 
 function newCustomer(){
     return {
@@ -536,7 +593,9 @@ function tell(message){
 
 function restart(){
     game={
-        start:now(),
+        level:1,
+        levelStart:now(),
+        lives:3,
         score:0,
         combo:0,
         best:0,
@@ -558,7 +617,57 @@ function restart(){
     };
 
     el('overlay').classList.add('hidden');
+    el('timer').classList.remove('low');
+    el('time').textContent=LEVEL_TIMES[0];
     renderAll();
+}
+
+function nextLevel(){
+    if(game.level>=5){
+        end(true);
+        return;
+    }
+
+    game.level++;
+    game.levelStart=now();
+
+    game.grills=[
+        {state:'empty'},
+        {state:'empty'},
+        {state:'empty'}
+    ];
+
+    game.plate=null;
+
+    game.customers=[
+        newCustomer(),
+        newCustomer(),
+        newCustomer()
+    ];
+
+    el('timer').classList.remove('low');
+    el('time').textContent=LEVEL_TIMES[game.level-1];
+
+    renderAll();
+
+    tell(
+        `🎊 LEVEL ${game.level} 시작! `+
+        `제한 시간 ${LEVEL_TIMES[game.level-1]}초`
+    );
+}
+
+function loseLife(message){
+    if(game.ended)return;
+
+    game.lives--;
+    game.combo=0;
+    updateHud();
+
+    if(game.lives<=0){
+        end(false);
+    }else{
+        tell(`${message} 남은 목숨 ${game.lives}개`);
+    }
 }
 
 function renderAll(){
@@ -566,7 +675,6 @@ function renderAll(){
     renderGrills();
     renderPlate();
     renderFillings();
-    renderToppings();
     updateHud();
 }
 
@@ -574,7 +682,9 @@ function renderCustomers(){
     el('customers').innerHTML=game.customers.map((c,i)=>`
         <button class="customer" onclick="serve(${i})">
             <span class="avatar">${c.face}</span>
-            <span class="ordername">손님 ${i+1} · 주문표</span>
+            <span class="ordername">
+                손님 ${i+1} · 주문표
+            </span>
             <span class="orderfood">
                 🐙 ${c.fill.emoji} ${c.top.emoji}
             </span>
@@ -584,7 +694,9 @@ function renderCustomers(){
             <span class="patience">
                 <span id="patience-${i}"></span>
             </span>
-            <span class="servehint">👆 클릭하면 서빙!</span>
+            <span class="servehint">
+                👆 클릭하면 서빙!
+            </span>
         </button>
     `).join('');
 }
@@ -592,7 +704,9 @@ function renderCustomers(){
 function renderFillings(){
     el('fillings').innerHTML=fillings.map((v,i)=>`
         <button
-            class="choice ${game.selected.name===v.name?'active':''}"
+            class="choice ${
+                game.selected.name===v.name?'active':''
+            }"
             onclick="selectFilling(${i})">
             <span class="emoji">${v.emoji}</span>
             ${v.name}
@@ -603,7 +717,9 @@ function renderFillings(){
 function renderToppings(){
     el('toppings').innerHTML=toppings.map((v,i)=>`
         <button
-            class="choice ${game.plate?.top?.name===v.name?'active':''}"
+            class="choice ${
+                game.plate?.top?.name===v.name?'active':''
+            }"
             onclick="addTopping(${i})">
             <span class="emoji">${v.emoji}</span>
             ${v.name}
@@ -642,7 +758,9 @@ function renderGrills(){
             <div class="cookbar">
                 <span id="cook-${i}"></span>
             </div>
-            <div class="micro">${captions[g.state]}</div>
+            <div class="micro">
+                ${captions[g.state]}
+            </div>
         </button>`;
     }).join('');
 }
@@ -650,25 +768,32 @@ function renderGrills(){
 function renderPlate(){
     if(!game.plate){
         el('plate').innerHTML='🍽️';
-        el('plate-note').textContent='익은 타코야끼를 클릭!';
+        el('plate-note').textContent=
+            '익은 타코야끼를 클릭!';
     }else{
         el('plate').innerHTML=`
             🐙<small>
                 ${game.plate.fill.name}
-                ${game.plate.top?'+ '+game.plate.top.name:''}
-            </small>`;
+                ${game.plate.top
+                    ?'+ '+game.plate.top.name
+                    :''}
+            </small>
+        `;
 
         el('plate-note').textContent=game.plate.top
             ?'주문에 맞는 손님 클릭!'
             :'아래에서 토핑을 골라 줘!';
     }
+
     renderToppings();
 }
 
 function selectFilling(i){
     if(game.ended)return;
+
     game.selected=fillings[i];
     renderFillings();
+
     tell(`${game.selected.name} 선택! 빈 판을 눌러!`);
 }
 
@@ -683,6 +808,7 @@ function tapGrill(i){
             fill:game.selected,
             born:now()
         };
+
         tell(`${game.selected.name} 타코야끼 굽기 시작!`);
 
     }else if(g.state==='cooking'){
@@ -691,12 +817,17 @@ function tapGrill(i){
 
     }else if(g.state==='ready'){
         if(game.plate){
-            tell('접시가 꽉 찼어! 손님께 먼저 서빙해!');
+            tell('접시가 꽉 찼어! 먼저 서빙해!');
             return;
         }
 
-        game.plate={fill:g.fill,top:null};
+        game.plate={
+            fill:g.fill,
+            top:null
+        };
+
         game.grills[i]={state:'empty'};
+
         tell('접시에 담았어! 토핑을 올려 줘.');
         renderPlate();
 
@@ -717,6 +848,7 @@ function addTopping(i){
     }
 
     game.plate.top=toppings[i];
+
     renderPlate();
     tell('토핑 완료! 맞는 손님을 클릭!');
 }
@@ -742,32 +874,46 @@ function serve(i){
         game.best=Math.max(game.combo,game.best);
         game.served++;
 
-        tell(`🎉 주문 성공! +${100+bonus}점`);
         game.customers[i]=newCustomer();
 
+        tell(`🎉 주문 성공! +${100+bonus}점`);
+
     }else{
-        game.score=Math.max(0,game.score-20);
-        game.combo=0;
-        tell('❌ 주문과 달라! -20점');
+        loseLife('❌ 잘못 서빙했어!');
     }
 
     game.plate=null;
-    renderPlate();
-    renderCustomers();
-    updateHud();
+
+    if(!game.ended){
+        renderPlate();
+        renderCustomers();
+        updateHud();
+    }
 }
 
 function updateHud(){
+    el('level').textContent=game.level;
     el('score').textContent=game.score;
     el('combo').textContent=game.combo;
+
+    el('lives').textContent=
+        '❤️'.repeat(game.lives)+
+        '🖤'.repeat(3-game.lives);
 }
 
-function end(){
+function end(win){
     if(game.ended)return;
+
     game.ended=true;
-    el('time').textContent='0';
+
+    el('result-icon').textContent=win?'🏆':'💔';
+
+    el('result-title').textContent=win
+        ?'5레벨 생존 성공!'
+        :'게임 오버!';
 
     el('result-text').innerHTML=`
+        도달 레벨 <b>${game.level} / 5</b><br>
         총 <b>${game.served}개</b> 완성<br>
         최종 점수 <b>${game.score}점</b><br>
         최고 콤보 <b>${game.best}</b><br>
@@ -781,15 +927,20 @@ function tick(){
     if(!game||game.ended)return;
 
     const t=now();
+
+    const limit=LEVEL_TIMES[game.level-1];
+
     const left=Math.max(
-        0,DURATION-(t-game.start)/1000
+        0,
+        limit-(t-game.levelStart)/1000
     );
 
     el('time').textContent=Math.ceil(left);
+
     el('timer').classList.toggle('low',left<=10);
 
     if(left<=0){
-        end();
+        nextLevel();
         return;
     }
 
@@ -800,16 +951,25 @@ function tick(){
 
         const elapsed=t-g.born;
 
-        if(g.state==='cooking'&&elapsed>=COOK_MS){
+        if(
+            g.state==='cooking' &&
+            elapsed>=COOK_MS
+        ){
             g.state='ready';
             grillChanged=true;
         }
 
-        if(g.state==='ready'&&elapsed>=BURN_MS){
+        if(
+            g.state==='ready' &&
+            elapsed>=BURN_MS
+        ){
             g.state='burnt';
+
             game.score=Math.max(0,game.score-10);
             game.combo=0;
+
             grillChanged=true;
+
             updateHud();
             tell('🔥 타코야끼가 타버렸어! -10점');
         }
@@ -818,7 +978,9 @@ function tick(){
 
         if(bar){
             bar.style.width=
-                `${Math.min(100,elapsed/BURN_MS*100)}%`;
+                `${Math.min(
+                    100,elapsed/BURN_MS*100
+                )}%`;
 
             bar.style.background=
                 g.state==='ready'?'#71d56c':
@@ -826,12 +988,18 @@ function tick(){
         }
     });
 
-    if(grillChanged)renderGrills();
+    if(grillChanged){
+        renderGrills();
+    }
 
     let customerChanged=false;
 
-    game.customers.forEach((c,i)=>{
-        const remaining=1-(t-c.born)/c.patience;
+    for(let i=0;i<game.customers.length;i++){
+        const c=game.customers[i];
+
+        const remaining=
+            1-(t-c.born)/c.patience;
+
         const bar=el(`patience-${i}`);
 
         if(bar){
@@ -845,17 +1013,18 @@ function tick(){
 
         if(remaining<=0){
             game.missed++;
-            game.score=Math.max(0,game.score-15);
-            game.combo=0;
+
             game.customers[i]=newCustomer();
             customerChanged=true;
+
+            loseLife('⌛ 손님이 기다리다 떠났어!');
+
+            if(game.ended)return;
         }
-    });
+    }
 
     if(customerChanged){
         renderCustomers();
-        updateHud();
-        tell('⌛ 손님이 떠났어! -15점');
     }
 }
 
