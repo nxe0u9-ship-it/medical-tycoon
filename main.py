@@ -3,1029 +3,828 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 st.set_page_config(
-    page_title="타코야끼 스피드게임",
+    page_title="타코야끼 대소동",
     page_icon="🐙",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed",
 )
 
 st.markdown("""
 <style>
-#MainMenu, footer, header {visibility:hidden;}
-.block-container {
-    padding:0 !important;
-    max-width:100% !important;
-}
-[data-testid="stAppViewContainer"] {
-    background:#1e2637;
-}
-iframe {display:block;border:0;}
+#MainMenu,footer,header{visibility:hidden}
+.block-container{max-width:100%!important;padding:0!important}
+[data-testid="stAppViewContainer"]{background:#25334b}
+iframe{display:block;border:0}
 </style>
 """, unsafe_allow_html=True)
 
 components.html(r"""
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 *{box-sizing:border-box}
-html,body{
-    margin:0;width:100%;height:100%;
-    font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;
-    color:#493322;overflow:hidden
-}
-button{
-    font:inherit;cursor:pointer;
-    -webkit-tap-highlight-color:transparent
-}
-button:active{transform:translateY(2px) scale(.98)}
-.game{
-    position:relative;isolation:isolate;width:100%;
-    height:900px;overflow:hidden;
-    background:linear-gradient(
-        #5578a0 0%,#a0d6dc 46%,#dfb985 100%
-    )
-}
-.backdrop{
-    position:absolute;inset:0;z-index:-2;
-    width:100%;height:100%
-}
-.shade{
-    position:absolute;inset:0;z-index:-1;
-    background:linear-gradient(
-        90deg,#3a54771f,transparent 30%,
-        transparent 65%,#30486e33
-    )
-}
-.lantern{
-    position:absolute;top:51px;font-size:37px;
-    filter:drop-shadow(0 7px 8px #6e391e44);
-    animation:swing 3s ease-in-out infinite;
-    pointer-events:none
-}
-.l1{left:6%}
-.l2{right:6%;animation-delay:-1s}
-.l3{left:17%;font-size:26px;animation-delay:-1.7s}
-.l4{right:17%;font-size:26px}
-@keyframes swing{
-    50%{transform:rotate(7deg) translateY(4px)}
-}
-.hud{
-    max-width:1370px;margin:auto;display:flex;
-    justify-content:space-between;align-items:center;
-    gap:8px;padding:13px 18px;
-    position:relative;z-index:4
-}
-.logo{
-    padding:8px 15px;background:#fff4d9e8;
-    border:3px solid #9d4e2f;border-radius:18px;
-    box-shadow:0 5px #69381d70;
-    font-weight:900;font-size:20px;color:#963c25;
-    white-space:nowrap
-}
-.hud-right{display:flex;gap:8px;align-items:center}
-.hud-box{
-    border:3px solid #fff5c8;background:#784d3bec;
-    border-radius:16px;min-width:91px;
-    padding:8px 10px;color:#fff7dd;text-align:center;
-    box-shadow:0 5px 0 #56322377;
-    font-weight:900;font-size:18px
-}
-.hud-box small{
-    display:block;font-size:10px;
-    letter-spacing:.05em;opacity:.95
-}
-.timer{
-    background:#b84742;
-    font-size:25px;min-width:108px
-}
-.timer.low{
-    animation:pulse .35s infinite alternate
-}
-@keyframes pulse{
-    to{background:#fa322f;transform:scale(1.04)}
-}
-.hearts{color:#ff8087;white-space:nowrap}
-.sign{
-    position:relative;width:max-content;
-    margin:-1px auto 2px;padding:5px 40px;
-    background:#873d31;color:#fff7db;
-    border:4px solid #edbd71;
-    border-radius:4px 4px 15px 15px;
-    box-shadow:0 7px 0 #5b2f28,0 11px 17px #56342888;
-    font-weight:900;font-size:22px;letter-spacing:2px;
-    text-shadow:1px 2px #5a271a
-}
-.customers{
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:13px;max-width:1140px;margin:22px auto 0;
-    padding:0 15px;position:relative;z-index:2;
-    min-height:185px
-}
-.customer{
-    position:relative;border:4px solid #d79554;
-    border-radius:20px;
-    background:linear-gradient(#fff6df,#fff0d1);
-    box-shadow:0 9px 0 #845d3e8a,0 13px 22px #3e2c2850;
-    min-height:167px;padding:13px 10px 10px;
-    display:flex;flex-direction:column;
-    align-items:center;gap:5px;
-    transition:transform .12s
-}
-.customer:hover{
-    transform:translateY(-3px);
-    border-color:#edac4d
-}
-.avatar{
-    position:absolute;left:11px;top:-38px;font-size:56px;
-    filter:drop-shadow(0 4px 1px #ffffffa8);
-    animation:bob 1.8s infinite alternate;
-    pointer-events:none
-}
-@keyframes bob{
-    to{transform:translateY(-5px)}
-}
-.ordername{
-    font-weight:900;font-size:13px;color:#a35b31
-}
-.orderfood{
-    font-size:34px;line-height:1.2;white-space:nowrap
-}
-.ordertext{
-    font-size:13px;font-weight:900;text-align:center;
-    color:#663e2a;white-space:nowrap
-}
-.patience{
-    height:11px;width:88%;background:#e6d0ac;
-    border:2px solid #fff;border-radius:15px;
-    overflow:hidden;margin-top:3px
-}
-.patience>span{
-    display:block;height:100%;background:#64ae60;
-    width:100%;transition:width .09s linear
-}
-.servehint{
-    font-size:11px;color:#875e45;font-weight:800
-}
-.counter{
-    position:relative;max-width:1280px;margin:13px auto 0;
-    border:9px solid #9e5732;
-    border-radius:27px 27px 40px 40px;
-    background:repeating-linear-gradient(
-        0deg,#bf7b44 0 21px,#c8884d 22px 45px
-    );
-    box-shadow:0 17px 0 #653b25,0 24px 32px #4d2c2059;
-    padding:14px 21px 18px;z-index:2
-}
-.counter:before{
-    content:'';position:absolute;inset:9px;
-    border:2px solid #f3cb91;border-radius:17px;
-    pointer-events:none
-}
-.counter-caption{
-    position:relative;color:#fff7d5;font-size:13px;
-    letter-spacing:3px;text-align:center;font-weight:900;
-    text-shadow:0 2px #7b3e23;margin-bottom:8px
-}
-.worktop{
-    display:grid;
-    grid-template-columns:minmax(0,1.7fr) minmax(245px,.8fr);
-    gap:16px
-}
-.grill-area{
-    padding:13px;background:#45434a;
-    border:5px solid #292b33;border-radius:23px;
-    box-shadow:inset 0 4px #686572,0 5px 0 #372e2c;
-    min-width:0
-}
-.grills{
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:12px
-}
-.grill{
-    position:relative;min-height:180px;
-    background:linear-gradient(140deg,#262b32,#38353a);
-    border:3px solid #686368;border-radius:20px;
-    box-shadow:inset 0 5px 12px #17181b,0 3px 1px #222;
-    display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    color:#fff8dc;padding:12px 4px 8px;overflow:hidden
-}
-.grill:hover{border-color:#ffd47e}
-.balls{
-    display:grid;grid-template-columns:repeat(2,1fr);
-    gap:5px;width:min(110px,90%);margin-bottom:9px
-}
-.ball{
-    aspect-ratio:1;border-radius:50%;
-    background:#13171c;border:3px solid #15191e;
-    box-shadow:inset 0 3px 4px #040609;
-    display:flex;align-items:center;
-    justify-content:center;font-size:19px
-}
-.ball.cooking{
-    background:radial-gradient(
-        circle at 35% 27%,#f9dd8e,#d2a55c
-    );
-    border-color:#b48047;
-    animation:fry .8s infinite alternate
-}
-.ball.ready{
-    background:radial-gradient(
-        circle at 30% 25%,#f8d37b,#a76127
-    );
-    border-color:#6d3919
-}
-.ball.burnt{
-    background:radial-gradient(
-        circle at 30% 25%,#735138,#291a13
-    );
-    border-color:#1b1510
-}
-@keyframes fry{
-    to{filter:brightness(1.12);transform:scale(1.05)}
-}
-.grill-name{
-    font-size:13px;font-weight:900;text-align:center
-}
-.cookbar{
-    height:8px;width:83%;margin:6px 0;
-    background:#151719;border-radius:8px;overflow:hidden
-}
-.cookbar span{
-    display:block;height:100%;width:0;background:#91dc69
-}
-.grill .micro{font-size:11px;color:#ffdfa0}
-.plating{
-    position:relative;
-    background:linear-gradient(140deg,#f4d8b7,#f7eacb);
-    border:5px solid #eac88e;border-radius:23px;
-    text-align:center;min-height:199px;
-    box-shadow:inset 0 4px #fff9ee,0 5px #815634;
-    display:flex;align-items:center;
-    justify-content:space-evenly;
-    flex-direction:column;padding:8px
-}
-.plating b{font-size:16px;color:#935127}
-.plate{
-    width:118px;height:118px;
-    background:radial-gradient(
-        circle,#fff 0 48%,#b7d3df 50% 58%,white 61% 100%
-    );
-    border-radius:50%;
-    box-shadow:0 6px 0 #bba482,0 8px 12px #4f393955;
-    display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    font-size:40px;margin:2px
-}
-.plate small{
-    font-size:11px;font-weight:900;
-    color:#7b432b;max-width:115px
-}
-.plate-note{
-    font-size:12px;color:#8e5d3a;font-weight:800
-}
-.supply{
-    max-width:1260px;margin:22px auto 0;padding:0 12px;
-    display:grid;grid-template-columns:1fr 1fr;
-    gap:18px;position:relative;z-index:2
-}
-.supply-box{
-    background:#ffefd5e8;border:4px solid #bb7a45;
-    border-radius:20px;padding:11px 12px 12px;
-    box-shadow:0 7px 0 #6b422d80
-}
-.supply-title{
-    font-size:14px;font-weight:900;
-    color:#8a492d;margin:0 0 8px 4px
-}
-.choices{display:flex;gap:8px}
-.choice{
-    flex:1;background:#fff9ec;
-    border:3px solid #f3c895;
-    border-radius:14px;color:#6c4127;
-    min-height:64px;font-weight:900;font-size:14px;
-    box-shadow:0 4px 0 #af814f;white-space:nowrap
-}
-.choice.active{
-    border-color:#e9673e;background:#ffddb0;
-    box-shadow:0 4px 0 #b6593f
-}
-.choice .emoji{
-    display:block;font-size:25px;margin-bottom:1px
-}
-.tips{
-    position:relative;z-index:2;text-align:center;
-    font-weight:900;font-size:13px;color:#fff5d7;
-    text-shadow:0 2px 4px #4d2e29;
-    margin:17px auto 0;padding:5px 16px;
-    background:#6b3e30c9;width:max-content;
-    max-width:98%;border-radius:15px
-}
-.toast{
-    position:absolute;left:50%;bottom:118px;
-    transform:translateX(-50%);
-    background:#392823e8;color:#fff6dd;
-    font-weight:900;border:2px solid #f6cb84;
-    border-radius:13px;padding:10px 20px;z-index:8;
-    text-align:center;white-space:nowrap;
-    max-width:90%;font-size:15px;opacity:0;
-    pointer-events:none;transition:opacity .15s
-}
+html,body{margin:0;height:100%;font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;color:#583a28}
+button{font:inherit;cursor:pointer}
+.game{position:relative;isolation:isolate;min-height:900px;padding:10px 12px 26px;overflow:hidden;background:linear-gradient(#536fa1 0%,#edb69e 47%,#eec995 80%)}
+.skyline{position:absolute;inset:0;width:100%;height:100%;z-index:-2}
+.game:before{content:"";position:absolute;inset:35% 0 0;z-index:-1;background:linear-gradient(#4b252f0a,#51322655)}
+.lanterns{position:absolute;left:0;right:0;top:90px;display:flex;justify-content:space-between;padding:0 7%;font-size:39px;pointer-events:none;z-index:0;filter:drop-shadow(1px 5px 4px #30201877)}
+.hud{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:10px;max-width:1320px;margin:auto}
+.logo{font-size:23px;font-weight:900;background:#fff5d8;border:4px solid #a85935;border-radius:18px;padding:9px 17px;box-shadow:0 5px #61372277;color:#a34524;white-space:nowrap}
+.hud-items{display:flex;gap:7px}
+.stat{border:3px solid #fff2c6;background:#6e4638ed;color:#fff9e8;border-radius:15px;padding:6px 11px;min-width:85px;text-align:center;font-size:20px;font-weight:900;box-shadow:0 5px #4c332d77}
+.stat small{display:block;font-size:10px;font-weight:700;color:#ffebc0}
+.stat.timer{background:#b64b43;min-width:95px}
+.stat.timer.urgent{animation:alert .45s infinite alternate}
+@keyframes alert{to{background:#ed352e;transform:scale(1.04)}}
+.hearts{font-size:19px;white-space:nowrap}
+.sign{position:relative;z-index:1;width:max-content;margin:8px auto 35px;padding:6px 25px;border-radius:5px 5px 15px 15px;border:4px solid #efbf7f;color:#fff5d4;background:#944633;font-size:22px;font-weight:900;box-shadow:0 7px #653121aa;text-align:center}
+.customers{position:relative;z-index:2;max-width:1120px;margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.customer{position:relative;min-height:152px;padding:13px 8px 10px;background:#fff1d5;border:4px solid #dea262;border-radius:20px;box-shadow:0 7px #8151338c;display:flex;flex-direction:column;align-items:center;justify-content:space-around;gap:5px;text-align:center;transition:border .12s,transform .12s}
+.customer .face{position:absolute;left:15px;top:-35px;font-size:51px;filter:drop-shadow(0 3px 1px #ffefcd)}
+.customer strong{color:#a65534;font-size:12px}
+.order{font-size:26px;font-weight:900;white-space:nowrap}
+.order-desc{font-size:12px;font-weight:900}
+.patience{height:10px;width:90%;border-radius:12px;background:#e6d4b4;overflow:hidden}
+.patience span{display:block;height:100%;width:100%;background:#6aae55}
+.customer small{color:#916347;font-size:11px;font-weight:900}
+.counter{position:relative;max-width:1240px;margin:21px auto 0;padding:14px 18px 18px;border:9px solid #9a5736;border-radius:27px 27px 35px 35px;background:repeating-linear-gradient(0deg,#bb7a48 0 24px,#c98752 24px 49px);box-shadow:0 14px #663b2b,0 25px 30px #39232066}
+.counter-title{font-size:15px;letter-spacing:2px;font-weight:900;text-align:center;color:#ffefc7;text-shadow:0 2px #754223;margin-bottom:12px}
+.station-row{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(220px,.75fr);gap:14px}
+.grills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:13px;background:#49464b;border:5px solid #2f3137;border-radius:20px;box-shadow:inset 0 3px #747075}
+.grill{min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;background:linear-gradient(140deg,#28292e,#393539);color:#f7e9c6;border:3px solid #686068;border-radius:18px;padding:8px 4px;box-shadow:inset 0 4px 12px #17181c}
+.grill label{font-size:12px;font-weight:900;pointer-events:none}
+.holes{width:min(113px,95%);display:grid;grid-template-columns:repeat(2,1fr);gap:5px;pointer-events:none}
+.ball{aspect-ratio:1;background:#15171b;border:3px solid #17191a;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 2px 3px #0008;font-size:19px}
+.ball.cooking{background:radial-gradient(circle at 27% 20%,#fff0aa,#d9a75a);border-color:#bc844b;animation:bubble .7s infinite alternate}
+.ball.ready{background:radial-gradient(circle at 30% 25%,#f2d27b,#b06a2d);border-color:#79451f}
+.ball.burnt{background:radial-gradient(circle at 30% 25%,#73543f,#291d18);border-color:#231812}
+@keyframes bubble{to{filter:brightness(1.13);transform:scale(1.045)}}
+.cookbar{width:86%;height:8px;background:#19181a;border-radius:6px;overflow:hidden;pointer-events:none}
+.cookbar span{display:block;width:0;height:100%;background:#f7cc59}
+.grill small{font-size:10px;color:#ffdfab;pointer-events:none}
+.right-station{display:flex;flex-direction:column;gap:11px}
+.plate-zone,.trash-zone{background:#f7e5c6;border:5px solid #eed1a0;border-radius:19px;text-align:center;box-shadow:inset 0 3px #fff7e3,0 4px #855b39;padding:8px;display:flex;flex-direction:column;align-items:center;justify-content:space-around;gap:4px}
+.plate-zone{min-height:170px}
+.plate-zone strong,.trash-zone strong{font-size:14px;color:#95502f}
+.plate{width:105px;height:105px;border-radius:50%;background:radial-gradient(circle,#fff 0 45%,#b6d8e7 47% 59%,#fff 62%);box-shadow:0 5px #a99574;display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:33px}
+.plate span{font-size:11px;font-weight:900;color:#72462d}
+.plate-zone small{font-size:11px;color:#895c3f}
+.trash-zone{min-height:58px;flex-direction:row;background:#f7d1bb;border-color:#d7a083}
+.trash-zone .trashicon{font-size:28px}
+.supplies{position:relative;z-index:2;max-width:1240px;margin:25px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.supply{padding:10px 13px 14px;border:4px solid #c28350;border-radius:19px;background:#fff1d9ed;box-shadow:0 6px #71482e77}
+.supply-title{font-size:14px;font-weight:900;margin-bottom:9px;color:#965134}
+.items{display:flex;gap:8px}
+.item{flex:1;min-width:0;min-height:68px;background:#fffdf5;border:3px solid #f0cf9d;border-radius:13px;box-shadow:0 4px #b59064;font-size:14px;font-weight:900;color:#75452d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.item .emoji{font-size:27px}
+.help{text-align:center;color:#fff9d7;background:#674534d9;border-radius:17px;max-width:max-content;margin:18px auto 0;padding:8px 18px;font-size:13px;font-weight:900;text-shadow:0 1px #372922}
+[data-source]{touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+[data-source]:active{cursor:grabbing}
+.dragging-original{opacity:.48}
+.drop-over{outline:5px solid #ffe377!important;outline-offset:1px;transform:scale(1.025);filter:brightness(1.09)}
+.drag-ghost{position:fixed;z-index:1000;pointer-events:none;transform:translate(-50%,-50%);background:#fff9e2eb;border:4px solid #eca65e;border-radius:20px;box-shadow:0 8px 22px #352a2255;min-width:72px;min-height:72px;padding:7px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:31px}
+.drag-ghost small{font-size:11px;font-weight:900;color:#74402b}
+.toast{position:absolute;z-index:15;bottom:95px;left:50%;transform:translateX(-50%);max-width:90%;background:#3f3029ed;color:#fff8dd;border:2px solid #f8c879;border-radius:14px;padding:11px 20px;box-shadow:0 5px 14px #0004;font-size:15px;font-weight:900;text-align:center;opacity:0;pointer-events:none;transition:opacity .15s}
 .toast.show{opacity:1}
-.overlay{
-    position:absolute;z-index:20;inset:0;
-    background:#1d1826c4;display:flex;
-    justify-content:center;align-items:center;padding:20px
-}
+.overlay{position:absolute;inset:0;z-index:30;display:grid;place-items:center;background:#1c1527cf;padding:20px}
 .overlay.hidden{display:none}
-.result{
-    width:min(450px,95%);border:9px solid #f2c476;
-    border-radius:28px;background:#fff3d9;
-    box-shadow:0 16px 0 #5c351db8;
-    padding:29px;text-align:center
-}
-.result h2{
-    font-size:33px;margin:5px;color:#ab5228
-}
-.result p{
-    font-size:19px;font-weight:800;line-height:1.8
-}
-.result .replay{
-    border:0;border-radius:16px;background:#d85e42;
-    color:white;font-size:21px;font-weight:900;
-    padding:15px 35px;box-shadow:0 6px #9e3c2b
-}
-@media(max-width:780px){
-    .logo{font-size:13px;padding:7px}
-    .hud{padding:9px 4px;gap:3px}
-    .hud-right{gap:3px}
-    .hud-box{
-        min-width:48px;font-size:12px;
-        padding:6px 4px;border-width:2px
-    }
-    .hud-box small{font-size:8px}
-    .timer{font-size:17px;min-width:57px}
-    .sign{font-size:17px;padding:7px 21px}
-    .customers{gap:6px;margin-top:35px}
-    .customer{min-height:157px;padding:15px 3px 7px}
-    .avatar{font-size:37px;top:-27px}
-    .orderfood{font-size:24px}
-    .ordertext{font-size:10px;white-space:normal}
-    .ordername,.servehint{font-size:10px}
-    .counter{
-        margin:15px 8px 0;padding:9px;border-width:6px
-    }
-    .worktop{
-        grid-template-columns:minmax(0,1.2fr) minmax(120px,.7fr);
-        gap:7px
-    }
-    .grill-area{padding:6px}
-    .grills{gap:3px}
-    .grill{min-height:155px;padding:3px}
-    .balls{gap:2px}
-    .ball{font-size:11px;border-width:1px}
-    .grill-name{font-size:10px}
-    .grill .micro{font-size:8px}
-    .plating{min-height:160px;padding:3px}
-    .plating b{font-size:11px}
-    .plate{width:77px;height:77px;font-size:24px}
-    .plate small,.plate-note{font-size:9px}
-    .supply{gap:6px;margin-top:16px;padding:0 5px}
-    .supply-box{padding:7px 5px;border-width:3px}
-    .supply-title{font-size:11px}
-    .choices{gap:3px}
-    .choice{
-        font-size:10px;min-height:55px;padding:1px
-    }
-    .choice .emoji{font-size:18px}
-    .tips{font-size:10px;white-space:normal}
+.result{background:#fff2d7;border:8px solid #ecc07b;border-radius:27px;width:min(450px,95%);padding:26px;text-align:center;box-shadow:0 14px #5f3b2dc0}
+.result h2{color:#a84d2a;font-size:31px;margin:6px}
+.result p{font-weight:900;line-height:1.9}
+.replay{padding:13px 30px;background:#d96242;color:white;border:0;border-radius:14px;box-shadow:0 5px #a3402a;font-size:19px;font-weight:900}
+@media(max-width:800px){
+.game{min-height:900px;padding:7px 5px}
+.logo{font-size:13px;padding:7px 5px;border-width:2px}
+.hud{gap:3px}.hud-items{gap:3px}
+.stat{min-width:46px;font-size:12px;padding:5px 3px;border-width:2px}
+.stat small{font-size:8px}.stat.timer{min-width:58px;font-size:16px}
+.hearts{font-size:12px}.sign{font-size:17px;margin-bottom:33px}
+.customers{gap:5px;padding:0 4px}
+.customer{padding:11px 2px 5px;min-height:140px;border-width:3px}
+.customer .face{font-size:34px;top:-24px;left:5px}
+.order{font-size:20px}.order-desc{font-size:10px;white-space:normal}
+.customer small,.customer strong{font-size:9px}
+.counter{padding:8px 5px;border-width:6px;margin-top:15px}
+.counter-title{font-size:11px}.station-row{grid-template-columns:minmax(0,1.6fr) minmax(95px,.65fr);gap:5px}
+.grills{gap:3px;padding:5px;border-width:3px}.grill{min-height:135px;padding:3px 1px;border-width:2px}
+.holes{gap:2px}.ball{font-size:11px;border-width:1px}
+.grill label{font-size:9px}.grill small{font-size:8px}
+.plate-zone{min-height:126px}.plate-zone strong,.trash-zone strong{font-size:10px}
+.plate{width:70px;height:70px;font-size:20px}.plate span,.plate-zone small{font-size:8px}
+.trash-zone{min-height:45px}.trash-zone .trashicon{font-size:21px}
+.supplies{gap:5px;margin-top:16px}.supply{padding:7px 4px;border-width:3px}
+.supply-title{font-size:10px}.items{gap:3px}.item{min-height:56px;font-size:9px;padding:2px}
+.item .emoji{font-size:20px}.help{font-size:10px;margin-top:14px}
 }
 </style>
 </head>
 <body>
 <div class="game">
-<svg class="backdrop" viewBox="0 0 1200 900"
-     preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-  <defs>
-    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-      <stop stop-color="#496ba1"/>
-      <stop offset=".43" stop-color="#d69aa1"/>
-      <stop offset="1" stop-color="#f6ce92"/>
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="900" fill="url(#sky)"/>
-  <circle cx="1000" cy="120" r="73" fill="#ffe7af" opacity=".8"/>
-  <path d="M0 370 Q120 230 255 365 T530 360 T825 357 T1200 355
-           L1200 900H0" fill="#647f92" opacity=".45"/>
-  <path d="M0 440L0 210L110 210L110 395L175 395L175 145L340 145
-           L340 430L445 430L445 240L535 240L535 475L670 475
-           L670 190L800 190L800 400L917 400L917 180L1040 180
-           L1040 430L1200 430V900H0" fill="#414e70" opacity=".63"/>
-  <path d="M0 470L0 280L148 280L148 470
-           M1052 470L1052 290H1200V470" fill="#695469" opacity=".9"/>
-  <g fill="#f8c77d" opacity=".8">
-    <rect x="28" y="320" width="28" height="36"/>
-    <rect x="89" y="320" width="28" height="36"/>
-    <rect x="225" y="195" width="43" height="38"/>
-    <rect x="290" y="195" width="30" height="38"/>
-    <rect x="940" y="238" width="39" height="45"/>
-    <rect x="1081" y="335" width="36" height="38"/>
-    <rect x="1145" y="335" width="36" height="38"/>
-  </g>
-  <path d="M0 380H1200V475H0Z" fill="#613c49"/>
-  <path d="M0 355H1200V421H0Z" fill="#f7e2b5"/>
-  <path d="M0 350H1200V388H0Z" fill="#a93e3c"/>
-  <path d="M0 388H1200V425H0Z" fill="#f8d6a8"/>
-  <g stroke="#8f403b" stroke-width="6">
-    <path d="M0 387V424M110 387V424M220 387V424
-             M330 387V424M440 387V424M550 387V424
-             M660 387V424M770 387V424M880 387V424
-             M990 387V424M1100 387V424M1200 387V424"/>
-  </g>
-  <path d="M0 420H1200V900H0" fill="#cc9873" opacity=".5"/>
-  <g fill="#548d79" opacity=".8">
-    <ellipse cx="45" cy="570" rx="75" ry="120"/>
-    <ellipse cx="1160" cy="590" rx="72" ry="145"/>
-    <ellipse cx="113" cy="660" rx="60" ry="80"/>
-  </g>
+<svg class="skyline" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<path fill="#506d9e" d="M0 0h1200v900H0z"/>
+<circle cx="1020" cy="125" r="79" fill="#f9dfb4"/>
+<path fill="#ac8293" d="M0 350q130-180 270 0t320 0t330 0t280 0v550H0Z"/>
+<path fill="#6d617d" d="M0 360V205h100v180h90V140h150v280h95V255h103v185h145V175h120v235h112V205h140v210h145V900H0Z"/>
+<g fill="#f7d9a7"><path d="M27 262h34v42H27zM230 190h41v39h-41zM290 190h31v39h-31zM721 222h40v41h-40zM966 250h40v45h-40zM1091 255h36v42h-36z"/></g>
+<path fill="#703e4c" d="M0 400h1200v180H0z"/>
+<path fill="#a94b42" d="M0 360h1200v45H0z"/>
+<path fill="#f3d6a9" d="M0 405h1200v80H0z"/>
+<g stroke="#a94b42" stroke-width="7"><path d="M100 404v81M240 404v81M380 404v81M520 404v81M660 404v81M800 404v81M940 404v81M1080 404v81"/></g>
+<path fill="#d2a07f" d="M0 485h1200v415H0z"/>
+<g fill="#729780"><ellipse cx="35" cy="620" rx="64" ry="135"/><ellipse cx="1175" cy="635" rx="62" ry="135"/></g>
 </svg>
+<div class="lanterns"><span>🏮</span><span>🏮</span></div>
 
-<div class="shade"></div>
-<div class="lantern l1">🏮</div>
-<div class="lantern l2">🏮</div>
-<div class="lantern l3">🏮</div>
-<div class="lantern l4">🏮</div>
-
-<div class="hud">
+<header class="hud">
   <div class="logo">🐙 타코야끼 대소동!</div>
-  <div class="hud-right">
-    <div class="hud-box">
-      <small>현재 레벨</small>
-      LV.<span id="level">1</span> / 5
-    </div>
-    <div class="hud-box timer" id="timer">
-      <small>남은 시간</small>
-      <span id="time">90</span>초
-    </div>
-    <div class="hud-box">
-      <small>목숨</small>
-      <span class="hearts" id="lives">❤️❤️❤️</span>
-    </div>
-    <div class="hud-box">
-      <small>매출 점수</small>
-      <span id="score">0</span> ⭐
-    </div>
-    <div class="hud-box">
-      <small>연속 성공</small>
-      <span id="combo">0</span> 🔥
-    </div>
+  <div class="hud-items">
+    <div class="stat"><small>레벨</small>LV.<span id="level">1</span>/5</div>
+    <div class="stat timer" id="timer"><small>남은 시간</small><span id="time">90</span>초</div>
+    <div class="stat"><small>목숨</small><span class="hearts" id="lives">❤️❤️❤️</span></div>
+    <div class="stat"><small>점수</small><span id="score">0</span>⭐</div>
+    <div class="stat"><small>콤보</small><span id="combo">0</span>🔥</div>
   </div>
-</div>
+</header>
 
 <div class="sign">🏮 타코타코 포장마차 🏮</div>
-<div class="customers" id="customers"></div>
+<section class="customers" id="customers"></section>
 
-<div class="counter">
-  <div class="counter-caption">
-    🍳 지글지글 타코야끼 조리대 🍳
-  </div>
-  <div class="worktop">
-    <div class="grill-area">
-      <div class="grills" id="grills"></div>
-    </div>
-    <div class="plating">
-      <b>🍽️ 완성 접시</b>
-      <div class="plate" id="plate"></div>
-      <div class="plate-note" id="plate-note">
-        익은 타코야끼를 클릭!
+<section class="counter">
+  <div class="counter-title">🍳 지글지글 타코야끼 조리대 🍳</div>
+  <div class="station-row">
+    <div class="grills" id="grills"></div>
+    <div class="right-station">
+      <div class="plate-zone" data-drop="plate">
+        <strong>🍽️ 완성 접시</strong>
+        <div class="plate" id="plate"></div>
+        <small id="plate-help">익은 타코야끼를 끌어와!</small>
+      </div>
+      <div class="trash-zone" data-drop="trash">
+        <span class="trashicon">🗑️</span><strong>휴지통 · 끌어서 버리기</strong>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<div class="supply">
-  <div class="supply-box">
-    <div class="supply-title">
-      ① 속재료 선택 → 빈 조리판 클릭
-    </div>
-    <div class="choices" id="fillings"></div>
+<section class="supplies">
+  <div class="supply">
+    <div class="supply-title">① 속재료를 조리판으로 드래그</div>
+    <div class="items" id="fillings"></div>
   </div>
-  <div class="supply-box">
-    <div class="supply-title">
-      ② 다 익으면 집기 → 토핑 선택
-    </div>
-    <div class="choices" id="toppings"></div>
+  <div class="supply">
+    <div class="supply-title">③ 토핑을 접시로 드래그</div>
+    <div class="items" id="toppings"></div>
   </div>
-</div>
+</section>
 
-<div class="tips">
-  ③ 주문에 맞는 손님을 눌러 서빙!
-  · 주문 실패 시 목숨 -1
+<div class="help">
+  ② 다 익은 타코야끼 → 접시 &nbsp;
+  ④ 완성 접시 → 손님 &nbsp;
+  🗑️ 탄 음식/실수한 음식 → 휴지통
 </div>
 
 <div class="toast" id="toast"></div>
-
 <div class="overlay hidden" id="overlay">
   <div class="result">
-    <div id="result-icon" style="font-size:56px">🏆</div>
+    <div id="result-icon" style="font-size:55px">🏆</div>
     <h2 id="result-title">게임 종료</h2>
     <p id="result-text"></p>
-    <button class="replay" onclick="restart()">
-      🔄 다시 도전하기
-    </button>
+    <button class="replay" onclick="restart()">🔄 다시 도전하기</button>
   </div>
 </div>
-
 </div>
 
 <script>
 const LEVEL_TIMES=[90,120,120,150,150];
-const COOK_MS=2700;
-const BURN_MS=6700;
+const COOK_MS=2700, BURN_MS=6700;
 
 const fillings=[
-    {name:'문어',emoji:'🐙'},
-    {name:'치즈',emoji:'🧀'},
-    {name:'새우',emoji:'🦐'}
+  {name:'문어',emoji:'🐙'},
+  {name:'치즈',emoji:'🧀'},
+  {name:'새우',emoji:'🦐'}
 ];
 
 const toppings=[
-    {name:'소스',emoji:'🍯'},
-    {name:'마요네즈',emoji:'🥛'},
-    {name:'가쓰오부시',emoji:'🍥'}
+  {name:'소스',emoji:'🍯'},
+  {name:'마요네즈',emoji:'🥛'},
+  {name:'가쓰오부시',emoji:'🍥'}
 ];
 
 const faces=['🐱','🐰','🐻','🦊','🐼','🐸'];
 
-let game;
-let toastTimer;
-
 const el=id=>document.getElementById(id);
-const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
 const now=()=>performance.now();
+const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
+
+let game, drag=null, highlighted=null, toastTimer;
 
 function newCustomer(){
-    return {
-        id:Math.random(),
-        face:pick(faces),
-        fill:pick(fillings),
-        top:pick(toppings),
-        born:now(),
-        patience:15000+Math.random()*3500
-    };
+  return {
+    face:pick(faces),
+    fill:pick(fillings),
+    top:pick(toppings),
+    born:now(),
+    patience:15000+Math.random()*3500
+  };
 }
 
-function tell(message){
-    const x=el('toast');
-    x.textContent=message;
-    x.classList.add('show');
+function tell(msg){
+  const x=el('toast');
+  x.textContent=msg;
+  x.classList.add('show');
 
-    clearTimeout(toastTimer);
-    toastTimer=setTimeout(
-        ()=>x.classList.remove('show'),1450
-    );
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(
+    ()=>x.classList.remove('show'),1400
+  );
 }
 
 function restart(){
-    game={
-        level:1,
-        levelStart:now(),
-        lives:3,
-        score:0,
-        combo:0,
-        best:0,
-        served:0,
-        missed:0,
-        selected:fillings[0],
-        grills:[
-            {state:'empty'},
-            {state:'empty'},
-            {state:'empty'}
-        ],
-        plate:null,
-        customers:[
-            newCustomer(),
-            newCustomer(),
-            newCustomer()
-        ],
-        ended:false
-    };
+  game={
+    level:1,
+    levelStart:now(),
+    lives:3,
+    score:0,
+    combo:0,
+    best:0,
+    served:0,
+    missed:0,
+    grills:[
+      {state:'empty'},
+      {state:'empty'},
+      {state:'empty'}
+    ],
+    plate:null,
+    customers:[
+      newCustomer(),
+      newCustomer(),
+      newCustomer()
+    ],
+    ended:false
+  };
 
-    el('overlay').classList.add('hidden');
-    el('timer').classList.remove('low');
-    el('time').textContent=LEVEL_TIMES[0];
-    renderAll();
+  el('overlay').classList.add('hidden');
+  renderAll();
+  tell('재료를 꾹 잡고 끌어서 조리판에 놓아 봐!');
 }
 
-function nextLevel(){
-    if(game.level>=5){
-        end(true);
-        return;
-    }
+function advance(){
+  if(game.level===5){
+    end(true);
+    return;
+  }
 
-    game.level++;
-    game.levelStart=now();
+  game.level++;
+  game.levelStart=now();
 
-    game.grills=[
-        {state:'empty'},
-        {state:'empty'},
-        {state:'empty'}
-    ];
+  game.grills=[
+    {state:'empty'},
+    {state:'empty'},
+    {state:'empty'}
+  ];
 
-    game.plate=null;
+  game.plate=null;
 
-    game.customers=[
-        newCustomer(),
-        newCustomer(),
-        newCustomer()
-    ];
+  game.customers=[
+    newCustomer(),
+    newCustomer(),
+    newCustomer()
+  ];
 
-    el('timer').classList.remove('low');
-    el('time').textContent=LEVEL_TIMES[game.level-1];
+  renderAll();
 
-    renderAll();
-
-    tell(
-        `🎊 LEVEL ${game.level} 시작! `+
-        `제한 시간 ${LEVEL_TIMES[game.level-1]}초`
-    );
+  tell(
+    `🎉 LEVEL ${game.level}! 제한 시간 ${
+      LEVEL_TIMES[game.level-1]
+    }초`
+  );
 }
 
 function loseLife(message){
-    if(game.ended)return;
+  if(game.ended)return;
 
-    game.lives--;
-    game.combo=0;
-    updateHud();
+  game.lives--;
+  game.combo=0;
+  updateHud();
 
-    if(game.lives<=0){
-        end(false);
-    }else{
-        tell(`${message} 남은 목숨 ${game.lives}개`);
-    }
+  if(game.lives<=0){
+    end(false);
+  }else{
+    tell(`${message} 남은 목숨 ${game.lives}개`);
+  }
 }
 
 function renderAll(){
-    renderCustomers();
-    renderGrills();
-    renderPlate();
-    renderFillings();
-    updateHud();
+  renderCustomers();
+  renderGrills();
+  renderPlate();
+  renderSupplies();
+  updateHud();
+}
+
+function updateHud(){
+  el('level').textContent=game.level;
+  el('score').textContent=game.score;
+  el('combo').textContent=game.combo;
+  el('lives').textContent=
+    '❤️'.repeat(game.lives)+
+    '🖤'.repeat(3-game.lives);
 }
 
 function renderCustomers(){
-    el('customers').innerHTML=game.customers.map((c,i)=>`
-        <button class="customer" onclick="serve(${i})">
-            <span class="avatar">${c.face}</span>
-            <span class="ordername">
-                손님 ${i+1} · 주문표
-            </span>
-            <span class="orderfood">
-                🐙 ${c.fill.emoji} ${c.top.emoji}
-            </span>
-            <span class="ordertext">
-                ${c.fill.name} + ${c.top.name}
-            </span>
-            <span class="patience">
-                <span id="patience-${i}"></span>
-            </span>
-            <span class="servehint">
-                👆 클릭하면 서빙!
-            </span>
-        </button>
-    `).join('');
-}
-
-function renderFillings(){
-    el('fillings').innerHTML=fillings.map((v,i)=>`
-        <button
-            class="choice ${
-                game.selected.name===v.name?'active':''
-            }"
-            onclick="selectFilling(${i})">
-            <span class="emoji">${v.emoji}</span>
-            ${v.name}
-        </button>
-    `).join('');
-}
-
-function renderToppings(){
-    el('toppings').innerHTML=toppings.map((v,i)=>`
-        <button
-            class="choice ${
-                game.plate?.top?.name===v.name?'active':''
-            }"
-            onclick="addTopping(${i})">
-            <span class="emoji">${v.emoji}</span>
-            ${v.name}
-        </button>
+  el('customers').innerHTML=
+    game.customers.map((c,i)=>`
+      <div class="customer"
+           data-drop="customer"
+           data-index="${i}">
+        <span class="face">${c.face}</span>
+        <strong>손님 ${i+1} · 주문표</strong>
+        <span class="order">
+          🐙 ${c.fill.emoji} ${c.top.emoji}
+        </span>
+        <span class="order-desc">
+          ${c.fill.name} + ${c.top.name}
+        </span>
+        <div class="patience">
+          <span id="patience-${i}"></span>
+        </div>
+        <small>완성 접시를 여기에 놓아 줘!</small>
+      </div>
     `).join('');
 }
 
 function renderGrills(){
-    el('grills').innerHTML=game.grills.map((g,i)=>{
-        const icons={
-            empty:'',
-            cooking:'🥣',
-            ready:g.fill?.emoji||'🐙',
-            burnt:'💨'
-        };
+  const captions={
+    empty:'재료를 올려 줘',
+    cooking:'굽는 중...',
+    ready:'접시로 끌어!',
+    burnt:'휴지통에 버려!'
+  };
 
-        const captions={
-            empty:'빈 판 · 클릭해서 굽기',
-            cooking:'굽는 중...',
-            ready:'완성! 빨리 클릭',
-            burnt:'탔다! 눌러서 버리기'
-        };
+  el('grills').innerHTML=
+    game.grills.map((g,i)=>{
+      const movable=
+        g.state==='ready'||g.state==='burnt';
 
-        return `
-        <button class="grill" onclick="tapGrill(${i})">
-            <div class="balls">
-                ${Array.from({length:6},()=>`
-                    <div class="ball ${g.state}">
-                        ${icons[g.state]}
-                    </div>
-                `).join('')}
-            </div>
-            <div class="grill-name">
-                ${i+1}번 판 ${g.fill?.emoji||'🍳'}
-            </div>
-            <div class="cookbar">
-                <span id="cook-${i}"></span>
-            </div>
-            <div class="micro">
-                ${captions[g.state]}
-            </div>
-        </button>`;
+      const em=
+        g.state==='cooking'?'🥣':
+        g.state==='ready'?(g.fill?.emoji||'🐙'):
+        g.state==='burnt'?'💨':'';
+
+      const source=movable?
+        `data-source="grill"
+         data-index="${i}"
+         data-emoji="${em||'🍡'}"
+         data-label="${
+           g.state==='burnt'?'탄 음식':'익은 타코야끼'
+         }"`:'';
+
+      return `
+        <div class="grill"
+             data-drop="grill"
+             data-index="${i}"
+             ${source}>
+          <div class="holes">
+            ${
+              Array.from({length:6},()=>`
+                <div class="ball ${g.state}">
+                  ${em}
+                </div>
+              `).join('')
+            }
+          </div>
+          <label>${i+1}번 조리판</label>
+          <div class="cookbar">
+            <span id="cook-${i}"></span>
+          </div>
+          <small>${captions[g.state]}</small>
+        </div>
+      `;
     }).join('');
 }
 
 function renderPlate(){
-    if(!game.plate){
-        el('plate').innerHTML='🍽️';
-        el('plate-note').textContent=
-            '익은 타코야끼를 클릭!';
-    }else{
-        el('plate').innerHTML=`
-            🐙<small>
-                ${game.plate.fill.name}
-                ${game.plate.top
-                    ?'+ '+game.plate.top.name
-                    :''}
-            </small>
-        `;
+  const plate=el('plate');
 
-        el('plate-note').textContent=game.plate.top
-            ?'주문에 맞는 손님 클릭!'
-            :'아래에서 토핑을 골라 줘!';
-    }
+  if(!game.plate){
+    plate.innerHTML='🍽️';
+    plate.removeAttribute('data-source');
 
-    renderToppings();
-}
-
-function selectFilling(i){
-    if(game.ended)return;
-
-    game.selected=fillings[i];
-    renderFillings();
-
-    tell(`${game.selected.name} 선택! 빈 판을 눌러!`);
-}
-
-function tapGrill(i){
-    if(game.ended)return;
-
-    let g=game.grills[i];
-
-    if(g.state==='empty'){
-        game.grills[i]={
-            state:'cooking',
-            fill:game.selected,
-            born:now()
-        };
-
-        tell(`${game.selected.name} 타코야끼 굽기 시작!`);
-
-    }else if(g.state==='cooking'){
-        tell('조금만 더 익혀 줘!');
-        return;
-
-    }else if(g.state==='ready'){
-        if(game.plate){
-            tell('접시가 꽉 찼어! 먼저 서빙해!');
-            return;
+    el('plate-help').textContent=
+      '익은 타코야끼를 끌어와!';
+  }else{
+    plate.innerHTML=`
+      🐙<span>
+        ${game.plate.fill.name}
+        ${
+          game.plate.top?
+          ' + '+game.plate.top.name:''
         }
+      </span>
+    `;
 
-        game.plate={
-            fill:g.fill,
-            top:null
-        };
+    plate.setAttribute('data-source','plate');
+    plate.setAttribute('data-emoji','🍡');
+    plate.setAttribute('data-label','완성 접시');
 
-        game.grills[i]={state:'empty'};
+    el('plate-help').textContent=
+      game.plate.top?
+      '손님에게 끌어다 줘!':
+      '토핑을 끌어다 놓아 줘!';
+  }
+}
 
-        tell('접시에 담았어! 토핑을 올려 줘.');
-        renderPlate();
+function renderSupplies(){
+  el('fillings').innerHTML=
+    fillings.map((v,i)=>`
+      <div class="item"
+           data-source="filling"
+           data-index="${i}"
+           data-emoji="${v.emoji}"
+           data-label="${v.name}">
+        <span class="emoji">${v.emoji}</span>
+        ${v.name}
+      </div>
+    `).join('');
 
-    }else{
-        game.grills[i]={state:'empty'};
-        tell('탄 타코야끼를 치웠어!');
+  el('toppings').innerHTML=
+    toppings.map((v,i)=>`
+      <div class="item"
+           data-source="topping"
+           data-index="${i}"
+           data-emoji="${v.emoji}"
+           data-label="${v.name}">
+        <span class="emoji">${v.emoji}</span>
+        ${v.name}
+      </div>
+    `).join('');
+}
+
+function handleDrop(kind,index,target,targetIndex){
+  if(game.ended)return;
+
+  // 속재료를 빈 조리판에 놓기
+  if(target==='grill'&&kind==='filling'){
+    const g=game.grills[targetIndex];
+
+    if(g.state!=='empty'){
+      tell('이 조리판은 사용 중이야!');
+      return;
     }
+
+    game.grills[targetIndex]={
+      state:'cooking',
+      fill:fillings[index],
+      born:now()
+    };
 
     renderGrills();
-}
+    tell(`${fillings[index].name} 타코야끼 굽기 시작!`);
+    return;
+  }
 
-function addTopping(i){
-    if(game.ended)return;
+  // 다 익은 타코야끼를 접시로 옮기기
+  if(target==='plate'&&kind==='grill'){
+    const g=game.grills[index];
 
-    if(!game.plate){
-        tell('먼저 익은 타코야끼를 접시에 올려!');
-        return;
+    if(g.state!=='ready'){
+      tell('익은 타코야끼만 접시에 올릴 수 있어!');
+      return;
     }
 
-    game.plate.top=toppings[i];
+    if(game.plate){
+      tell('접시가 이미 차 있어!');
+      return;
+    }
+
+    game.plate={
+      fill:g.fill,
+      top:null
+    };
+
+    game.grills[index]={state:'empty'};
+
+    renderGrills();
+    renderPlate();
+    tell('접시에 담았어! 토핑을 올려 줘.');
+    return;
+  }
+
+  // 토핑을 접시 위에 올리기
+  if(target==='plate'&&kind==='topping'){
+    if(!game.plate){
+      tell('먼저 타코야끼를 접시로 가져와!');
+      return;
+    }
+
+    game.plate.top=toppings[index];
 
     renderPlate();
-    tell('토핑 완료! 맞는 손님을 클릭!');
-}
+    tell('토핑 완료! 완성 접시를 손님에게 끌어다 줘!');
+    return;
+  }
 
-function serve(i){
-    if(game.ended)return;
-
-    if(!game.plate||!game.plate.top){
-        tell('타코야끼를 완성한 뒤 손님을 눌러!');
-        return;
+  // 완성 접시를 손님에게 서빙하기
+  if(target==='customer'&&kind==='plate'){
+    if(!game.plate?.top){
+      tell('토핑까지 올리고 서빙해 줘!');
+      return;
     }
 
-    const c=game.customers[i];
+    const c=game.customers[targetIndex];
 
     if(
-        c.fill.name===game.plate.fill.name &&
-        c.top.name===game.plate.top.name
+      c.fill.name===game.plate.fill.name &&
+      c.top.name===game.plate.top.name
     ){
-        const bonus=Math.min(game.combo,5)*20;
+      const points=
+        100+Math.min(game.combo,5)*20;
 
-        game.score+=100+bonus;
-        game.combo++;
-        game.best=Math.max(game.combo,game.best);
-        game.served++;
+      game.score+=points;
+      game.combo++;
+      game.best=Math.max(game.best,game.combo);
+      game.served++;
 
-        game.customers[i]=newCustomer();
+      game.customers[targetIndex]=newCustomer();
 
-        tell(`🎉 주문 성공! +${100+bonus}점`);
-
+      renderCustomers();
+      updateHud();
+      tell(`🎉 주문 성공! +${points}점`);
     }else{
-        loseLife('❌ 잘못 서빙했어!');
+      loseLife('❌ 잘못 서빙했어!');
     }
 
     game.plate=null;
+    renderPlate();
+    return;
+  }
 
-    if(!game.ended){
-        renderPlate();
-        renderCustomers();
-        updateHud();
+  // 휴지통으로 음식 버리기
+  if(target==='trash'){
+    if(kind==='plate'){
+      game.plate=null;
+      renderPlate();
+      tell('접시의 음식을 버렸어!');
+      return;
     }
+
+    if(kind==='grill'){
+      if(
+        !['ready','burnt'].includes(
+          game.grills[index].state
+        )
+      )return;
+
+      game.grills[index]={state:'empty'};
+
+      renderGrills();
+      tell('음식을 휴지통에 버렸어!');
+      return;
+    }
+  }
+
+  tell('여기에는 놓을 수 없어!');
 }
 
-function updateHud(){
-    el('level').textContent=game.level;
-    el('score').textContent=game.score;
-    el('combo').textContent=game.combo;
+// 마우스나 손가락을 따라 움직이는 음식 표시
+function updateGhost(e){
+  if(!drag)return;
 
-    el('lives').textContent=
-        '❤️'.repeat(game.lives)+
-        '🖤'.repeat(3-game.lives);
+  drag.ghost.style.left=e.clientX+'px';
+  drag.ghost.style.top=e.clientY+'px';
+
+  const target=document.elementFromPoint(
+    e.clientX,e.clientY
+  )?.closest('[data-drop]');
+
+  if(highlighted&&highlighted!==target){
+    highlighted.classList.remove('drop-over');
+  }
+
+  highlighted=target||null;
+
+  if(highlighted){
+    highlighted.classList.add('drop-over');
+  }
 }
 
-function end(win){
-    if(game.ended)return;
+// 드래그 시작
+document.addEventListener('pointerdown',e=>{
+  if(game?.ended||drag||e.button!==0)return;
 
-    game.ended=true;
+  const source=e.target.closest('[data-source]');
+  if(!source)return;
 
-    el('result-icon').textContent=win?'🏆':'💔';
+  e.preventDefault();
 
-    el('result-title').textContent=win
-        ?'5레벨 생존 성공!'
-        :'게임 오버!';
+  const ghost=document.createElement('div');
+  ghost.className='drag-ghost';
 
-    el('result-text').innerHTML=`
-        도달 레벨 <b>${game.level} / 5</b><br>
-        총 <b>${game.served}개</b> 완성<br>
-        최종 점수 <b>${game.score}점</b><br>
-        최고 콤보 <b>${game.best}</b><br>
-        놓친 주문 <b>${game.missed}</b>
-    `;
+  ghost.innerHTML=`
+    ${source.dataset.emoji||'🍡'}
+    <small>${source.dataset.label||'음식'}</small>
+  `;
 
-    el('overlay').classList.remove('hidden');
-}
+  document.body.appendChild(ghost);
 
-function tick(){
-    if(!game||game.ended)return;
+  drag={
+    pointerId:e.pointerId,
+    kind:source.dataset.source,
+    index:Number(source.dataset.index||0),
+    source,
+    ghost
+  };
 
-    const t=now();
+  source.classList.add('dragging-original');
+  updateGhost(e);
+});
 
-    const limit=LEVEL_TIMES[game.level-1];
+// 드래그 중 이동
+document.addEventListener(
+  'pointermove',
+  e=>{
+    if(drag&&e.pointerId===drag.pointerId){
+      e.preventDefault();
+      updateGhost(e);
+    }
+  },
+  {passive:false}
+);
 
-    const left=Math.max(
-        0,
-        limit-(t-game.levelStart)/1000
+// 드래그 종료
+function releaseDrag(e,cancel=false){
+  if(!drag||e.pointerId!==drag.pointerId)return;
+
+  const current=drag;
+
+  const destination=cancel?
+    null:
+    document.elementFromPoint(
+      e.clientX,e.clientY
+    )?.closest('[data-drop]');
+
+  current.source.classList.remove('dragging-original');
+  current.ghost.remove();
+
+  if(highlighted){
+    highlighted.classList.remove('drop-over');
+  }
+
+  highlighted=null;
+  drag=null;
+
+  if(destination){
+    handleDrop(
+      current.kind,
+      current.index,
+      destination.dataset.drop,
+      Number(destination.dataset.index||0)
     );
+  }
+}
 
-    el('time').textContent=Math.ceil(left);
+document.addEventListener(
+  'pointerup',
+  e=>releaseDrag(e)
+);
 
-    el('timer').classList.toggle('low',left<=10);
+document.addEventListener(
+  'pointercancel',
+  e=>releaseDrag(e,true)
+);
 
-    if(left<=0){
-        nextLevel();
-        return;
+// 게임 종료
+function end(won){
+  if(game.ended)return;
+
+  game.ended=true;
+
+  el('result-icon').textContent=won?'🏆':'💔';
+
+  el('result-title').textContent=
+    won?'5레벨 생존 성공!':'게임 오버!';
+
+  el('result-text').innerHTML=`
+    도달 레벨 <b>${game.level} / 5</b><br>
+    총 <b>${game.served}개</b> 완성<br>
+    최종 점수 <b>${game.score}점</b><br>
+    최고 콤보 <b>${game.best}</b><br>
+    놓친 주문 <b>${game.missed}</b>
+  `;
+
+  el('overlay').classList.remove('hidden');
+}
+
+// 실시간 게임 진행
+function tick(){
+  if(!game||game.ended)return;
+
+  const t=now();
+  const limit=LEVEL_TIMES[game.level-1];
+
+  const left=Math.max(
+    0,
+    limit-(t-game.levelStart)/1000
+  );
+
+  el('time').textContent=Math.ceil(left);
+
+  el('timer').classList.toggle(
+    'urgent',left<=10
+  );
+
+  if(left<=0){
+    advance();
+    return;
+  }
+
+  let needGrillRender=false;
+  let needCustomerRender=false;
+
+  game.grills.forEach((g,i)=>{
+    if(g.state==='empty')return;
+
+    const passed=t-g.born;
+
+    if(
+      g.state==='cooking' &&
+      passed>=COOK_MS
+    ){
+      g.state='ready';
+      needGrillRender=true;
     }
 
-    let grillChanged=false;
+    if(
+      g.state==='ready' &&
+      passed>=BURN_MS
+    ){
+      g.state='burnt';
 
-    game.grills.forEach((g,i)=>{
-        if(g.state==='empty')return;
+      game.score=Math.max(
+        0,game.score-10
+      );
 
-        const elapsed=t-g.born;
+      game.combo=0;
+      needGrillRender=true;
 
-        if(
-            g.state==='cooking' &&
-            elapsed>=COOK_MS
-        ){
-            g.state='ready';
-            grillChanged=true;
-        }
-
-        if(
-            g.state==='ready' &&
-            elapsed>=BURN_MS
-        ){
-            g.state='burnt';
-
-            game.score=Math.max(0,game.score-10);
-            game.combo=0;
-
-            grillChanged=true;
-
-            updateHud();
-            tell('🔥 타코야끼가 타버렸어! -10점');
-        }
-
-        const bar=el(`cook-${i}`);
-
-        if(bar){
-            bar.style.width=
-                `${Math.min(
-                    100,elapsed/BURN_MS*100
-                )}%`;
-
-            bar.style.background=
-                g.state==='ready'?'#71d56c':
-                g.state==='burnt'?'#ef665d':'#ffcc58';
-        }
-    });
-
-    if(grillChanged){
-        renderGrills();
+      updateHud();
+      tell('🔥 타코야끼가 탔어! -10점');
     }
 
-    let customerChanged=false;
+    const bar=el('cook-'+i);
 
-    for(let i=0;i<game.customers.length;i++){
-        const c=game.customers[i];
+    if(bar){
+      bar.style.width=
+        `${Math.min(100,passed/BURN_MS*100)}%`;
 
-        const remaining=
-            1-(t-c.born)/c.patience;
+      bar.style.background=
+        g.state==='ready'?'#75d66b':
+        g.state==='burnt'?'#e35e51':
+        '#ffd264';
+    }
+  });
 
-        const bar=el(`patience-${i}`);
+  if(needGrillRender){
+    renderGrills();
+  }
 
-        if(bar){
-            bar.style.width=
-                `${Math.max(0,remaining)*100}%`;
+  for(let i=0;i<game.customers.length;i++){
+    const c=game.customers[i];
 
-            bar.style.background=
-                remaining<.28?'#e35248':
-                remaining<.55?'#e6a942':'#65b56c';
-        }
+    const r=
+      1-(t-c.born)/c.patience;
 
-        if(remaining<=0){
-            game.missed++;
+    const bar=el('patience-'+i);
 
-            game.customers[i]=newCustomer();
-            customerChanged=true;
+    if(bar){
+      bar.style.width=
+        `${Math.max(0,r)*100}%`;
 
-            loseLife('⌛ 손님이 기다리다 떠났어!');
-
-            if(game.ended)return;
-        }
+      bar.style.background=
+        r<.3?'#e4584c':
+        r<.55?'#ecad46':
+        '#69b65a';
     }
 
-    if(customerChanged){
-        renderCustomers();
+    if(r<=0){
+      game.missed++;
+
+      game.customers[i]=newCustomer();
+      needCustomerRender=true;
+
+      loseLife('⌛ 손님이 기다리다 떠났어!');
+
+      if(game.ended)return;
     }
+  }
+
+  if(needCustomerRender){
+    renderCustomers();
+  }
 }
 
 restart();
@@ -1033,4 +832,4 @@ setInterval(tick,80);
 </script>
 </body>
 </html>
-""", height=900, scrolling=False)
+""",height=900,scrolling=False)
