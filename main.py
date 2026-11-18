@@ -2,7 +2,7 @@
 import streamlit as st
 
 # =====================================
-# 기본 페이지 설정
+# 기본 설정
 # =====================================
 
 st.set_page_config(
@@ -29,7 +29,7 @@ def return_home():
 # 공통 디자인
 # =====================================
 
-st.html("""
+st.html(r"""
 <style>
 [data-testid="stAppViewContainer"] {
     background: linear-gradient(
@@ -47,10 +47,6 @@ st.html("""
 
 [data-testid="stSidebar"] {
     background: #fff7eb;
-}
-
-[data-testid="stSidebar"] .block-container {
-    padding-top: 1.2rem;
 }
 
 [data-testid="stSidebar"] [data-testid="stPageLink"] {
@@ -74,19 +70,23 @@ st.html("""
 
 
 # =====================================
-# 홈 화면
+# 홈 페이지
 # =====================================
 
 def render_home():
 
-    st.html("""
+    st.html(r"""
     <style>
+
     .block-container {
         padding-top: clamp(3rem, 10vh, 6rem) !important;
     }
 
+    /* =========================
+       게임 시작 화면
+    ========================= */
+
     .hero {
-        position: relative;
         overflow: hidden;
         border: 7px solid #a85f3d;
         border-radius: 30px;
@@ -166,7 +166,7 @@ def render_home():
 
     .game-info {
         text-align: center;
-        margin: 8px auto 7px;
+        margin: 13px auto 10px;
         padding: 5px;
         font-size: 16px;
         font-weight: 900;
@@ -193,13 +193,18 @@ def render_home():
         transform: translateY(-2px);
     }
 
+    /* =========================
+       홈 안내 영역
+    ========================= */
+
     .lobby {
         background: #fff7e7;
         border: 5px solid #d69b70;
         border-radius: 24px;
         text-align: center;
         padding: 23px 18px;
-        box-shadow: 0 7px 0 #aa7854;
+        box-shadow: 0 7px #aa7854;
+        margin-bottom: 16px;
     }
 
     .lobby-title {
@@ -213,36 +218,118 @@ def render_home():
         color: #84543d;
         font-size: 16px;
         font-weight: 700;
-        line-height: 1.7;
+        line-height: 1.8;
     }
 
-    .menu-card {
-        background: #fff8e9;
-        border: 4px solid #e4b689;
-        border-radius: 22px;
-        text-align: center;
-        min-height: 180px;
-        padding: 19px 10px;
-        margin-top: 15px;
+    /* =========================
+       클릭 가능한 메뉴 카드
+    ========================= */
+
+    .st-key-card_taco button,
+    .st-key-card_okonomi button,
+    .st-key-card_decorate button {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 14px !important;
+
+        width: 100% !important;
+        min-height: 235px !important;
+        padding: 20px 12px !important;
+
+        border: 4px solid #e4b689 !important;
+        border-radius: 24px !important;
+
+        background: #fff8e9 !important;
+        color: #995338 !important;
+
+        box-shadow: 0 5px 0 #d29b70 !important;
+
+        transition:
+            transform 0.15s ease,
+            box-shadow 0.15s ease,
+            background 0.15s ease;
     }
 
-    .menu-emoji {
-        font-size: 55px;
+    /* 카드 제목 */
+    .st-key-card_taco button p,
+    .st-key-card_okonomi button p,
+    .st-key-card_decorate button p {
+        font-size: 23px !important;
+        font-weight: 900 !important;
+        color: #995338 !important;
+        margin: 0 !important;
+        line-height: 1.3 !important;
     }
 
-    .menu-title {
-        color: #995338;
-        font-size: 21px;
-        font-weight: 900;
-        margin: 8px auto;
+    /* 카드 상단 그림 */
+    .st-key-card_taco button::before,
+    .st-key-card_okonomi button::before,
+    .st-key-card_decorate button::before {
+        display: block;
+        font-size: 57px;
+        line-height: 1.2;
     }
 
-    .menu-description {
-        color: #906248;
+    .st-key-card_taco button::before {
+        content: "🐙";
+    }
+
+    .st-key-card_okonomi button::before {
+        content: "🍳";
+    }
+
+    .st-key-card_decorate button::before {
+        content: "🎨";
+    }
+
+    /* 카드 하단 설명 */
+    .st-key-card_taco button::after,
+    .st-key-card_okonomi button::after,
+    .st-key-card_decorate button::after {
+        display: block;
         font-size: 13px;
-        font-weight: 700;
-        line-height: 1.6;
+        line-height: 1.7;
+        font-weight: 800;
+        color: #976443;
+        white-space: pre-line;
+        text-align: center;
     }
+
+    .st-key-card_taco button::after {
+        content: "주문을 받고 빠르게 구워\A손님에게 서빙하세요!";
+    }
+
+    .st-key-card_okonomi button::after {
+        content: "반죽을 굽고 뒤집어\A주문을 완성하세요!";
+    }
+
+    .st-key-card_decorate button::after {
+        content: "나만의 포장마차를\A원하는 스타일로 꾸며 보세요!";
+    }
+
+    /* 마우스를 올렸을 때 */
+    .st-key-card_taco button:hover,
+    .st-key-card_okonomi button:hover,
+    .st-key-card_decorate button:hover {
+        background: #fff0d7 !important;
+        border-color: #d9905a !important;
+        transform: translateY(-5px);
+        box-shadow: 0 10px 0 #c68b61 !important;
+    }
+
+    /* 클릭했을 때 */
+    .st-key-card_taco button:active,
+    .st-key-card_okonomi button:active,
+    .st-key-card_decorate button:active {
+        transform: translateY(2px);
+        box-shadow: 0 2px 0 #c68b61 !important;
+    }
+
+    /* =========================
+       화면 높이가 작은 경우
+    ========================= */
 
     @media (max-height: 750px) {
         .block-container {
@@ -293,6 +380,10 @@ def render_home():
         }
     }
 
+    /* =========================
+       모바일
+    ========================= */
+
     @media (max-width: 700px) {
         .block-container {
             padding-left: 0.6rem !important;
@@ -324,20 +415,18 @@ def render_home():
             font-size: 27px;
         }
 
-        .menu-title {
-            font-size: 16px;
-        }
-
-        .menu-card {
-            min-height: 160px;
-            padding: 13px 5px;
+        .st-key-card_taco button,
+        .st-key-card_okonomi button,
+        .st-key-card_decorate button {
+            min-height: 195px !important;
         }
     }
+
     </style>
     """)
 
     # =====================================
-    # 게임 시작 전 첫 화면
+    # 게임 시작 전 화면
     # =====================================
 
     if not st.session_state.game_entered:
@@ -410,7 +499,7 @@ def render_home():
             )
 
     # =====================================
-    # 게임 시작 후 홈 화면
+    # 게임 선택 홈 화면
     # =====================================
 
     else:
@@ -424,9 +513,8 @@ def render_home():
 
             <div class="lobby-description">
                 어서 오세요!<br>
-                지금부터 나만의 포장마차를
-                운영해 보세요.<br><br>
-                원하는 게임을 선택해 주세요!
+                오늘은 어떤 가게를 운영해 볼까요?<br><br>
+                플레이할 메뉴를 선택해 주세요!
             </div>
 
         </div>
@@ -437,70 +525,49 @@ def render_home():
             gap="medium"
         )
 
+        # =================================
         # 타코야끼 카드
+        # =================================
+
         with col1:
 
-            st.html("""
-            <div class="menu-card">
-                <div class="menu-emoji">🐙</div>
-                <div class="menu-title">타코야끼</div>
-                <div class="menu-description">
-                    타코야끼를 빠르게 구워<br>
-                    손님에게 서빙하세요!
-                </div>
-            </div>
-            """)
-
-            st.page_link(
-                taco_page,
-                label="타코야끼 가게 입장하기",
+            if st.button(
+                "타코야끼",
+                key="card_taco",
                 use_container_width=True,
-            )
+            ):
+                st.switch_page(taco_page)
 
+        # =================================
         # 오코노미야끼 카드
+        # =================================
+
         with col2:
 
-            st.html("""
-            <div class="menu-card">
-                <div class="menu-emoji">🍳</div>
-                <div class="menu-title">오코노미야끼</div>
-                <div class="menu-description">
-                    주문에 맞춰<br>
-                    맛있는 오코노미야끼를 만드세요!
-                </div>
-            </div>
-            """)
-
-            st.page_link(
-                okonomi_page,
-                label="오코노미야끼 가게 입장하기",
+            if st.button(
+                "오코노미야끼",
+                key="card_okonomi",
                 use_container_width=True,
-            )
+            ):
+                st.switch_page(okonomi_page)
 
+        # =================================
         # 배경 꾸미기 카드
+        # =================================
+
         with col3:
 
-            st.html("""
-            <div class="menu-card">
-                <div class="menu-emoji">🎨</div>
-                <div class="menu-title">배경 꾸미기</div>
-                <div class="menu-description">
-                    배경과 캐릭터를 선택해<br>
-                    나만의 포장마차를 꾸며 보세요!
-                </div>
-            </div>
-            """)
-
-            st.page_link(
-                decorate_page,
-                label="배경 꾸미러 가기",
+            if st.button(
+                "배경 꾸미기",
+                key="card_decorate",
                 use_container_width=True,
-            )
+            ):
+                st.switch_page(decorate_page)
 
         st.html("""
         <div class="game-info">
-            ❤️ 3개의 목숨으로 시작하고
-            5레벨까지 생존하면 승리합니다!
+            ❤️ 목숨 3개 · ⭐ 5레벨 도전<br>
+            카드를 눌러 원하는 가게에 입장하세요!
         </div>
         """)
 
@@ -536,7 +603,7 @@ decorate_page = st.Page(
 
 
 # =====================================
-# 자동 메뉴 대신 직접 만든 메뉴 사용
+# 페이지 이동
 # =====================================
 
 pg = st.navigation(
@@ -560,7 +627,9 @@ if st.session_state.game_entered:
 
         st.title("🏮 와글와글 포장마차")
 
-        st.caption("원하는 메뉴를 선택해 주세요!")
+        st.caption(
+            "원하는 메뉴를 선택해 주세요!"
+        )
 
         st.divider()
 
