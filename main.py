@@ -2,7 +2,7 @@
 import streamlit as st
 
 # =====================================
-# 기본 설정
+# 기본 페이지 설정
 # =====================================
 
 st.set_page_config(
@@ -25,11 +25,13 @@ def return_home():
 
 
 # =====================================
-# 디자인
+# 전체 화면 디자인
 # =====================================
 
 st.html("""
 <style>
+
+/* 전체 배경 */
 [data-testid="stAppViewContainer"] {
     background: linear-gradient(
         180deg,
@@ -39,104 +41,153 @@ st.html("""
     );
 }
 
+/* Streamlit 상단 여백 축소 */
 .block-container {
-    max-width: 1150px;
-    padding-top: 2rem;
-    padding-bottom: 3rem;
+    max-width: 1100px !important;
+    padding-top: 0.7rem !important;
+    padding-bottom: 1rem !important;
+}
+
+/* 기본 상단 영역 최소화 */
+[data-testid="stHeader"] {
+    height: 2.5rem;
+    background: transparent;
+}
+
+/* 요소 사이 여백 조절 */
+[data-testid="stVerticalBlock"] {
+    gap: 0.65rem;
 }
 
 #MainMenu, footer {
     visibility: hidden;
 }
 
+/* =====================================
+   첫 화면
+===================================== */
+
 .hero {
     position: relative;
     overflow: hidden;
-    min-height: 470px;
-    border: 8px solid #a85f3d;
-    border-radius: 30px;
-    padding: 30px 20px;
+
+    min-height: 0;
+    border: 7px solid #a85f3d;
+    border-radius: 26px;
+
+    padding: 12px 20px 17px;
     text-align: center;
+
     background: linear-gradient(
         180deg,
         #6684b3 0%,
         #f3ada0 55%,
         #ffdc9e 100%
     );
-    box-shadow: 0 12px 0 #915637;
+
+    box-shadow: 0 8px 0 #915637;
 }
 
+/* 게임 제목 */
 .hero-title {
     display: inline-block;
-    margin: 30px auto 15px;
-    padding: 15px 30px;
-    border: 5px solid #ffe9ae;
-    border-radius: 20px;
+
+    margin: 4px auto 7px;
+    padding: 9px 23px;
+
+    border: 4px solid #ffe9ae;
+    border-radius: 17px;
+
     background: #a84839;
     color: #fff2ca;
-    font-size: clamp(29px, 4.3vw, 56px);
+
+    font-size: clamp(26px, 3.5vw, 43px);
     font-weight: 900;
+
     text-shadow: 2px 3px #6d332c;
-    box-shadow: 0 7px #74372c;
+    box-shadow: 0 5px #74372c;
 }
 
+/* 부제목 */
 .hero-subtitle {
     color: #69402d;
-    font-size: 21px;
+
+    font-size: 17px;
     font-weight: 900;
-    margin: 15px auto 25px;
-    line-height: 1.7;
+
+    margin: 8px auto 13px;
+    line-height: 1.5;
 }
 
+/* 포장마차 전체 */
 .stall {
-    max-width: 660px;
+    max-width: 570px;
     margin: 0 auto;
-    border: 6px solid #965537;
-    border-radius: 25px;
+
+    border: 5px solid #965537;
+    border-radius: 21px;
+
     background: #fff0ce;
     overflow: hidden;
-    box-shadow: 0 12px 0 #74442e;
+
+    box-shadow: 0 7px 0 #74442e;
 }
 
+/* 포장마차 지붕 */
 .stall-roof {
-    padding: 12px;
-    font-size: 32px;
+    padding: 6px;
+    font-size: 25px;
+
     background: repeating-linear-gradient(
         90deg,
-        #c95045 0 85px,
-        #ffe8c7 85px 170px
+        #c95045 0 73px,
+        #ffe8c7 73px 146px
     );
-    border-bottom: 5px solid #965537;
+
+    border-bottom: 4px solid #965537;
 }
 
+/* 음식 그림 */
 .stall-food {
-    padding: 20px 10px;
-    font-size: clamp(38px, 5vw, 62px);
+    padding: 12px 8px;
+
+    font-size: clamp(33px, 4vw, 46px);
+    letter-spacing: 8px;
+}
+
+/* 포장마차 간판 */
+.stall-sign {
+    padding: 8px;
+
+    background: #8d4b32;
+    color: #fff3d6;
+
+    font-weight: 900;
+    font-size: 14px;
+}
+
+/* 손님 캐릭터 */
+.customers {
+    font-size: 30px;
+    margin-top: 12px;
     letter-spacing: 10px;
 }
 
-.stall-sign {
-    padding: 10px;
-    background: #8d4b32;
-    color: #fff3d6;
-    font-weight: 900;
-    font-size: 17px;
-}
-
-.customers {
-    font-size: 39px;
-    margin-top: 17px;
-    letter-spacing: 14px;
-}
-
+/* 게임 안내 */
 .game-info {
     text-align: center;
-    margin: 22px auto;
-    padding: 12px;
-    font-size: 17px;
+
+    margin: 6px auto 5px;
+    padding: 5px;
+
+    font-size: 15px;
     font-weight: 900;
     color: #855337;
 }
+
+/* =====================================
+   게임 시작 버튼
+===================================== */
 
 .st-key-game_start_button button {
     background: linear-gradient(
@@ -144,13 +195,16 @@ st.html("""
         #ffb06e,
         #e5754b
     ) !important;
+
     color: white !important;
     border: 3px solid #ab542e !important;
-    border-radius: 19px !important;
-    min-height: 76px !important;
-    font-size: 24px !important;
+    border-radius: 17px !important;
+
+    min-height: 60px !important;
+    font-size: 21px !important;
     font-weight: 900 !important;
-    box-shadow: 0 7px 0 #a05233 !important;
+
+    box-shadow: 0 5px 0 #a05233 !important;
 }
 
 .st-key-game_start_button button:hover {
@@ -158,97 +212,177 @@ st.html("""
     transform: translateY(-2px);
 }
 
+/* =====================================
+   게임 선택 화면
+===================================== */
+
 .lobby {
     background: #fff7e7;
     border: 5px solid #d69b70;
-    border-radius: 27px;
+    border-radius: 24px;
+
     text-align: center;
-    padding: 30px 20px;
-    box-shadow: 0 8px #aa7854;
+    padding: 23px 18px;
+
+    box-shadow: 0 7px #aa7854;
 }
 
 .lobby-title {
     color: #9a4b31;
-    font-size: 36px;
+
+    font-size: clamp(25px, 3vw, 34px);
     font-weight: 900;
-    margin-bottom: 15px;
+
+    margin-bottom: 10px;
 }
 
 .lobby-description {
     color: #84543d;
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 1.8;
-}
 
-.menu-card {
-    background: #fff8e9;
-    border: 4px solid #e4b689;
-    border-radius: 23px;
-    text-align: center;
-    min-height: 195px;
-    padding: 22px 10px;
-    margin-top: 20px;
-}
-
-.menu-emoji {
-    font-size: 60px;
-}
-
-.menu-title {
-    color: #995338;
-    font-size: 22px;
-    font-weight: 900;
-    margin: 10px auto;
-}
-
-.menu-description {
-    color: #906248;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 1.7;
 }
 
-@media(max-width:700px) {
+/* 메뉴 카드 */
+.menu-card {
+    background: #fff8e9;
+    border: 4px solid #e4b689;
+    border-radius: 22px;
+
+    text-align: center;
+    min-height: 180px;
+
+    padding: 19px 10px;
+    margin-top: 15px;
+}
+
+.menu-emoji {
+    font-size: 55px;
+}
+
+.menu-title {
+    color: #995338;
+
+    font-size: 21px;
+    font-weight: 900;
+
+    margin: 8px auto;
+}
+
+.menu-description {
+    color: #906248;
+
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.6;
+}
+
+/* =====================================
+   창 높이가 작은 경우
+===================================== */
+
+@media (max-height: 750px) {
+
+    .block-container {
+        padding-top: 0.35rem !important;
+    }
+
     .hero {
-        min-height: 400px;
-        padding: 20px 10px;
+        padding: 8px 15px 12px;
     }
 
     .hero-title {
-        padding: 12px;
-        margin-top: 20px;
-        font-size: 28px;
+        font-size: 32px;
+        padding: 7px 16px;
     }
 
     .hero-subtitle {
-        font-size: 16px;
+        font-size: 15px;
+        margin: 6px auto 10px;
+    }
+
+    .stall-roof {
+        font-size: 22px;
+        padding: 4px;
+    }
+
+    .stall-food {
+        font-size: 36px;
+        padding: 7px;
+    }
+
+    .customers {
+        font-size: 27px;
+        margin-top: 7px;
+    }
+
+    .game-info {
+        font-size: 13px;
+    }
+
+    .st-key-game_start_button button {
+        min-height: 52px !important;
+        font-size: 18px !important;
+    }
+}
+
+/* =====================================
+   모바일 화면
+===================================== */
+
+@media (max-width: 700px) {
+
+    .block-container {
+        padding-left: 0.6rem !important;
+        padding-right: 0.6rem !important;
+    }
+
+    .hero {
+        padding: 15px 8px;
+        border-width: 5px;
+    }
+
+    .hero-title {
+        font-size: 25px;
+        padding: 9px;
+    }
+
+    .hero-subtitle {
+        font-size: 15px;
     }
 
     .stall-food {
         letter-spacing: 2px;
+        font-size: 35px;
     }
 
     .customers {
         letter-spacing: 3px;
-        font-size: 30px;
+        font-size: 27px;
     }
 
     .menu-title {
         font-size: 16px;
     }
+
+    .menu-card {
+        min-height: 160px;
+        padding: 13px 5px;
+    }
 }
+
 </style>
 """)
 
 
 # =====================================
-# 첫 화면
+# 1. 게임 첫 화면
 # =====================================
 
 if not st.session_state.game_entered:
 
-    # 시작 전에는 사이드바 숨기기
+    # 시작 화면에서는 사이드바 숨기기
     st.html("""
     <style>
     [data-testid="stSidebar"],
@@ -259,7 +393,6 @@ if not st.session_state.game_entered:
     </style>
     """)
 
-    # HTML 전용 출력 방식
     st.html("""
     <div class="hero">
 
@@ -297,8 +430,10 @@ if not st.session_state.game_entered:
 
     st.html("""
     <div class="game-info">
-        ❤️ 목숨 3개 &nbsp;·&nbsp;
-        ⭐ 5레벨 도전 &nbsp;·&nbsp;
+        ❤️ 목숨 3개
+        &nbsp; · &nbsp;
+        ⭐ 5레벨 도전
+        &nbsp; · &nbsp;
         🍳 2가지 요리
     </div>
     """)
@@ -317,12 +452,11 @@ if not st.session_state.game_entered:
 
 
 # =====================================
-# 게임 시작 후 메뉴 선택
+# 2. 게임 시작 후 메뉴 선택
 # =====================================
 
 else:
 
-    # 사이드바
     with st.sidebar:
 
         st.title("🏮 와글와글 포장마차")
@@ -354,7 +488,6 @@ else:
             use_container_width=True,
         )
 
-    # 환영 화면
     st.html("""
     <div class="lobby">
 
@@ -373,14 +506,11 @@ else:
     </div>
     """)
 
-    st.write("")
-
     col1, col2, col3 = st.columns(
         3,
         gap="medium"
     )
 
-    # 타코야끼 메뉴
     with col1:
 
         st.html("""
@@ -408,7 +538,6 @@ else:
             use_container_width=True,
         )
 
-    # 오코노미야끼 메뉴
     with col2:
 
         st.html("""
@@ -436,7 +565,6 @@ else:
             use_container_width=True,
         )
 
-    # 배경 꾸미기 메뉴
     with col3:
 
         st.html("""
