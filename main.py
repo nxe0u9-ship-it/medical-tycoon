@@ -45,7 +45,6 @@ st.html("""
     height: 2.5rem;
 }
 
-/* 사이드바 제목과 메뉴 */
 [data-testid="stSidebar"] {
     background: #fff7eb;
 }
@@ -54,7 +53,6 @@ st.html("""
     padding-top: 1.2rem;
 }
 
-/* 기본 버튼 및 메뉴 */
 [data-testid="stSidebar"] [data-testid="stPageLink"] {
     border-radius: 12px;
 }
@@ -63,7 +61,6 @@ st.html("""
     background: #f8dfc9;
 }
 
-/* 기본 여백 */
 .block-container {
     max-width: 1200px;
     padding-bottom: 1.5rem;
@@ -77,7 +74,7 @@ st.html("""
 
 
 # =====================================
-# 게임 메인 화면
+# 홈 화면
 # =====================================
 
 def render_home():
@@ -202,7 +199,7 @@ def render_home():
         border-radius: 24px;
         text-align: center;
         padding: 23px 18px;
-        box-shadow: 0 7px #aa7854;
+        box-shadow: 0 7px 0 #aa7854;
     }
 
     .lobby-title {
@@ -339,9 +336,9 @@ def render_home():
     </style>
     """)
 
-    # =================================
+    # =====================================
     # 게임 시작 전 첫 화면
-    # =================================
+    # =====================================
 
     if not st.session_state.game_entered:
 
@@ -412,9 +409,9 @@ def render_home():
                 on_click=enter_game,
             )
 
-    # =================================
-    # 게임 선택 화면
-    # =================================
+    # =====================================
+    # 게임 시작 후 홈 화면
+    # =====================================
 
     else:
 
@@ -440,16 +437,13 @@ def render_home():
             gap="medium"
         )
 
+        # 타코야끼 카드
         with col1:
 
             st.html("""
             <div class="menu-card">
-                <div class="menu-emoji">
-                    🐙
-                </div>
-                <div class="menu-title">
-                    타코야끼
-                </div>
+                <div class="menu-emoji">🐙</div>
+                <div class="menu-title">타코야끼</div>
                 <div class="menu-description">
                     타코야끼를 빠르게 구워<br>
                     손님에게 서빙하세요!
@@ -459,20 +453,17 @@ def render_home():
 
             st.page_link(
                 taco_page,
-                label="🐙 타코야끼 가게 입장하기",
+                label="타코야끼 가게 입장하기",
                 use_container_width=True,
             )
 
+        # 오코노미야끼 카드
         with col2:
 
             st.html("""
             <div class="menu-card">
-                <div class="menu-emoji">
-                    🍳
-                </div>
-                <div class="menu-title">
-                    오코노미야끼
-                </div>
+                <div class="menu-emoji">🍳</div>
+                <div class="menu-title">오코노미야끼</div>
                 <div class="menu-description">
                     주문에 맞춰<br>
                     맛있는 오코노미야끼를 만드세요!
@@ -482,20 +473,17 @@ def render_home():
 
             st.page_link(
                 okonomi_page,
-                label="🍳 오코노미야끼 가게 입장하기",
+                label="오코노미야끼 가게 입장하기",
                 use_container_width=True,
             )
 
+        # 배경 꾸미기 카드
         with col3:
 
             st.html("""
             <div class="menu-card">
-                <div class="menu-emoji">
-                    🎨
-                </div>
-                <div class="menu-title">
-                    배경 꾸미기
-                </div>
+                <div class="menu-emoji">🎨</div>
+                <div class="menu-title">배경 꾸미기</div>
                 <div class="menu-description">
                     배경과 캐릭터를 선택해<br>
                     나만의 포장마차를 꾸며 보세요!
@@ -505,7 +493,7 @@ def render_home():
 
             st.page_link(
                 decorate_page,
-                label="🎨 배경 꾸미러 가기",
+                label="배경 꾸미러 가기",
                 use_container_width=True,
             )
 
@@ -523,7 +511,7 @@ def render_home():
 
 home_page = st.Page(
     render_home,
-    title="게임 선택",
+    title="홈",
     icon="🏠",
     default=True,
 )
@@ -572,33 +560,31 @@ if st.session_state.game_entered:
 
         st.title("🏮 와글와글 포장마차")
 
-        st.caption(
-            "원하는 메뉴를 선택해 주세요!"
-        )
+        st.caption("원하는 메뉴를 선택해 주세요!")
 
         st.divider()
 
         st.page_link(
             home_page,
-            label="🏠 게임 선택",
+            label="홈",
             use_container_width=True,
         )
 
         st.page_link(
             taco_page,
-            label="🐙 타코야끼",
+            label="타코야끼",
             use_container_width=True,
         )
 
         st.page_link(
             okonomi_page,
-            label="🍳 오코노미야끼",
+            label="오코노미야끼",
             use_container_width=True,
         )
 
         st.page_link(
             decorate_page,
-            label="🎨 배경 꾸미기",
+            label="배경 꾸미기",
             use_container_width=True,
         )
 
