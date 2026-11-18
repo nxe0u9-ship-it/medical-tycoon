@@ -41,20 +41,20 @@ st.html("""
     );
 }
 
-/* Streamlit 상단 여백 축소 */
+/* 화면 전체 너비와 상단 여백 */
 .block-container {
-    max-width: 1100px !important;
-    padding-top: 0.7rem !important;
+    max-width: 1200px !important;
+    padding-top: clamp(3rem, 12vh, 7rem) !important;
     padding-bottom: 1rem !important;
 }
 
-/* 기본 상단 영역 최소화 */
+/* Streamlit 기본 상단 영역 */
 [data-testid="stHeader"] {
     height: 2.5rem;
     background: transparent;
 }
 
-/* 요소 사이 여백 조절 */
+/* 요소 간격 */
 [data-testid="stVerticalBlock"] {
     gap: 0.65rem;
 }
@@ -72,10 +72,11 @@ st.html("""
     overflow: hidden;
 
     min-height: 0;
-    border: 7px solid #a85f3d;
-    border-radius: 26px;
 
-    padding: 12px 20px 17px;
+    border: 7px solid #a85f3d;
+    border-radius: 30px;
+
+    padding: 22px 25px 28px;
     text-align: center;
 
     background: linear-gradient(
@@ -92,8 +93,8 @@ st.html("""
 .hero-title {
     display: inline-block;
 
-    margin: 4px auto 7px;
-    padding: 9px 23px;
+    margin: 10px auto 13px;
+    padding: 12px 28px;
 
     border: 4px solid #ffe9ae;
     border-radius: 17px;
@@ -101,7 +102,7 @@ st.html("""
     background: #a84839;
     color: #fff2ca;
 
-    font-size: clamp(26px, 3.5vw, 43px);
+    font-size: clamp(32px, 4vw, 50px);
     font-weight: 900;
 
     text-shadow: 2px 3px #6d332c;
@@ -112,16 +113,16 @@ st.html("""
 .hero-subtitle {
     color: #69402d;
 
-    font-size: 17px;
+    font-size: 19px;
     font-weight: 900;
 
-    margin: 8px auto 13px;
+    margin: 12px auto 18px;
     line-height: 1.5;
 }
 
 /* 포장마차 전체 */
 .stall {
-    max-width: 570px;
+    max-width: 650px;
     margin: 0 auto;
 
     border: 5px solid #965537;
@@ -135,8 +136,8 @@ st.html("""
 
 /* 포장마차 지붕 */
 .stall-roof {
-    padding: 6px;
-    font-size: 25px;
+    padding: 10px;
+    font-size: 29px;
 
     background: repeating-linear-gradient(
         90deg,
@@ -149,9 +150,9 @@ st.html("""
 
 /* 음식 그림 */
 .stall-food {
-    padding: 12px 8px;
+    padding: 17px 10px;
 
-    font-size: clamp(33px, 4vw, 46px);
+    font-size: 53px;
     letter-spacing: 8px;
 }
 
@@ -168,8 +169,8 @@ st.html("""
 
 /* 손님 캐릭터 */
 .customers {
-    font-size: 30px;
-    margin-top: 12px;
+    font-size: 35px;
+    margin-top: 17px;
     letter-spacing: 10px;
 }
 
@@ -177,10 +178,10 @@ st.html("""
 .game-info {
     text-align: center;
 
-    margin: 6px auto 5px;
+    margin: 8px auto 7px;
     padding: 5px;
 
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 900;
     color: #855337;
 }
@@ -200,8 +201,8 @@ st.html("""
     border: 3px solid #ab542e !important;
     border-radius: 17px !important;
 
-    min-height: 60px !important;
-    font-size: 21px !important;
+    min-height: 68px !important;
+    font-size: 23px !important;
     font-weight: 900 !important;
 
     box-shadow: 0 5px 0 #a05233 !important;
@@ -279,27 +280,32 @@ st.html("""
 }
 
 /* =====================================
-   창 높이가 작은 경우
+   높이가 작은 화면
 ===================================== */
 
 @media (max-height: 750px) {
 
     .block-container {
-        padding-top: 0.35rem !important;
+        padding-top: 2rem !important;
     }
 
     .hero {
-        padding: 8px 15px 12px;
+        padding: 12px 15px 16px;
     }
 
     .hero-title {
         font-size: 32px;
         padding: 7px 16px;
+        margin: 5px auto 9px;
     }
 
     .hero-subtitle {
         font-size: 15px;
         margin: 6px auto 10px;
+    }
+
+    .stall {
+        max-width: 550px;
     }
 
     .stall-roof {
@@ -308,13 +314,13 @@ st.html("""
     }
 
     .stall-food {
-        font-size: 36px;
-        padding: 7px;
+        padding: 9px;
+        font-size: 40px;
     }
 
     .customers {
-        font-size: 27px;
-        margin-top: 7px;
+        font-size: 29px;
+        margin-top: 9px;
     }
 
     .game-info {
@@ -336,6 +342,7 @@ st.html("""
     .block-container {
         padding-left: 0.6rem !important;
         padding-right: 0.6rem !important;
+        padding-top: 1.5rem !important;
     }
 
     .hero {
@@ -382,7 +389,7 @@ st.html("""
 
 if not st.session_state.game_entered:
 
-    # 시작 화면에서는 사이드바 숨기기
+    # 첫 화면에서는 사이드바 숨기기
     st.html("""
     <style>
     [data-testid="stSidebar"],
@@ -393,6 +400,7 @@ if not st.session_state.game_entered:
     </style>
     """)
 
+    # 첫 화면 그림
     st.html("""
     <div class="hero">
 
@@ -428,6 +436,7 @@ if not st.session_state.game_entered:
     </div>
     """)
 
+    # 게임 정보
     st.html("""
     <div class="game-info">
         ❤️ 목숨 3개
@@ -438,6 +447,7 @@ if not st.session_state.game_entered:
     </div>
     """)
 
+    # 시작 버튼
     left, center, right = st.columns(
         [1, 1.5, 1]
     )
@@ -457,6 +467,7 @@ if not st.session_state.game_entered:
 
 else:
 
+    # 사이드바 메뉴
     with st.sidebar:
 
         st.title("🏮 와글와글 포장마차")
@@ -488,6 +499,7 @@ else:
             use_container_width=True,
         )
 
+    # 게임 선택 화면
     st.html("""
     <div class="lobby">
 
@@ -511,6 +523,7 @@ else:
         gap="medium"
     )
 
+    # 타코야끼
     with col1:
 
         st.html("""
@@ -538,6 +551,7 @@ else:
             use_container_width=True,
         )
 
+    # 오코노미야끼
     with col2:
 
         st.html("""
@@ -565,6 +579,7 @@ else:
             use_container_width=True,
         )
 
+    # 배경 꾸미기
     with col3:
 
         st.html("""
