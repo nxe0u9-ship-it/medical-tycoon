@@ -3,51 +3,44 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 st.set_page_config(
-    page_title="와글와글 포장마차 - 타코야끼",
+    page_title="타코야끼 | 와글와글 포장마차",
     page_icon="🐙",
     layout="wide",
-    initial_sidebar_state="collapsed",
 )
 
 st.markdown("""
 <style>
-#MainMenu, footer, header {
-    visibility: hidden;
-}
 .block-container {
     max-width: 100% !important;
-    padding: 0 !important;
+    padding: 0.5rem !important;
 }
 [data-testid="stAppViewContainer"] {
-    background: #25334b;
+    background: #fff0d8;
 }
 iframe {
+    border: none;
     display: block;
-    border: 0;
 }
 </style>
 """, unsafe_allow_html=True)
 
 components.html(r"""
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport"
-      content="width=device-width,initial-scale=1">
+      content="width=device-width,initial-scale=1.0">
 
 <style>
 * {
     box-sizing: border-box;
 }
 
-html, body {
+body {
     margin: 0;
-    height: 100%;
-    font-family: 'Malgun Gothic',
-                 'Apple SD Gothic Neo',
-                 sans-serif;
-    color: #583a28;
+    font-family: 'Malgun Gothic', sans-serif;
+    color: #68412b;
 }
 
 button {
@@ -57,191 +50,134 @@ button {
 
 .game {
     position: relative;
-    isolation: isolate;
-    min-height: 900px;
-    padding: 10px 12px 26px;
+    min-height: 850px;
     overflow: hidden;
     background: linear-gradient(
-        #536fa1 0%,
-        #edb69e 47%,
-        #eec995 80%
+        #536c9b 0%,
+        #e9a9a0 40%,
+        #f3d7a5 70%,
+        #bb8258 100%
     );
+    padding: 15px;
+    border-radius: 20px;
 }
 
-.skyline {
+.decor {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -2;
-}
-
-.game:before {
-    content: "";
-    position: absolute;
-    inset: 35% 0 0;
-    z-index: -1;
-    background: linear-gradient(
-        #4b252f0a,
-        #51322655
-    );
-}
-
-.lanterns {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 90px;
+    top: 65px;
+    width: 95%;
+    left: 2.5%;
     display: flex;
     justify-content: space-between;
-    padding: 0 7%;
-    font-size: 39px;
+    font-size: 48px;
     pointer-events: none;
-    z-index: 0;
-    filter: drop-shadow(1px 5px 4px #30201877);
 }
 
-.hud {
+.header {
     position: relative;
-    z-index: 2;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     gap: 10px;
-    max-width: 1320px;
-    margin: auto;
+    flex-wrap: wrap;
+    z-index: 2;
 }
 
 .logo {
-    font-size: 23px;
-    font-weight: 900;
-    background: #fff5d8;
-    border: 4px solid #a85935;
+    background: #fff1ce;
+    border: 4px solid #a85d37;
+    color: #95472e;
     border-radius: 18px;
-    padding: 9px 17px;
-    box-shadow: 0 5px #61372277;
-    color: #a34524;
-    white-space: nowrap;
+    padding: 12px;
+    font-size: 22px;
+    font-weight: 900;
 }
 
-.hud-items {
+.stats {
     display: flex;
-    gap: 7px;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .stat {
-    border: 3px solid #fff2c6;
-    background: #6e4638ed;
-    color: #fff9e8;
-    border-radius: 15px;
-    padding: 6px 11px;
-    min-width: 85px;
+    background: #794b3b;
+    color: white;
+    border: 3px solid #f1d49b;
+    border-radius: 14px;
+    padding: 9px;
     text-align: center;
-    font-size: 20px;
+    min-width: 90px;
     font-weight: 900;
-    box-shadow: 0 5px #4c332d77;
+    font-size: 20px;
 }
 
 .stat small {
     display: block;
-    font-size: 10px;
-    font-weight: 700;
-    color: #ffebc0;
+    font-size: 11px;
+    color: #ffe1b7;
 }
 
-.stat.timer {
-    background: #b64b43;
-    min-width: 95px;
-}
-
-.stat.timer.urgent {
-    animation: alert .45s infinite alternate;
-}
-
-@keyframes alert {
-    to {
-        background: #ed352e;
-        transform: scale(1.04);
-    }
-}
-
-.hearts {
-    font-size: 19px;
-    white-space: nowrap;
+.timer {
+    background: #c55548;
 }
 
 .sign {
     position: relative;
-    z-index: 1;
-    width: max-content;
-    margin: 8px auto 35px;
-    padding: 6px 25px;
-    border-radius: 5px 5px 15px 15px;
-    border: 4px solid #efbf7f;
-    color: #fff5d4;
-    background: #944633;
-    font-size: 22px;
+    width: fit-content;
+    max-width: 100%;
+    margin: 18px auto 45px;
+    padding: 12px 30px;
+    background: #934a35;
+    border: 5px solid #f2ca87;
+    border-radius: 16px;
+    color: #fff6da;
+    font-size: 23px;
     font-weight: 900;
-    box-shadow: 0 7px #653121aa;
     text-align: center;
+    box-shadow: 0 7px #683b29;
 }
 
 .customers {
-    position: relative;
-    z-index: 2;
-    max-width: 1120px;
-    margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 12px;
+    max-width: 1050px;
+    margin: 0 auto 20px;
 }
 
 .customer {
-    position: relative;
-    min-height: 152px;
-    padding: 13px 8px 10px;
-    background: #fff1d5;
-    border: 4px solid #dea262;
+    min-height: 160px;
+    padding: 13px;
+    border: 4px solid #d49d65;
     border-radius: 20px;
-    box-shadow: 0 7px #8151338c;
+    background: #fff4dd;
+    text-align: center;
+    box-shadow: 0 7px #9d693f;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: space-around;
+    flex-direction: column;
     gap: 5px;
-    text-align: center;
-    transition: border .12s, transform .12s;
 }
 
-.customer .face {
-    position: absolute;
-    left: 15px;
-    top: -35px;
-    font-size: 51px;
-    filter: drop-shadow(0 3px 1px #ffefcd);
+.face {
+    font-size: 38px;
 }
 
 .customer strong {
-    color: #a65534;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .order {
-    font-size: 26px;
-    font-weight: 900;
-    white-space: nowrap;
-}
-
-.order-desc {
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 900;
 }
 
 .patience {
-    height: 10px;
     width: 90%;
-    border-radius: 12px;
-    background: #e6d4b4;
+    height: 12px;
+    background: #dfc29d;
+    border-radius: 10px;
     overflow: hidden;
 }
 
@@ -249,257 +185,200 @@ button {
     display: block;
     height: 100%;
     width: 100%;
-    background: #6aae55;
-}
-
-.customer small {
-    color: #916347;
-    font-size: 11px;
-    font-weight: 900;
+    background: #70b963;
 }
 
 .counter {
-    position: relative;
-    max-width: 1240px;
-    margin: 21px auto 0;
-    padding: 14px 18px 18px;
-    border: 9px solid #9a5736;
-    border-radius: 27px 27px 35px 35px;
+    max-width: 1200px;
+    margin: auto;
+    padding: 16px;
     background: repeating-linear-gradient(
         0deg,
-        #bb7a48 0 24px,
-        #c98752 24px 49px
+        #b87648 0 24px,
+        #c88958 24px 48px
     );
-    box-shadow:
-        0 14px #663b2b,
-        0 25px 30px #39232066;
+    border: 8px solid #8e5334;
+    border-radius: 25px;
+    box-shadow: 0 12px #643b28;
 }
 
-.counter-title {
-    font-size: 15px;
-    letter-spacing: 2px;
-    font-weight: 900;
+.counter h3 {
     text-align: center;
-    color: #ffefc7;
-    text-shadow: 0 2px #754223;
-    margin-bottom: 12px;
+    color: #fff3d4;
+    text-shadow: 0 2px #73472e;
+    margin: 0 0 15px;
 }
 
-.station-row {
+.kitchen {
     display: grid;
-    grid-template-columns:
-        minmax(0, 1.8fr)
-        minmax(220px, .75fr);
+    grid-template-columns: minmax(0,2fr) minmax(170px,1fr);
     gap: 14px;
 }
 
 .grills {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3,minmax(0,1fr));
     gap: 10px;
-    padding: 13px;
-    background: #49464b;
-    border: 5px solid #2f3137;
+    background: #44434a;
+    padding: 12px;
+    border: 5px solid #302e34;
     border-radius: 20px;
-    box-shadow: inset 0 3px #747075;
 }
 
 .grill {
     min-height: 180px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    background: linear-gradient(
-        140deg,
-        #28292e,
-        #393539
-    );
-    color: #f7e9c6;
-    border: 3px solid #686068;
+    border: 3px solid #686268;
     border-radius: 18px;
-    padding: 8px 4px;
-    box-shadow: inset 0 4px 12px #17181c;
-}
-
-.grill label {
-    font-size: 12px;
-    font-weight: 900;
-    pointer-events: none;
+    background: #28282c;
+    color: #fff5da;
+    padding: 10px 4px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .holes {
-    width: min(113px, 95%);
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2,1fr);
     gap: 5px;
+    width: min(110px,90%);
     pointer-events: none;
 }
 
 .ball {
     aspect-ratio: 1;
-    background: #15171b;
-    border: 3px solid #17191a;
     border-radius: 50%;
+    background: #15161a;
+    border: 3px solid #121319;
     display: grid;
     place-items: center;
-    box-shadow: inset 0 2px 3px #0008;
-    font-size: 19px;
+    font-size: 20px;
 }
 
 .ball.cooking {
     background: radial-gradient(
-        circle at 27% 20%,
-        #fff0aa,
-        #d9a75a
+        circle at 25% 25%,
+        #fff1b0,
+        #d9ab65
     );
-    border-color: #bc844b;
-    animation: bubble .7s infinite alternate;
+    animation: fry .8s infinite alternate;
 }
 
 .ball.ready {
     background: radial-gradient(
-        circle at 30% 25%,
-        #f2d27b,
-        #b06a2d
+        circle at 25% 25%,
+        #f8d27a,
+        #ad692b
     );
-    border-color: #79451f;
 }
 
 .ball.burnt {
-    background: radial-gradient(
-        circle at 30% 25%,
-        #73543f,
-        #291d18
-    );
-    border-color: #231812;
+    background: #493024;
 }
 
-@keyframes bubble {
+@keyframes fry {
     to {
-        filter: brightness(1.13);
-        transform: scale(1.045);
+        transform: scale(1.07);
     }
 }
 
-.cookbar {
-    width: 86%;
-    height: 8px;
-    background: #19181a;
-    border-radius: 6px;
+.grill small {
+    font-size: 11px;
+    pointer-events: none;
+}
+
+.grill strong {
+    pointer-events: none;
+}
+
+.bar {
+    background: #151515;
+    width: 80%;
+    height: 9px;
+    border-radius: 10px;
     overflow: hidden;
     pointer-events: none;
 }
 
-.cookbar span {
+.bar span {
     display: block;
     width: 0;
     height: 100%;
-    background: #f7cc59;
+    background: #efc456;
 }
 
-.grill small {
-    font-size: 10px;
-    color: #ffdfab;
-    pointer-events: none;
-}
-
-.right-station {
+.right {
     display: flex;
     flex-direction: column;
-    gap: 11px;
+    gap: 12px;
 }
 
-.plate-zone,
-.trash-zone {
-    background: #f7e5c6;
-    border: 5px solid #eed1a0;
-    border-radius: 19px;
+.plate-zone, .trash {
+    border: 5px solid #e5bd8f;
+    border-radius: 20px;
+    background: #fff1d9;
     text-align: center;
-    box-shadow:
-        inset 0 3px #fff7e3,
-        0 4px #855b39;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    gap: 4px;
-}
-
-.plate-zone {
-    min-height: 170px;
-}
-
-.plate-zone strong,
-.trash-zone strong {
-    font-size: 14px;
-    color: #95502f;
-}
-
-.plate {
-    width: 105px;
-    height: 105px;
-    border-radius: 50%;
-    background: radial-gradient(
-        circle,
-        #fff 0 45%,
-        #b6d8e7 47% 59%,
-        #fff 62%
-    );
-    box-shadow: 0 5px #a99574;
+    padding: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    font-size: 33px;
+    gap: 8px;
 }
 
-.plate span {
+.plate-zone {
+    min-height: 175px;
+}
+
+.plate {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        white 0 48%,
+        #b7d6e2 50% 60%,
+        white 62%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 38px;
+}
+
+.plate small {
     font-size: 11px;
     font-weight: 900;
-    color: #72462d;
 }
 
-.plate-zone small {
-    font-size: 11px;
-    color: #895c3f;
-}
-
-.trash-zone {
-    min-height: 58px;
-    flex-direction: row;
-    background: #f7d1bb;
-    border-color: #d7a083;
-}
-
-.trash-zone .trashicon {
-    font-size: 28px;
+.trash {
+    min-height: 70px;
+    background: #f9d6c7;
+    font-weight: 900;
 }
 
 .supplies {
-    position: relative;
-    z-index: 2;
-    max-width: 1240px;
-    margin: 25px auto 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
+    max-width: 1200px;
+    margin: 25px auto;
 }
 
 .supply {
-    padding: 10px 13px 14px;
-    border: 4px solid #c28350;
-    border-radius: 19px;
-    background: #fff1d9ed;
-    box-shadow: 0 6px #71482e77;
+    background: #fff1da;
+    border: 4px solid #be8454;
+    border-radius: 20px;
+    padding: 13px;
 }
 
-.supply-title {
-    font-size: 14px;
-    font-weight: 900;
-    margin-bottom: 9px;
-    color: #965134;
+.supply h3 {
+    margin: 0 0 12px;
+    font-size: 16px;
 }
 
 .items {
@@ -510,42 +389,24 @@ button {
 .item {
     flex: 1;
     min-width: 0;
-    min-height: 68px;
-    background: #fffdf5;
-    border: 3px solid #f0cf9d;
-    border-radius: 13px;
-    box-shadow: 0 4px #b59064;
-    font-size: 14px;
-    font-weight: 900;
-    color: #75452d;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-}
-
-.item .emoji {
-    font-size: 27px;
-}
-
-.help {
+    padding: 12px 5px;
+    background: #fffaf1;
+    border: 3px solid #e5c49a;
+    border-radius: 14px;
     text-align: center;
-    color: #fff9d7;
-    background: #674534d9;
-    border-radius: 17px;
-    max-width: max-content;
-    margin: 18px auto 0;
-    padding: 8px 18px;
-    font-size: 13px;
     font-weight: 900;
+    font-size: 14px;
+}
+
+.item span {
+    display: block;
+    font-size: 29px;
 }
 
 [data-source] {
-    touch-action: none;
     cursor: grab;
+    touch-action: none;
     user-select: none;
-    -webkit-user-select: none;
 }
 
 [data-source]:active {
@@ -553,60 +414,58 @@ button {
 }
 
 .dragging-original {
-    opacity: .48;
+    opacity: .45;
 }
 
 .drop-over {
-    outline: 5px solid #ffe377 !important;
-    outline-offset: 1px;
-    transform: scale(1.025);
-    filter: brightness(1.09);
+    outline: 5px solid #ffe47c;
+    outline-offset: 2px;
+    filter: brightness(1.1);
 }
 
-.drag-ghost {
+.ghost {
     position: fixed;
-    z-index: 1000;
+    z-index: 100;
     pointer-events: none;
-    transform: translate(-50%, -50%);
-    background: #fff9e2eb;
-    border: 4px solid #eca65e;
-    border-radius: 20px;
-    box-shadow: 0 8px 22px #352a2255;
-    min-width: 72px;
-    min-height: 72px;
-    padding: 7px 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 31px;
+    transform: translate(-50%,-50%);
+    padding: 12px;
+    background: #fff4d9;
+    border: 3px solid #d99a60;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 32px;
 }
 
-.drag-ghost small {
+.ghost small {
+    display: block;
     font-size: 11px;
+}
+
+.help {
+    background: #744c36;
+    color: white;
+    text-align: center;
+    font-size: 14px;
     font-weight: 900;
-    color: #74402b;
+    padding: 12px;
+    border-radius: 16px;
 }
 
 .toast {
     position: absolute;
     z-index: 15;
-    bottom: 95px;
+    bottom: 45px;
     left: 50%;
     transform: translateX(-50%);
     max-width: 90%;
-    background: #3f3029ed;
-    color: #fff8dd;
-    border: 2px solid #f8c879;
-    border-radius: 14px;
-    padding: 11px 20px;
-    box-shadow: 0 5px 14px #0004;
-    font-size: 15px;
-    font-weight: 900;
-    text-align: center;
+    padding: 13px 20px;
+    background: #493427;
+    color: white;
+    border-radius: 15px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity .15s;
+    text-align: center;
+    font-weight: 900;
 }
 
 .toast.show {
@@ -615,11 +474,11 @@ button {
 
 .overlay {
     position: absolute;
-    inset: 0;
     z-index: 30;
+    inset: 0;
+    background: #251b29bc;
     display: grid;
     place-items: center;
-    background: #1c1527cf;
     padding: 20px;
 }
 
@@ -627,368 +486,235 @@ button {
     display: none;
 }
 
-.result {
-    background: #fff2d7;
-    border: 8px solid #ecc07b;
-    border-radius: 27px;
-    width: min(450px, 95%);
-    padding: 26px;
+.start-panel {
+    width: min(500px,95%);
+    padding: 30px;
+    background: #fff0d0;
+    border: 8px solid #e5af6c;
+    border-radius: 30px;
     text-align: center;
-    box-shadow: 0 14px #5f3b2dc0;
+    box-shadow: 0 15px #68412d;
 }
 
-.result h2 {
-    color: #a84d2a;
-    font-size: 31px;
-    margin: 6px;
+.start-panel h1 {
+    color: #a44c30;
+    font-size: 36px;
 }
 
-.result p {
+.start-panel p {
     font-weight: 900;
-    line-height: 1.9;
+    line-height: 1.8;
 }
 
-.replay {
-    padding: 13px 30px;
-    background: #d96242;
+.start-button {
+    padding: 17px 30px;
+    background: #e8734c;
     color: white;
     border: 0;
-    border-radius: 14px;
-    box-shadow: 0 5px #a3402a;
-    font-size: 19px;
+    border-radius: 16px;
+    box-shadow: 0 6px #aa4c30;
+    font-size: 23px;
     font-weight: 900;
+}
+
+.countdown {
+    position: absolute;
+    z-index: 40;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: #2d1e29ba;
+    color: #fff2bc;
+    font-size: clamp(80px,15vw,160px);
+    font-weight: 900;
+    text-shadow: 0 9px #82432e;
+}
+
+.countdown.show {
+    display: flex;
 }
 
 @media(max-width:800px) {
     .game {
-        min-height: 900px;
-        padding: 7px 5px;
+        padding: 8px;
+        min-height: 830px;
     }
 
     .logo {
         font-size: 13px;
-        padding: 7px 5px;
-        border-width: 2px;
-    }
-
-    .hud {
-        gap: 3px;
-    }
-
-    .hud-items {
-        gap: 3px;
+        padding: 7px;
     }
 
     .stat {
-        min-width: 46px;
-        font-size: 12px;
-        padding: 5px 3px;
-        border-width: 2px;
+        font-size: 13px;
+        min-width: 53px;
+        padding: 5px;
     }
 
     .stat small {
-        font-size: 8px;
-    }
-
-    .stat.timer {
-        min-width: 58px;
-        font-size: 16px;
-    }
-
-    .hearts {
-        font-size: 12px;
+        font-size: 9px;
     }
 
     .sign {
         font-size: 17px;
-        margin-bottom: 33px;
     }
 
     .customers {
         gap: 5px;
-        padding: 0 4px;
     }
 
     .customer {
-        padding: 11px 2px 5px;
-        min-height: 140px;
-        border-width: 3px;
+        padding: 6px 2px;
+        min-height: 135px;
     }
 
-    .customer .face {
-        font-size: 34px;
-        top: -24px;
-        left: 5px;
+    .face {
+        font-size: 25px;
     }
 
     .order {
-        font-size: 20px;
-    }
-
-    .order-desc {
-        font-size: 10px;
-        white-space: normal;
-    }
-
-    .customer small,
-    .customer strong {
-        font-size: 9px;
-    }
-
-    .counter {
-        padding: 8px 5px;
-        border-width: 6px;
-        margin-top: 15px;
-    }
-
-    .counter-title {
         font-size: 11px;
     }
 
-    .station-row {
-        grid-template-columns:
-            minmax(0, 1.6fr)
-            minmax(95px, .65fr);
+    .customer strong {
+        font-size: 10px;
+    }
+
+    .kitchen {
+        grid-template-columns: minmax(0,1.7fr) minmax(95px,.7fr);
         gap: 5px;
+    }
+
+    .counter {
+        padding: 8px;
     }
 
     .grills {
         gap: 3px;
         padding: 5px;
-        border-width: 3px;
     }
 
     .grill {
-        min-height: 135px;
-        padding: 3px 1px;
-        border-width: 2px;
+        min-height: 140px;
+        padding: 5px 1px;
+    }
+
+    .ball {
+        font-size: 12px;
+        border-width: 1px;
     }
 
     .holes {
         gap: 2px;
     }
 
-    .ball {
-        font-size: 11px;
-        border-width: 1px;
-    }
-
-    .grill label {
-        font-size: 9px;
-    }
-
     .grill small {
         font-size: 8px;
     }
 
-    .plate-zone {
-        min-height: 126px;
-    }
-
-    .plate-zone strong,
-    .trash-zone strong {
-        font-size: 10px;
-    }
-
     .plate {
-        width: 70px;
-        height: 70px;
-        font-size: 20px;
-    }
-
-    .plate span,
-    .plate-zone small {
-        font-size: 8px;
-    }
-
-    .trash-zone {
-        min-height: 45px;
-    }
-
-    .trash-zone .trashicon {
-        font-size: 21px;
-    }
-
-    .supplies {
-        gap: 5px;
-        margin-top: 16px;
+        width: 75px;
+        height: 75px;
+        font-size: 24px;
     }
 
     .supply {
-        padding: 7px 4px;
-        border-width: 3px;
+        padding: 7px;
     }
 
-    .supply-title {
-        font-size: 10px;
-    }
-
-    .items {
-        gap: 3px;
+    .supply h3 {
+        font-size: 11px;
     }
 
     .item {
-        min-height: 56px;
-        font-size: 9px;
-        padding: 2px;
-    }
-
-    .item .emoji {
-        font-size: 20px;
-    }
-
-    .help {
         font-size: 10px;
-        margin-top: 14px;
+        padding: 7px 2px;
+    }
+
+    .item span {
+        font-size: 19px;
     }
 }
 </style>
 </head>
 
 <body>
+
 <div class="game">
 
-<svg class="skyline"
-     viewBox="0 0 1200 900"
-     preserveAspectRatio="xMidYMid slice"
-     aria-hidden="true">
-
-<path fill="#506d9e" d="M0 0h1200v900H0z"/>
-
-<circle cx="1020" cy="125" r="79"
-        fill="#f9dfb4"/>
-
-<path fill="#ac8293"
-      d="M0 350q130-180 270 0t320 0t330 0t280 0v550H0Z"/>
-
-<path fill="#6d617d"
-      d="M0 360V205h100v180h90V140h150v280h95V255h103v185h145V175h120v235h112V205h140v210h145V900H0Z"/>
-
-<g fill="#f7d9a7">
-    <path d="M27 262h34v42H27z"/>
-    <path d="M230 190h41v39h-41z"/>
-    <path d="M290 190h31v39h-31z"/>
-    <path d="M721 222h40v41h-40z"/>
-    <path d="M966 250h40v45h-40z"/>
-    <path d="M1091 255h36v42h-36z"/>
-</g>
-
-<path fill="#703e4c"
-      d="M0 400h1200v180H0z"/>
-
-<path fill="#a94b42"
-      d="M0 360h1200v45H0z"/>
-
-<path fill="#f3d6a9"
-      d="M0 405h1200v80H0z"/>
-
-<g stroke="#a94b42" stroke-width="7">
-    <path d="M100 404v81M240 404v81M380 404v81M520 404v81M660 404v81M800 404v81M940 404v81M1080 404v81"/>
-</g>
-
-<path fill="#d2a07f"
-      d="M0 485h1200v415H0z"/>
-
-<g fill="#729780">
-    <ellipse cx="35" cy="620"
-             rx="64" ry="135"/>
-    <ellipse cx="1175" cy="635"
-             rx="62" ry="135"/>
-</g>
-
-</svg>
-
-<div class="lanterns">
+<div class="decor">
     <span>🏮</span>
     <span>🏮</span>
 </div>
 
-<header class="hud">
+<div class="header">
 
     <div class="logo">
         🏮 와글와글 포장마차
     </div>
 
-    <div class="hud-items">
+    <div class="stats">
 
         <div class="stat">
             <small>레벨</small>
-            LV.<span id="level">1</span>/5
+            <span id="level">1</span>/5
         </div>
 
-        <div class="stat timer" id="timer">
+        <div class="stat timer">
             <small>남은 시간</small>
             <span id="time">90</span>초
         </div>
 
         <div class="stat">
             <small>목숨</small>
-            <span class="hearts" id="lives">
-                ❤️❤️❤️
-            </span>
+            <span id="lives">❤️❤️❤️</span>
         </div>
 
         <div class="stat">
             <small>점수</small>
-            <span id="score">0</span>⭐
-        </div>
-
-        <div class="stat">
-            <small>콤보</small>
-            <span id="combo">0</span>🔥
+            <span id="score">0</span>
         </div>
 
     </div>
 
-</header>
-
-<div class="sign">
-    🏮 타코타코 포장마차 🏮
 </div>
 
-<section class="customers"
-         id="customers">
-</section>
+<div class="sign">
+    🐙 타코야끼 가게 🐙
+</div>
 
-<section class="counter">
+<div class="customers" id="customers"></div>
 
-    <div class="counter-title">
-        🍳 지글지글 타코야끼 조리대 🍳
-    </div>
+<div class="counter">
 
-    <div class="station-row">
+    <h3>🍳 타코야끼 조리대</h3>
 
-        <div class="grills"
-             id="grills">
-        </div>
+    <div class="kitchen">
 
-        <div class="right-station">
+        <div class="grills" id="grills"></div>
+
+        <div class="right">
 
             <div class="plate-zone"
                  data-drop="plate">
 
                 <strong>🍽️ 완성 접시</strong>
 
-                <div class="plate"
-                     id="plate">
+                <div class="plate" id="plate">
+                    🍽️
                 </div>
 
                 <small id="plate-help">
-                    익은 타코야끼를 끌어와!
+                    익은 타코야끼를 올려 주세요
                 </small>
 
             </div>
 
-            <div class="trash-zone"
+            <div class="trash"
                  data-drop="trash">
 
-                <span class="trashicon">
-                    🗑️
-                </span>
-
-                <strong>
-                    휴지통 · 끌어서 버리기
-                </strong>
+                🗑️ 휴지통
 
             </div>
 
@@ -996,109 +722,89 @@ button {
 
     </div>
 
-</section>
+</div>
 
-<section class="supplies">
+<div class="supplies">
 
     <div class="supply">
-
-        <div class="supply-title">
-            ① 속재료를 조리판으로 드래그
-        </div>
-
-        <div class="items"
-             id="fillings">
-        </div>
-
+        <h3>① 속재료를 조리판으로 옮기세요</h3>
+        <div class="items" id="fillings"></div>
     </div>
 
     <div class="supply">
-
-        <div class="supply-title">
-            ③ 토핑을 접시로 드래그
-        </div>
-
-        <div class="items"
-             id="toppings">
-        </div>
-
+        <h3>③ 토핑을 접시에 올리세요</h3>
+        <div class="items" id="toppings"></div>
     </div>
 
-</section>
+</div>
 
 <div class="help">
-    ② 다 익은 타코야끼 → 접시
-    &nbsp;
-    ④ 완성 접시 → 손님
-    &nbsp;
-    🗑️ 탄 음식 → 휴지통
+    ② 익은 음식 → 접시　
+    ④ 완성 접시 → 손님　
+    🗑️ 잘못 만든 음식 → 휴지통
 </div>
 
-<div class="toast"
-     id="toast">
-</div>
+<div class="toast" id="toast"></div>
 
-<div class="overlay hidden"
-     id="overlay">
+<!-- 게임 시작 및 결과 화면 -->
+<div class="overlay" id="overlay">
 
-    <div class="result">
+    <div class="start-panel">
 
-        <div id="result-icon"
-             style="font-size:55px">
-            🏆
+        <div style="font-size:58px"
+             id="panel-icon">
+            🐙
         </div>
 
-        <h2 id="result-title">
-            게임 종료
-        </h2>
+        <h1 id="panel-title">
+            타코야끼 만들기
+        </h1>
 
-        <p id="result-text"></p>
+        <p id="panel-description">
+            손님의 주문에 맞춰 타코야끼를 완성하세요!
+            <br>
+            ❤️ 목숨 3개 · 총 5레벨
+            <br>
+            5레벨까지 살아남으면 승리합니다!
+        </p>
 
-        <button class="replay"
-                onclick="restart()">
-            🔄 다시 도전하기
+        <button class="start-button"
+                id="start-button"
+                onclick="beginCountdown()">
+
+            🎮 타코야끼 만들기
+
         </button>
 
     </div>
 
 </div>
 
+<!-- 카운트다운 -->
+<div class="countdown" id="countdown">
+    <span id="count-text">3</span>
+</div>
+
 </div>
 
 <script>
 
-// =====================================
-// 1. 레벨별 시간 설정
-// =====================================
-
-// 각 레벨의 전체 제한 시간 (초)
+// 레벨별 제한 시간 (초)
 const LEVEL_TIMES = [
-    90,
-    120,
-    120,
-    150,
-    150
+    90, 120, 120, 150, 150
 ];
 
-// 각 레벨의 손님 최소·최대 대기 시간 (초)
+// 레벨별 손님 대기 시간 (초)
 const CUSTOMER_WAIT = [
-    [40, 45],  // LEVEL 1
-    [30, 35],  // LEVEL 2
-    [22, 27],  // LEVEL 3
-    [15, 20],  // LEVEL 4
-    [10, 13]   // LEVEL 5
+    [40,45],
+    [30,35],
+    [22,27],
+    [15,20],
+    [10,13]
 ];
 
-// 타코야끼 조리 시간 (밀리초)
 const COOK_MS = 2700;
-
-// 타코야끼가 타는 시간 (밀리초)
 const BURN_MS = 6700;
-
-
-// =====================================
-// 2. 재료와 캐릭터
-// =====================================
 
 const fillings = [
     {name:'문어', emoji:'🐙'},
@@ -1113,191 +819,141 @@ const toppings = [
 ];
 
 const faces = [
-    '🐱',
-    '🐰',
-    '🐻',
-    '🦊',
-    '🐼',
-    '🐸'
+    '🐱','🐰','🐻','🦊','🐼','🐸'
 ];
 
 const el = id => document.getElementById(id);
-
 const now = () => performance.now();
-
 const pick = arr =>
-    arr[Math.floor(Math.random() * arr.length)];
+    arr[Math.floor(Math.random()*arr.length)];
 
-let game;
+let game = null;
 let drag = null;
 let highlighted = null;
-let toastTimer;
+let toastTimer = null;
+let countdownActive = false;
 
 
-// =====================================
-// 3. 손님 생성
-// =====================================
+// ====================================
+// 카운트다운 시작
+// ====================================
+
+async function beginCountdown() {
+
+    if (countdownActive) return;
+
+    countdownActive = true;
+
+    el('overlay').classList.add('hidden');
+
+    el('countdown').classList.add('show');
+
+    for (const number of ['3','2','1']) {
+
+        el('count-text').textContent = number;
+
+        await new Promise(
+            resolve => setTimeout(resolve,1000)
+        );
+    }
+
+    el('count-text').textContent = 'START!';
+
+    await new Promise(
+        resolve => setTimeout(resolve,700)
+    );
+
+    el('countdown').classList.remove('show');
+
+    countdownActive = false;
+
+    // 카운트다운이 끝난 다음 게임 시작
+    startGame();
+}
+
+
+// ====================================
+// 게임 시작
+// ====================================
+
+function startGame() {
+
+    game = {
+        level: 1,
+        levelStart: now(),
+        lives: 3,
+        score: 0,
+        combo: 0,
+        best: 0,
+        served: 0,
+        missed: 0,
+        plate: null,
+        grills: [
+            {state:'empty'},
+            {state:'empty'},
+            {state:'empty'}
+        ],
+        customers: [],
+        ended: false
+    };
+
+    game.customers = [
+        newCustomer(),
+        newCustomer(),
+        newCustomer()
+    ];
+
+    renderAll();
+
+    tell('영업 시작! 주문을 만들어 주세요!');
+}
+
+
+// ====================================
+// 손님 생성
+// ====================================
 
 function newCustomer() {
 
-    // 현재 레벨에 따른 대기 시간
-    const [minWait, maxWait] =
-        CUSTOMER_WAIT[game.level - 1];
-
-    // 초를 밀리초로 변환
-    const waitTime = (
-        minWait +
-        Math.random() * (maxWait - minWait)
-    ) * 1000;
+    const [min,max] =
+        CUSTOMER_WAIT[game.level-1];
 
     return {
         face: pick(faces),
         fill: pick(fillings),
         top: pick(toppings),
         born: now(),
-        patience: waitTime
+        patience: (
+            min + Math.random()*(max-min)
+        )*1000
     };
 }
 
 
-// =====================================
-// 4. 알림 메시지
-// =====================================
+// ====================================
+// 알림
+// ====================================
 
-function tell(msg) {
+function tell(message) {
 
-    const x = el('toast');
+    const box = el('toast');
 
-    x.textContent = msg;
-    x.classList.add('show');
+    box.textContent = message;
+
+    box.classList.add('show');
 
     clearTimeout(toastTimer);
 
     toastTimer = setTimeout(
-        () => x.classList.remove('show'),
+        ()=>box.classList.remove('show'),
         1400
     );
 }
 
 
-// =====================================
-// 5. 게임 시작 및 초기화
-// =====================================
-
-function restart() {
-
-    game = {
-        level: 1,
-        levelStart: now(),
-
-        lives: 3,
-        score: 0,
-        combo: 0,
-        best: 0,
-
-        served: 0,
-        missed: 0,
-
-        grills: [
-            {state:'empty'},
-            {state:'empty'},
-            {state:'empty'}
-        ],
-
-        plate: null,
-
-        // 게임 객체를 만든 후 손님 생성
-        customers: [],
-
-        ended: false
-    };
-
-    // game.level이 준비된 이후 손님 생성
-    game.customers = [
-        newCustomer(),
-        newCustomer(),
-        newCustomer()
-    ];
-
-    el('overlay').classList.add('hidden');
-
-    renderAll();
-
-    tell(
-        '재료를 끌어서 조리판에 올려 주세요!'
-    );
-}
-
-
-// =====================================
-// 6. 다음 레벨
-// =====================================
-
-function advance() {
-
-    // 5레벨까지 생존하면 승리
-    if (game.level === 5) {
-        end(true);
-        return;
-    }
-
-    game.level++;
-
-    // 새로운 레벨 타이머 시작
-    game.levelStart = now();
-
-    // 조리판 초기화
-    game.grills = [
-        {state:'empty'},
-        {state:'empty'},
-        {state:'empty'}
-    ];
-
-    // 접시 초기화
-    game.plate = null;
-
-    // 새로운 레벨 대기 시간을 적용한 손님 생성
-    game.customers = [
-        newCustomer(),
-        newCustomer(),
-        newCustomer()
-    ];
-
-    renderAll();
-
-    tell(
-        `🎉 LEVEL ${game.level}! ` +
-        `제한 시간 ${LEVEL_TIMES[game.level-1]}초`
-    );
-}
-
-
-// =====================================
-// 7. 목숨 감소
-// =====================================
-
-function loseLife(message) {
-
-    if (game.ended) return;
-
-    game.lives--;
-    game.combo = 0;
-
-    updateHud();
-
-    if (game.lives <= 0) {
-        end(false);
-    } else {
-        tell(
-            `${message} 남은 목숨 ${game.lives}개`
-        );
-    }
-}
-
-
-// =====================================
-// 8. 화면 전체 표시
-// =====================================
+// ====================================
+// 화면 갱신
+// ====================================
 
 function renderAll() {
     renderCustomers();
@@ -1307,147 +963,108 @@ function renderAll() {
     updateHud();
 }
 
-
-// =====================================
-// 9. 점수와 목숨 표시
-// =====================================
-
 function updateHud() {
 
     el('level').textContent = game.level;
 
     el('score').textContent = game.score;
 
-    el('combo').textContent = game.combo;
-
     el('lives').textContent =
         '❤️'.repeat(game.lives) +
-        '🖤'.repeat(3 - game.lives);
+        '🖤'.repeat(3-game.lives);
 }
-
-
-// =====================================
-// 10. 손님 화면
-// =====================================
 
 function renderCustomers() {
 
     el('customers').innerHTML =
-        game.customers.map((c, i) => `
+        game.customers.map((c,i)=>`
 
         <div class="customer"
              data-drop="customer"
              data-index="${i}">
 
-            <span class="face">
-                ${c.face}
-            </span>
+            <span class="face">${c.face}</span>
 
-            <strong>
-                손님 ${i+1} · 주문표
-            </strong>
+            <strong>손님 ${i+1}</strong>
 
-            <span class="order">
-                🐙 ${c.fill.emoji} ${c.top.emoji}
-            </span>
+            <div class="order">
+                ${c.fill.emoji} + ${c.top.emoji}
+            </div>
 
-            <span class="order-desc">
+            <div class="order">
                 ${c.fill.name} + ${c.top.name}
-            </span>
+            </div>
 
             <div class="patience">
                 <span id="patience-${i}"></span>
             </div>
 
-            <small>
-                완성 접시를 여기에 놓아 주세요!
-            </small>
-
         </div>
 
-    `).join('');
+        `).join('');
 }
-
-
-// =====================================
-// 11. 조리판 화면
-// =====================================
 
 function renderGrills() {
 
-    const captions = {
+    const messages = {
         empty: '재료를 올려 주세요',
-        cooking: '굽는 중...',
-        ready: '접시로 끌어 주세요!',
-        burnt: '휴지통에 버려 주세요!'
+        cooking: '굽는 중',
+        ready: '접시로 옮기세요',
+        burnt: '휴지통에 버리세요'
     };
 
     el('grills').innerHTML =
-        game.grills.map((g, i) => {
+        game.grills.map((g,i)=>{
 
-        const movable =
-            g.state === 'ready' ||
-            g.state === 'burnt';
+            const movable =
+                g.state==='ready' ||
+                g.state==='burnt';
 
-        const em =
-            g.state === 'cooking' ? '🥣' :
-            g.state === 'ready'
-                ? (g.fill?.emoji || '🐙') :
-            g.state === 'burnt' ? '💨' : '';
+            const icon =
+                g.state==='cooking'?'🥣':
+                g.state==='ready'
+                    ?g.fill.emoji:
+                g.state==='burnt'?'💨':'';
 
-        const source = movable ? `
-            data-source="grill"
-            data-index="${i}"
-            data-emoji="${em || '🍡'}"
-            data-label="${
-                g.state === 'burnt'
-                    ? '탄 음식'
-                    : '익은 타코야끼'
-            }"
-        ` : '';
+            const source = movable
+                ? `data-source="grill"
+                   data-index="${i}"
+                   data-emoji="${icon}"
+                   data-label="타코야끼"`
+                : '';
 
-        return `
+            return `
 
-        <div class="grill"
-             data-drop="grill"
-             data-index="${i}"
-             ${source}>
+            <div class="grill"
+                 data-drop="grill"
+                 data-index="${i}"
+                 ${source}>
 
-            <div class="holes">
+                <div class="holes">
 
-                ${
-                    Array.from({length:6}, () => `
+                    ${Array.from(
+                        {length:6},
+                        ()=>`
                         <div class="ball ${g.state}">
-                            ${em}
+                            ${icon}
                         </div>
-                    `).join('')
-                }
+                        `
+                    ).join('')}
+
+                </div>
+
+                <strong>${i+1}번 조리판</strong>
+
+                <div class="bar">
+                    <span id="cook-${i}"></span>
+                </div>
+
+                <small>${messages[g.state]}</small>
 
             </div>
-
-            <label>
-                ${i+1}번 조리판
-            </label>
-
-            <div class="cookbar">
-                <span id="cook-${i}"></span>
-            </div>
-
-            <small>
-                ${captions[g.state]}
-            </small>
-
-        </div>
-
-        `;
-
-    }).join('');
+            `;
+        }).join('');
 }
-
-
-// =====================================
-// 12. 접시 화면
-// =====================================
 
 function renderPlate() {
 
@@ -1460,315 +1077,235 @@ function renderPlate() {
         plate.removeAttribute('data-source');
 
         el('plate-help').textContent =
-            '익은 타코야끼를 끌어와 주세요!';
+            '익은 타코야끼를 올려 주세요';
 
     } else {
 
         plate.innerHTML = `
             🐙
-
-            <span>
+            <small>
                 ${game.plate.fill.name}
-
-                ${
-                    game.plate.top
-                        ? ' + ' + game.plate.top.name
-                        : ''
-                }
-            </span>
+                ${game.plate.top
+                    ?' + '+game.plate.top.name
+                    :''}
+            </small>
         `;
 
-        plate.setAttribute(
-            'data-source',
-            'plate'
-        );
-
-        plate.setAttribute(
-            'data-emoji',
-            '🍡'
-        );
-
-        plate.setAttribute(
-            'data-label',
-            '완성 접시'
-        );
+        plate.setAttribute('data-source','plate');
+        plate.setAttribute('data-emoji','🍡');
+        plate.setAttribute('data-label','접시');
 
         el('plate-help').textContent =
             game.plate.top
-                ? '손님에게 끌어다 주세요!'
-                : '토핑을 끌어다 놓아 주세요!';
+                ?'손님에게 서빙하세요'
+                :'토핑을 올려 주세요';
     }
 }
-
-
-// =====================================
-// 13. 재료와 토핑 표시
-// =====================================
 
 function renderSupplies() {
 
     el('fillings').innerHTML =
-        fillings.map((v, i) => `
+        fillings.map((f,i)=>`
 
         <div class="item"
              data-source="filling"
              data-index="${i}"
-             data-emoji="${v.emoji}"
-             data-label="${v.name}">
+             data-emoji="${f.emoji}"
+             data-label="${f.name}">
 
-            <span class="emoji">
-                ${v.emoji}
-            </span>
-
-            ${v.name}
+            <span>${f.emoji}</span>
+            ${f.name}
 
         </div>
 
-    `).join('');
-
+        `).join('');
 
     el('toppings').innerHTML =
-        toppings.map((v, i) => `
+        toppings.map((t,i)=>`
 
         <div class="item"
              data-source="topping"
              data-index="${i}"
-             data-emoji="${v.emoji}"
-             data-label="${v.name}">
+             data-emoji="${t.emoji}"
+             data-label="${t.name}">
 
-            <span class="emoji">
-                ${v.emoji}
-            </span>
-
-            ${v.name}
+            <span>${t.emoji}</span>
+            ${t.name}
 
         </div>
 
-    `).join('');
+        `).join('');
 }
 
 
-// =====================================
-// 14. 드래그 앤 드롭 처리
-// =====================================
+// ====================================
+// 드래그 앤 드롭 처리
+// ====================================
 
-function handleDrop(kind, index, target, targetIndex) {
+function handleDrop(kind,index,target,targetIndex) {
 
-    if (game.ended) return;
+    if (!game || game.ended) return;
 
-    // 속재료 → 조리판
-    if (target === 'grill' && kind === 'filling') {
+    // 재료를 조리판에 올리기
+    if (kind==='filling' && target==='grill') {
 
-        const g = game.grills[targetIndex];
-
-        if (g.state !== 'empty') {
-            tell('이 조리판은 사용 중이에요!');
+        if (game.grills[targetIndex].state!=='empty') {
+            tell('이미 사용 중인 조리판입니다!');
             return;
         }
 
         game.grills[targetIndex] = {
-            state: 'cooking',
-            fill: fillings[index],
-            born: now()
+            state:'cooking',
+            fill:fillings[index],
+            born:now()
         };
 
         renderGrills();
-
-        tell(
-            `${fillings[index].name} 타코야끼 조리 시작!`
-        );
-
         return;
     }
 
-    // 조리판 → 접시
-    if (target === 'plate' && kind === 'grill') {
+    // 익은 타코야끼를 접시로
+    if (kind==='grill' && target==='plate') {
 
         const g = game.grills[index];
 
-        if (g.state !== 'ready') {
-            tell('익은 타코야끼만 담을 수 있어요!');
+        if (g.state!=='ready') {
+            tell('익은 음식만 담을 수 있습니다!');
             return;
         }
 
         if (game.plate) {
-            tell('접시가 이미 차 있어요!');
+            tell('접시가 이미 차 있습니다!');
             return;
         }
 
         game.plate = {
-            fill: g.fill,
-            top: null
+            fill:g.fill,
+            top:null
         };
 
-        game.grills[index] = {
-            state: 'empty'
-        };
+        game.grills[index] = {state:'empty'};
 
         renderGrills();
         renderPlate();
-
-        tell('접시에 담았어요! 토핑을 올려 주세요.');
-
         return;
     }
 
-    // 토핑 → 접시
-    if (target === 'plate' && kind === 'topping') {
+    // 토핑을 접시에 올리기
+    if (kind==='topping' && target==='plate') {
 
         if (!game.plate) {
-            tell('먼저 타코야끼를 접시에 담아 주세요!');
+            tell('타코야끼를 먼저 담아 주세요!');
             return;
         }
 
         game.plate.top = toppings[index];
-
         renderPlate();
-
-        tell('토핑 완료! 손님에게 서빙해 주세요!');
-
         return;
     }
 
-    // 완성된 음식 → 손님
-    if (target === 'customer' && kind === 'plate') {
+    // 손님에게 서빙
+    if (kind==='plate' && target==='customer') {
 
         if (!game.plate?.top) {
-            tell('토핑까지 올려 주세요!');
+            tell('토핑을 먼저 올려 주세요!');
             return;
         }
 
         const c = game.customers[targetIndex];
 
         if (
-            c.fill.name === game.plate.fill.name &&
-            c.top.name === game.plate.top.name
+            c.fill.name===game.plate.fill.name &&
+            c.top.name===game.plate.top.name
         ) {
 
             const points =
-                100 + Math.min(game.combo, 5) * 20;
+                100+Math.min(game.combo,5)*20;
 
             game.score += points;
-
             game.combo++;
-
             game.best = Math.max(
-                game.best,
-                game.combo
+                game.best,game.combo
             );
-
             game.served++;
 
             game.customers[targetIndex] =
                 newCustomer();
 
-            renderCustomers();
-            updateHud();
-
-            tell(`🎉 주문 성공! +${points}점`);
+            tell(`주문 성공! +${points}점`);
 
         } else {
-
-            loseLife('❌ 잘못 서빙했어요!');
+            loseLife('잘못된 주문입니다!');
         }
 
         game.plate = null;
 
         renderPlate();
-
+        renderCustomers();
+        updateHud();
         return;
     }
 
-    // 휴지통 처리
-    if (target === 'trash') {
+    // 휴지통
+    if (target==='trash') {
 
-        if (kind === 'plate') {
+        if (kind==='plate') {
 
             game.plate = null;
-
             renderPlate();
-
-            tell('접시의 음식을 버렸어요!');
-
+            tell('음식을 버렸습니다!');
             return;
         }
 
-        if (kind === 'grill') {
-
-            if (
-                !['ready', 'burnt'].includes(
-                    game.grills[index].state
-                )
-            ) {
-                return;
-            }
+        if (kind==='grill') {
 
             game.grills[index] = {
-                state: 'empty'
+                state:'empty'
             };
 
             renderGrills();
-
-            tell('음식을 휴지통에 버렸어요!');
-
+            tell('음식을 버렸습니다!');
             return;
         }
     }
 
-    tell('여기에는 놓을 수 없어요!');
+    tell('이곳에는 놓을 수 없습니다!');
 }
 
 
-// =====================================
-// 15. 드래그 중 음식 표시
-// =====================================
+// ====================================
+// 마우스 드래그 처리
+// ====================================
 
-function updateGhost(e) {
+function moveGhost(e) {
 
     if (!drag) return;
 
     drag.ghost.style.left =
-        e.clientX + 'px';
+        e.clientX+'px';
 
     drag.ghost.style.top =
-        e.clientY + 'px';
+        e.clientY+'px';
 
     const target =
         document.elementFromPoint(
-            e.clientX,
-            e.clientY
+            e.clientX,e.clientY
         )?.closest('[data-drop]');
 
-    if (
-        highlighted &&
-        highlighted !== target
-    ) {
-        highlighted.classList.remove(
-            'drop-over'
-        );
+    if (highlighted) {
+        highlighted.classList.remove('drop-over');
     }
 
-    highlighted = target || null;
+    highlighted = target;
 
-    if (highlighted) {
-        highlighted.classList.add(
-            'drop-over'
-        );
+    if (target) {
+        target.classList.add('drop-over');
     }
 }
 
+document.addEventListener('pointerdown',e=>{
 
-// =====================================
-// 16. 드래그 시작
-// =====================================
-
-document.addEventListener('pointerdown', e => {
-
-    if (
-        game?.ended ||
-        drag ||
-        e.button !== 0
-    ) return;
+    if (!game || game.ended || drag) return;
 
     const source =
         e.target.closest('[data-source]');
@@ -1779,331 +1316,288 @@ document.addEventListener('pointerdown', e => {
 
     const ghost = document.createElement('div');
 
-    ghost.className = 'drag-ghost';
+    ghost.className = 'ghost';
 
     ghost.innerHTML = `
-        ${source.dataset.emoji || '🍡'}
-
-        <small>
-            ${source.dataset.label || '음식'}
-        </small>
+        ${source.dataset.emoji}
+        <small>${source.dataset.label}</small>
     `;
 
     document.body.appendChild(ghost);
 
     drag = {
-        pointerId: e.pointerId,
-        kind: source.dataset.source,
-        index: Number(
-            source.dataset.index || 0
-        ),
-        source,
-        ghost
+        pointerId:e.pointerId,
+        source:source,
+        kind:source.dataset.source,
+        index:Number(source.dataset.index||0),
+        ghost:ghost
     };
 
-    source.classList.add(
-        'dragging-original'
-    );
+    source.classList.add('dragging-original');
 
-    updateGhost(e);
+    moveGhost(e);
 });
-
-
-// =====================================
-// 17. 드래그 이동
-// =====================================
 
 document.addEventListener(
     'pointermove',
-
-    e => {
-
-        if (
-            drag &&
-            e.pointerId === drag.pointerId
-        ) {
+    e=>{
+        if (drag && drag.pointerId===e.pointerId) {
             e.preventDefault();
-
-            updateGhost(e);
+            moveGhost(e);
         }
     },
-
     {passive:false}
 );
 
+function releaseDrag(e) {
 
-// =====================================
-// 18. 드래그 종료
-// =====================================
-
-function releaseDrag(e, cancel = false) {
-
-    if (
-        !drag ||
-        e.pointerId !== drag.pointerId
-    ) return;
+    if (!drag || drag.pointerId!==e.pointerId) {
+        return;
+    }
 
     const current = drag;
 
-    const destination = cancel
-        ? null
-        : document.elementFromPoint(
-            e.clientX,
-            e.clientY
+    const target =
+        document.elementFromPoint(
+            e.clientX,e.clientY
         )?.closest('[data-drop]');
+
+    current.ghost.remove();
 
     current.source.classList.remove(
         'dragging-original'
     );
 
-    current.ghost.remove();
-
     if (highlighted) {
-        highlighted.classList.remove(
-            'drop-over'
-        );
+        highlighted.classList.remove('drop-over');
     }
 
     highlighted = null;
-
     drag = null;
 
-    if (destination) {
-
+    if (target) {
         handleDrop(
             current.kind,
             current.index,
-            destination.dataset.drop,
-            Number(
-                destination.dataset.index || 0
-            )
+            target.dataset.drop,
+            Number(target.dataset.index||0)
         );
     }
 }
 
-document.addEventListener(
-    'pointerup',
-    e => releaseDrag(e)
-);
+document.addEventListener('pointerup',releaseDrag);
 
-document.addEventListener(
-    'pointercancel',
-    e => releaseDrag(e, true)
-);
+document.addEventListener('pointercancel',e=>{
+    if (!drag || drag.pointerId!==e.pointerId) {
+        return;
+    }
+    drag.ghost.remove();
+    if (drag.source.isConnected) {
+        drag.source.classList.remove('dragging-original');
+    }
+    if (highlighted) {
+        highlighted.classList.remove('drop-over');
+    }
+    highlighted = null;
+    drag = null;
+});
 
 
-// =====================================
-// 19. 게임 종료
-// =====================================
+// ====================================
+// 목숨 감소
+// ====================================
 
-function end(won) {
+function loseLife(message) {
 
     if (game.ended) return;
 
-    game.ended = true;
+    game.lives--;
+    game.combo=0;
 
-    el('result-icon').textContent =
-        won ? '🏆' : '💔';
+    updateHud();
 
-    el('result-title').textContent =
-        won
-            ? '5레벨 생존 성공!'
-            : '게임 오버!';
-
-    el('result-text').innerHTML = `
-
-        도달 레벨
-        <b>${game.level} / 5</b><br>
-
-        총
-        <b>${game.served}개</b>
-        완성<br>
-
-        최종 점수
-        <b>${game.score}점</b><br>
-
-        최고 콤보
-        <b>${game.best}</b><br>
-
-        놓친 주문
-        <b>${game.missed}</b>
-
-    `;
-
-    el('overlay').classList.remove(
-        'hidden'
-    );
+    if (game.lives<=0) {
+        endGame(false);
+    } else {
+        tell(
+            `${message} 남은 목숨 ${game.lives}개`
+        );
+    }
 }
 
 
-// =====================================
-// 20. 실시간 타이머와 게임 진행
-// =====================================
+// ====================================
+// 레벨 전환
+// ====================================
+
+function nextLevel() {
+
+    if (game.level===5) {
+        endGame(true);
+        return;
+    }
+
+    game.level++;
+    game.levelStart=now();
+
+    game.grills = [
+        {state:'empty'},
+        {state:'empty'},
+        {state:'empty'}
+    ];
+
+    game.plate=null;
+
+    game.customers=[
+        newCustomer(),
+        newCustomer(),
+        newCustomer()
+    ];
+
+    renderAll();
+
+    tell(`LEVEL ${game.level} 시작!`);
+}
+
+
+// ====================================
+// 게임 결과
+// ====================================
+
+function endGame(won) {
+
+    game.ended=true;
+
+    el('panel-icon').textContent =
+        won?'🏆':'💔';
+
+    el('panel-title').textContent =
+        won?'최종 승리!':'게임 오버!';
+
+    el('panel-description').innerHTML = `
+        도달 레벨: ${game.level}/5<br>
+        완성한 주문: ${game.served}개<br>
+        최종 점수: ${game.score}점<br>
+        최고 콤보: ${game.best}회<br>
+        놓친 주문: ${game.missed}개
+    `;
+
+    el('start-button').textContent =
+        '🔄 다시 도전하기';
+
+    el('overlay').classList.remove('hidden');
+}
+
+
+// ====================================
+// 실시간 타이머
+// ====================================
 
 function tick() {
 
+    // 게임 시작 전에는 타이머가 흐르지 않음
     if (!game || game.ended) return;
 
     const t = now();
 
-    // 현재 레벨의 제한 시간
     const limit =
-        LEVEL_TIMES[game.level - 1];
+        LEVEL_TIMES[game.level-1];
 
-    const left = Math.max(
-        0,
-        limit - (t - game.levelStart) / 1000
-    );
+    const remaining =
+        limit-(t-game.levelStart)/1000;
 
     el('time').textContent =
-        Math.ceil(left);
+        Math.max(0,Math.ceil(remaining));
 
-    el('timer').classList.toggle(
-        'urgent',
-        left <= 10
-    );
-
-    // 시간이 끝나면 다음 레벨
-    if (left <= 0) {
-
-        advance();
-
+    if (remaining<=0) {
+        nextLevel();
         return;
     }
 
-    let needGrillRender = false;
-    let needCustomerRender = false;
+    let grillChanged=false;
 
+    game.grills.forEach((g,i)=>{
 
-    // 타코야끼 굽기
-    game.grills.forEach((g, i) => {
+        if (g.state==='empty') return;
 
-        if (g.state === 'empty') return;
-
-        const passed = t - g.born;
+        const elapsed=t-g.born;
 
         if (
-            g.state === 'cooking' &&
-            passed >= COOK_MS
+            g.state==='cooking' &&
+            elapsed>=COOK_MS
         ) {
-
-            g.state = 'ready';
-
-            needGrillRender = true;
+            g.state='ready';
+            grillChanged=true;
         }
 
         if (
-            g.state === 'ready' &&
-            passed >= BURN_MS
+            g.state==='ready' &&
+            elapsed>=BURN_MS
         ) {
-
-            g.state = 'burnt';
-
-            game.score = Math.max(
-                0,
-                game.score - 10
-            );
-
-            game.combo = 0;
-
-            needGrillRender = true;
-
+            g.state='burnt';
+            game.score=Math.max(0,game.score-10);
+            game.combo=0;
             updateHud();
-
-            tell('🔥 타코야끼가 탔어요! -10점');
+            grillChanged=true;
         }
 
-        const bar = el('cook-' + i);
+        const bar=el('cook-'+i);
 
         if (bar) {
-
-            bar.style.width =
-                `${Math.min(
-                    100,
-                    passed / BURN_MS * 100
-                )}%`;
-
-            bar.style.background =
-                g.state === 'ready'
-                    ? '#75d66b'
-                    : g.state === 'burnt'
-                    ? '#e35e51'
-                    : '#ffd264';
+            bar.style.width=
+                Math.min(
+                    100,elapsed/BURN_MS*100
+                )+'%';
         }
     });
 
-    if (needGrillRender) {
-
+    if (grillChanged) {
         renderGrills();
     }
 
+    let customersChanged=false;
 
-    // 손님 대기 시간 확인
-    for (
-        let i = 0;
-        i < game.customers.length;
-        i++
-    ) {
+    for (let i=0;i<game.customers.length;i++) {
 
-        const c = game.customers[i];
+        const c=game.customers[i];
 
-        const remaining =
-            1 - (t - c.born) / c.patience;
+        const r=
+            1-(t-c.born)/c.patience;
 
-        const bar = el('patience-' + i);
+        const bar=el('patience-'+i);
 
         if (bar) {
+            bar.style.width=
+                Math.max(0,r)*100+'%';
 
-            bar.style.width =
-                `${Math.max(
-                    0,
-                    remaining
-                ) * 100}%`;
-
-            bar.style.background =
-                remaining < .3
-                    ? '#e4584c'
-                    : remaining < .55
-                    ? '#ecad46'
-                    : '#69b65a';
+            bar.style.background=
+                r<.3?'#e35a4d':
+                r<.55?'#e9ac49':
+                '#70b963';
         }
 
-        // 대기 시간 초과
-        if (remaining <= 0) {
+        if (r<=0) {
 
             game.missed++;
 
-            // 새로운 손님은 현재 레벨
-            // 대기 시간을 적용받음
-            game.customers[i] =
-                newCustomer();
+            game.customers[i]=newCustomer();
 
-            needCustomerRender = true;
+            customersChanged=true;
 
-            loseLife(
-                '⌛ 손님이 기다리다 떠났어요!'
-            );
+            loseLife('손님이 떠났습니다!');
 
             if (game.ended) return;
         }
     }
 
-    if (needCustomerRender) {
-
+    if (customersChanged) {
         renderCustomers();
     }
 }
 
-
-// =====================================
-// 21. 게임 실행
-// =====================================
-
-// 첫 번째 레벨 즉시 시작
-restart();
-
-// 80밀리초 간격으로 게임 상태 갱신
-setInterval(tick, 80);
+// 처음에는 게임을 시작하지 않음
+// 카운트다운 완료 후 startGame() 실행
+setInterval(tick,80);
 
 </script>
 </body>
