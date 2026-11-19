@@ -1,15 +1,14 @@
-
 import streamlit as st
 
 # =====================================
-# 기본 설정
+# 기본 페이지 설정
 # =====================================
 
 st.set_page_config(
     page_title="와글와글 포장마차",
     page_icon="🏮",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 if "game_entered" not in st.session_state:
@@ -20,17 +19,14 @@ def enter_game():
     st.session_state.game_entered = True
 
 
-def return_home():
-    st.session_state.game_entered = False
-    st.switch_page(home_page)
-
-
 # =====================================
 # 공통 디자인
 # =====================================
 
 st.html(r"""
 <style>
+
+/* 전체 배경 */
 [data-testid="stAppViewContainer"] {
     background: linear-gradient(
         180deg,
@@ -40,15 +36,22 @@ st.html(r"""
     );
 }
 
+/* 상단 영역 */
 [data-testid="stHeader"] {
     background: transparent;
     height: 2.5rem;
 }
 
+/* 사이드바 */
 [data-testid="stSidebar"] {
     background: #fff7eb;
 }
 
+[data-testid="stSidebarUserContent"] {
+    padding-top: 1rem;
+}
+
+/* 사이드바 페이지 링크 */
 [data-testid="stSidebar"] [data-testid="stPageLink"] {
     border-radius: 12px;
 }
@@ -57,23 +60,30 @@ st.html(r"""
     background: #f8dfc9;
 }
 
+/* 본문 */
 .block-container {
     max-width: 1200px;
     padding-bottom: 1.5rem;
 }
 
+/* 기본 하단 메뉴 숨기기 */
 #MainMenu, footer {
     visibility: hidden;
 }
+
 </style>
 """)
 
 
 # =====================================
-# 홈 페이지
+# 홈 페이지 함수
 # =====================================
 
 def render_home():
+
+    # =====================================
+    # 홈 페이지 디자인
+    # =====================================
 
     st.html(r"""
     <style>
@@ -82,9 +92,9 @@ def render_home():
         padding-top: clamp(3rem, 10vh, 6rem) !important;
     }
 
-    /* =========================
+    /* =====================================
        게임 시작 화면
-    ========================= */
+    ===================================== */
 
     .hero {
         overflow: hidden;
@@ -92,12 +102,14 @@ def render_home():
         border-radius: 30px;
         padding: 22px 25px 28px;
         text-align: center;
+
         background: linear-gradient(
             180deg,
             #6684b3 0%,
             #f3ada0 55%,
             #ffdc9e 100%
         );
+
         box-shadow: 0 8px 0 #915637;
     }
 
@@ -105,12 +117,16 @@ def render_home():
         display: inline-block;
         margin: 10px auto 13px;
         padding: 12px 28px;
+
         border: 4px solid #ffe9ae;
         border-radius: 17px;
+
         background: #a84839;
         color: #fff2ca;
+
         font-size: clamp(32px, 4vw, 50px);
         font-weight: 900;
+
         text-shadow: 2px 3px #6d332c;
         box-shadow: 0 5px #74372c;
     }
@@ -119,28 +135,36 @@ def render_home():
         color: #69402d;
         font-size: 19px;
         font-weight: 900;
+
         margin: 12px auto 18px;
         line-height: 1.5;
     }
 
+    /* 포장마차 그림 */
+
     .stall {
         max-width: 650px;
         margin: 0 auto;
+
         border: 5px solid #965537;
         border-radius: 21px;
+
         background: #fff0ce;
         overflow: hidden;
+
         box-shadow: 0 7px 0 #74442e;
     }
 
     .stall-roof {
         padding: 10px;
         font-size: 29px;
+
         background: repeating-linear-gradient(
             90deg,
             #c95045 0 73px,
             #ffe8c7 73px 146px
         );
+
         border-bottom: 4px solid #965537;
     }
 
@@ -152,8 +176,10 @@ def render_home():
 
     .stall-sign {
         padding: 8px;
+
         background: #8d4b32;
         color: #fff3d6;
+
         font-weight: 900;
         font-size: 14px;
     }
@@ -168,10 +194,15 @@ def render_home():
         text-align: center;
         margin: 13px auto 10px;
         padding: 5px;
+
         font-size: 16px;
         font-weight: 900;
         color: #855337;
     }
+
+    /* =====================================
+       게임 시작 버튼
+    ===================================== */
 
     .st-key-game_start_button button {
         background: linear-gradient(
@@ -179,12 +210,16 @@ def render_home():
             #ffb06e,
             #e5754b
         ) !important;
+
         color: white !important;
+
         border: 3px solid #ab542e !important;
         border-radius: 17px !important;
+
         min-height: 68px !important;
         font-size: 23px !important;
         font-weight: 900 !important;
+
         box-shadow: 0 5px 0 #a05233 !important;
     }
 
@@ -193,45 +228,53 @@ def render_home():
         transform: translateY(-2px);
     }
 
-    /* =========================
+    /* =====================================
        홈 안내 영역
-    ========================= */
+    ===================================== */
 
     .lobby {
         background: #fff7e7;
+
         border: 5px solid #d69b70;
         border-radius: 24px;
+
         text-align: center;
         padding: 23px 18px;
+
         box-shadow: 0 7px #aa7854;
         margin-bottom: 16px;
     }
 
     .lobby-title {
         color: #9a4b31;
+
         font-size: clamp(25px, 3vw, 34px);
         font-weight: 900;
+
         margin-bottom: 10px;
     }
 
     .lobby-description {
         color: #84543d;
+
         font-size: 16px;
         font-weight: 700;
         line-height: 1.8;
     }
 
-    /* =========================
+    /* =====================================
        클릭 가능한 메뉴 카드
-    ========================= */
+    ===================================== */
 
     .st-key-card_taco button,
     .st-key-card_okonomi button,
     .st-key-card_decorate button {
+
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
+
         gap: 14px !important;
 
         width: 100% !important;
@@ -253,20 +296,26 @@ def render_home():
     }
 
     /* 카드 제목 */
+
     .st-key-card_taco button p,
     .st-key-card_okonomi button p,
     .st-key-card_decorate button p {
+
         font-size: 23px !important;
         font-weight: 900 !important;
+
         color: #995338 !important;
+
         margin: 0 !important;
         line-height: 1.3 !important;
     }
 
-    /* 카드 상단 그림 */
+    /* 카드 그림 */
+
     .st-key-card_taco button::before,
     .st-key-card_okonomi button::before,
     .st-key-card_decorate button::before {
+
         display: block;
         font-size: 57px;
         line-height: 1.2;
@@ -284,15 +333,20 @@ def render_home():
         content: "🎨";
     }
 
-    /* 카드 하단 설명 */
+    /* 카드 설명 */
+
     .st-key-card_taco button::after,
     .st-key-card_okonomi button::after,
     .st-key-card_decorate button::after {
+
         display: block;
+
         font-size: 13px;
         line-height: 1.7;
         font-weight: 800;
+
         color: #976443;
+
         white-space: pre-line;
         text-align: center;
     }
@@ -309,29 +363,36 @@ def render_home():
         content: "나만의 포장마차를\A원하는 스타일로 꾸며 보세요!";
     }
 
-    /* 마우스를 올렸을 때 */
+    /* 카드에 마우스를 올렸을 때 */
+
     .st-key-card_taco button:hover,
     .st-key-card_okonomi button:hover,
     .st-key-card_decorate button:hover {
+
         background: #fff0d7 !important;
         border-color: #d9905a !important;
+
         transform: translateY(-5px);
+
         box-shadow: 0 10px 0 #c68b61 !important;
     }
 
-    /* 클릭했을 때 */
+    /* 카드 클릭 효과 */
+
     .st-key-card_taco button:active,
     .st-key-card_okonomi button:active,
     .st-key-card_decorate button:active {
+
         transform: translateY(2px);
         box-shadow: 0 2px 0 #c68b61 !important;
     }
 
-    /* =========================
+    /* =====================================
        화면 높이가 작은 경우
-    ========================= */
+    ===================================== */
 
     @media (max-height: 750px) {
+
         .block-container {
             padding-top: 2rem !important;
         }
@@ -380,11 +441,12 @@ def render_home():
         }
     }
 
-    /* =========================
-       모바일
-    ========================= */
+    /* =====================================
+       모바일 화면
+    ===================================== */
 
     @media (max-width: 700px) {
+
         .block-container {
             padding-left: 0.6rem !important;
             padding-right: 0.6rem !important;
@@ -426,20 +488,12 @@ def render_home():
     """)
 
     # =====================================
-    # 게임 시작 전 화면
+    # 게임 시작 전 첫 화면
     # =====================================
 
     if not st.session_state.game_entered:
 
-        st.html("""
-        <style>
-        [data-testid="stSidebar"],
-        [data-testid="stSidebarCollapsedControl"],
-        [data-testid="collapsedControl"] {
-            display: none !important;
-        }
-        </style>
-        """)
+        # 사이드바를 숨기는 코드는 제거했음
 
         st.html("""
         <div class="hero">
@@ -499,7 +553,7 @@ def render_home():
             )
 
     # =====================================
-    # 게임 선택 홈 화면
+    # 게임 시작 후 홈 화면
     # =====================================
 
     else:
@@ -525,9 +579,9 @@ def render_home():
             gap="medium"
         )
 
-        # =================================
+        # =====================================
         # 타코야끼 카드
-        # =================================
+        # =====================================
 
         with col1:
 
@@ -538,9 +592,9 @@ def render_home():
             ):
                 st.switch_page(taco_page)
 
-        # =================================
+        # =====================================
         # 오코노미야끼 카드
-        # =================================
+        # =====================================
 
         with col2:
 
@@ -551,9 +605,9 @@ def render_home():
             ):
                 st.switch_page(okonomi_page)
 
-        # =================================
+        # =====================================
         # 배경 꾸미기 카드
-        # =================================
+        # =====================================
 
         with col3:
 
@@ -603,8 +657,11 @@ decorate_page = st.Page(
 
 
 # =====================================
-# 페이지 이동
+# 페이지 이동 설정
 # =====================================
+
+# Streamlit의 자동 메뉴를 숨기고
+# 아래에서 직접 사이드바를 구성함
 
 pg = st.navigation(
     [
@@ -621,49 +678,49 @@ pg = st.navigation(
 # 공통 사이드바
 # =====================================
 
-if st.session_state.game_entered:
+# 모든 페이지에서 사이드바 표시
+# 게임 시작 여부와 관계없이 출력
 
-    with st.sidebar:
+with st.sidebar:
 
-        st.title("🏮 와글와글 포장마차")
+    st.title("🏮 와글와글 포장마차")
 
-        st.caption(
-            "원하는 메뉴를 선택해 주세요!"
-        )
+    st.caption("원하는 메뉴를 선택해 주세요!")
 
-        st.divider()
+    st.divider()
 
-        st.page_link(
-            home_page,
-            label="홈",
-            use_container_width=True,
-        )
+    st.page_link(
+        home_page,
+        label="홈",
+        use_container_width=True,
+    )
 
-        st.page_link(
-            taco_page,
-            label="타코야끼",
-            use_container_width=True,
-        )
+    st.page_link(
+        taco_page,
+        label="타코야끼",
+        use_container_width=True,
+    )
 
-        st.page_link(
-            okonomi_page,
-            label="오코노미야끼",
-            use_container_width=True,
-        )
+    st.page_link(
+        okonomi_page,
+        label="오코노미야끼",
+        use_container_width=True,
+    )
 
-        st.page_link(
-            decorate_page,
-            label="배경 꾸미기",
-            use_container_width=True,
-        )
+    st.page_link(
+        decorate_page,
+        label="배경 꾸미기",
+        use_container_width=True,
+    )
 
-        st.divider()
+    st.divider()
 
-        st.button(
-            "🏠 처음 화면으로",
-            use_container_width=True,
-            on_click=return_home,
-        )
+    if st.button(
+        "🏠 처음 화면으로",
+        use_container_width=True,
+    ):
+        st.session_state.game_entered = False
+        st.switch_page(home_page)
 
 
 # =====================================
