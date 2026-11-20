@@ -25,10 +25,9 @@ CUSTOMER_STYLES = [
 
 BUBBLE_STYLES = [
     "💭 둥근 말풍선",
-    "💥 코믹 말풍선",
+    "✨ 강조 말풍선",
     "▫️ 심플 말풍선",
 ]
-
 
 # ==========================================
 # 2. 기본 설정
@@ -44,6 +43,14 @@ for key, value in DEFAULTS.items():
     if key not in st.session_state:
         st.session_state[key] = value
 
+# 기존 코믹 말풍선 설정을 새 이름으로 변경
+if (
+    st.session_state.get("saved_bubble_style")
+    == "💥 코믹 말풍선"
+):
+    st.session_state["saved_bubble_style"] = (
+        "✨ 강조 말풍선"
+    )
 
 # ==========================================
 # 3. 화면 디자인
@@ -69,7 +76,6 @@ st.html("""
 .decorate-title {
     padding: 24px 20px;
     margin-bottom: 25px;
-
     border: 4px solid #d7a077;
     border-radius: 22px;
 
@@ -140,7 +146,6 @@ st.html("""
 </style>
 """)
 
-
 # ==========================================
 # 4. 페이지 제목
 # ==========================================
@@ -154,7 +159,6 @@ st.html("""
     </p>
 </div>
 """)
-
 
 # ==========================================
 # 5. 꾸미기 설정
@@ -208,7 +212,6 @@ if st.button(
     st.session_state.saved_bubble_style = bubble_style
 
     st.success("꾸미기 설정이 저장되었어요!")
-
 
 # ==========================================
 # 6. 현재 저장된 설정
