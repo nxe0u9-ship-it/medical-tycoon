@@ -9,7 +9,6 @@ from game_unlock import listen_for_takoyaki_clear
 
 # ==========================================
 # 와글와글 포장마차 - 타코야끼
-# 15초 타기 대기 / 레벨별 목숨 회복
 # ==========================================
 
 CUSTOMER_THEMES = {
@@ -21,24 +20,25 @@ CUSTOMER_THEMES = {
 
 BUBBLE_THEMES = {
     "💭 둥근 말풍선": "round",
+    "✨ 강조 말풍선": "comic",
     "💥 코믹 말풍선": "comic",
     "▫️ 심플 말풍선": "simple",
 }
 
+customer_style = st.session_state.get(
+    "saved_customer_style", "🎆 축제 손님"
+)
+
+bubble_style = st.session_state.get(
+    "saved_bubble_style", "💭 둥근 말풍선"
+)
+
 theme = CUSTOMER_THEMES.get(
-    st.session_state.get(
-        "saved_customer_style",
-        "🎆 축제 손님",
-    ),
-    "festival",
+    customer_style, "festival"
 )
 
 bubble = BUBBLE_THEMES.get(
-    st.session_state.get(
-        "saved_bubble_style",
-        "💭 둥근 말풍선",
-    ),
-    "round",
+    bubble_style, "round"
 )
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -151,7 +151,7 @@ html, body {
     );
 }
 
-/* 상단 */
+/* 상단 정보 */
 
 .header {
     display: flex;
@@ -199,7 +199,7 @@ html, body {
     background: #c8584c;
 }
 
-/* 안내문 전용 영역 */
+/* 안내문 */
 
 .notice-area {
     height: 43px;
@@ -290,6 +290,8 @@ html, body {
     text-align: center;
 }
 
+/* 말풍선 공통 */
+
 .bubble {
     position: relative;
     z-index: 2;
@@ -307,10 +309,16 @@ html, body {
     line-height: 1.3;
 }
 
+/* 1. 둥근 말풍선 */
+
 .bubble.round {
     border: 3px solid #d9ab83;
     border-radius: 18px;
+    background: #fffdf5;
 }
+
+/* 2. 강조 말풍선
+   기존 코믹 말풍선 디자인 유지 */
 
 .bubble.comic {
     border: 3px solid #d28b54;
@@ -319,10 +327,15 @@ html, body {
     box-shadow: 3px 3px #e7b06e;
 }
 
+/* 3. 심플 말풍선 */
+
 .bubble.simple {
     border: 2px solid #d8c1aa;
     border-radius: 9px;
+    background: #fffdf5;
 }
+
+/* 둥근 말풍선과 심플 말풍선 꼬리 */
 
 .bubble.round::after,
 .bubble.simple::after {
@@ -337,6 +350,8 @@ html, body {
     border-right: 2px solid #d9ab83;
     border-bottom: 2px solid #d9ab83;
 }
+
+/* 손님 캐릭터 */
 
 .avatar {
     width: 135px;
@@ -475,8 +490,6 @@ html, body {
     background: #493024;
 }
 
-/* 남은 시간 게이지 */
-
 .bar {
     width: 80%;
     height: 9px;
@@ -507,7 +520,7 @@ html, body {
     border-color: #87493d;
 }
 
-/* 완성 접시 */
+/* 접시 */
 
 .right {
     display: flex;
@@ -687,7 +700,7 @@ html, body {
     font-size: 11px;
 }
 
-/* 게임 시작 / 종료 화면 */
+/* 시작 화면 */
 
 .overlay {
     position: absolute;
@@ -737,7 +750,7 @@ html, body {
     cursor: pointer;
 }
 
-/* 레벨별 카운트다운 */
+/* 레벨 카운트다운 */
 
 .countdown {
     position: absolute;
@@ -760,7 +773,6 @@ html, body {
 .count-level {
     font-size: 42px;
     font-weight: 900;
-    color: #fff2bc;
     text-shadow: 0 4px #76452f;
 }
 
@@ -781,7 +793,7 @@ html, body {
     text-shadow: 0 7px #7a4436;
 }
 
-/* 작은 화면 */
+/* 화면 크기 대응 */
 
 @media (max-width: 900px) {
     .game {
@@ -862,7 +874,6 @@ html, body {
         </div>
 
         <div class="stats">
-
             <div class="stat">
                 <small>레벨</small>
                 <span id="level">1</span>/5
@@ -882,16 +893,12 @@ html, body {
                 <small>점수</small>
                 <span id="score">0</span>
             </div>
-
         </div>
     </div>
 
     <div class="notice-area">
-        <div
-            class="toast info"
-            id="toast"
-            role="status"
-            aria-live="polite">
+        <div class="toast info" id="toast"
+             role="status" aria-live="polite">
         </div>
     </div>
 
@@ -942,13 +949,9 @@ html, body {
         가쓰오부시 → 소스 → 손님
     </div>
 
-    <!-- 시작 및 종료 창 -->
-
     <div class="overlay" id="overlay">
         <div class="panel">
-            <div
-                id="panel-icon"
-                style="font-size:58px">
+            <div id="panel-icon" style="font-size:58px">
                 🐙
             </div>
 
@@ -964,16 +967,13 @@ html, body {
                 다음 레벨에서는 목숨이 3개로 회복돼요!
             </p>
 
-            <button
-                class="start"
-                id="start-button"
-                onclick="beginCountdown()">
+            <button class="start"
+                    id="start-button"
+                    onclick="beginCountdown()">
                 🎮 타코야끼 만들기
             </button>
         </div>
     </div>
-
-    <!-- 레벨 시작 카운트다운 -->
 
     <div class="countdown" id="countdown">
         <div class="count-level" id="count-level">
@@ -991,7 +991,6 @@ html, body {
 
 </div>
 
-
 <script>
 
 // ==========================================
@@ -1001,9 +1000,7 @@ html, body {
 const CUSTOMER_IMAGES = __IMAGES__;
 const BUBBLE_STYLE = __BUBBLE__;
 
-const LEVEL_TIMES = [
-    90, 120, 120, 150, 150
-];
+const LEVEL_TIMES = [90, 120, 120, 150, 150];
 
 const CUSTOMER_WAIT = [
     [70, 85],
@@ -1013,22 +1010,13 @@ const CUSTOMER_WAIT = [
     [30, 45]
 ];
 
-// 익는 시간: 2.7초
 const COOK_MS = 2700;
 
-// 다 익은 후 타기까지 15초
+// 다 익은 후 15초가 지나면 탐
 const READY_TIME_MS = 15000;
-
-// 조리 시작부터 타기까지 17.7초
 const BURN_MS = COOK_MS + READY_TIME_MS;
 
-// 레벨 시작마다 회복되는 목숨
 const MAX_LIVES = 3;
-
-
-// ==========================================
-// 재료
-// ==========================================
 
 const fillings = [
     {
@@ -1069,10 +1057,8 @@ const toppings = [
 const el = id => document.getElementById(id);
 const now = () => performance.now();
 
-const sleep = milliseconds =>
-    new Promise(resolve =>
-        setTimeout(resolve, milliseconds)
-    );
+const sleep = ms =>
+    new Promise(resolve => setTimeout(resolve, ms));
 
 let game = null;
 let drag = null;
@@ -1082,7 +1068,7 @@ let counting = false;
 
 
 // ==========================================
-// 알림
+// 안내문
 // ==========================================
 
 function tell(message, type = "info") {
@@ -1125,6 +1111,7 @@ function newCustomer() {
 
     return {
         character: Math.floor(Math.random() * 5) + 1,
+
         cheese: Math.random() < 0.5,
 
         sauce: Math.random() < 0.5
@@ -1156,7 +1143,7 @@ function orderText(c) {
 
 
 // ==========================================
-// 게임 최초 시작
+// 새 게임
 // ==========================================
 
 function createNewGame() {
@@ -1185,7 +1172,7 @@ function createNewGame() {
 
 
 // ==========================================
-// 카운트다운
+// 시작 및 레벨 카운트다운
 // ==========================================
 
 async function beginCountdown() {
@@ -1205,7 +1192,6 @@ async function runLevelCountdown(showLevelIntro) {
     counting = true;
     game.paused = true;
 
-    // 카운트다운 중 기존 게임을 조작하지 못하도록 함
     el("overlay").classList.add("hidden");
     el("countdown").classList.add("show");
 
@@ -1215,7 +1201,6 @@ async function runLevelCountdown(showLevelIntro) {
     el("count-lives").textContent =
         `❤️ 목숨 ${game.lives}개`;
 
-    // 2레벨부터는 레벨 안내를 먼저 보여줌
     if (showLevelIntro) {
         el("count-text").textContent =
             "다음 레벨!";
@@ -1223,7 +1208,6 @@ async function runLevelCountdown(showLevelIntro) {
         await sleep(1200);
     }
 
-    // 3 → 2 → 1
     for (const number of ["3", "2", "1"]) {
         el("count-text").textContent = number;
         await sleep(1000);
@@ -1232,10 +1216,8 @@ async function runLevelCountdown(showLevelIntro) {
     el("count-text").textContent = "START!";
     await sleep(600);
 
-    // 카운트다운 종료 후 타이머 초기화
     game.levelStart = now();
 
-    // 손님 대기 시간도 지금부터 새로 계산
     game.customers = Array.from(
         {length: 3},
         newCustomer
@@ -1261,7 +1243,7 @@ async function runLevelCountdown(showLevelIntro) {
 
 
 // ==========================================
-// 화면 정보
+// 상단 정보
 // ==========================================
 
 function updateHud() {
@@ -1283,28 +1265,24 @@ function renderCustomers() {
 
     el("customers").innerHTML =
         game.customers.map((c, i) => `
-            <div
-                class="customer"
-                id="customer-${i}"
-                data-drop="customer"
-                data-index="${i}">
+            <div class="customer"
+                 id="customer-${i}"
+                 data-drop="customer"
+                 data-index="${i}">
 
-                <div
-                    class="bubble ${BUBBLE_STYLE}"
-                    id="bubble-${i}">
+                <div class="bubble ${BUBBLE_STYLE}"
+                     id="bubble-${i}">
                     ${orderText(c)}
                 </div>
 
-                <img
-                    class="avatar"
-                    id="avatar-${i}"
-                    src="${imageFor(c.character, "normal")}"
-                    data-expression="normal"
-                    draggable="false">
+                <img class="avatar"
+                     id="avatar-${i}"
+                     src="${imageFor(c.character, "normal")}"
+                     data-expression="normal"
+                     draggable="false">
 
-                <div
-                    class="customer-label"
-                    id="label-${i}">
+                <div class="customer-label"
+                     id="label-${i}">
                     주문을 기다리는 중
                 </div>
 
@@ -1317,7 +1295,7 @@ function renderCustomers() {
 
 
 // ==========================================
-// 손님 표정과 대기 게이지
+// 손님 표정 및 대기 시간
 // ==========================================
 
 function updateCustomers(t) {
@@ -1427,12 +1405,11 @@ function renderGrills() {
                 : "🥣 기본";
 
             return `
-                <div
-                    class="grill ${g.state}"
-                    id="grill-${i}"
-                    data-drop="grill"
-                    data-index="${i}"
-                    ${source}>
+                <div class="grill ${g.state}"
+                     id="grill-${i}"
+                     data-drop="grill"
+                     data-index="${i}"
+                     ${source}>
 
                     <div class="holes">
                         ${Array.from(
@@ -1466,7 +1443,7 @@ function renderGrills() {
 
 
 // ==========================================
-// 완성 접시 3개
+// 접시 3개
 // ==========================================
 
 function renderPlates() {
@@ -1492,10 +1469,9 @@ function renderPlates() {
         game.plates.map((p, i) => {
             if (!p) {
                 return `
-                    <div
-                        class="plate"
-                        data-drop="plate"
-                        data-index="${i}">
+                    <div class="plate"
+                         data-drop="plate"
+                         data-index="${i}">
 
                         <span class="plate-number">
                             ${i + 1}
@@ -1525,13 +1501,12 @@ function renderPlates() {
             }
 
             return `
-                <div
-                    class="plate ${complete ? "ready" : ""}"
-                    data-drop="plate"
-                    data-index="${i}"
-                    data-source="plate"
-                    data-emoji="🍡"
-                    data-label="타코야끼">
+                <div class="plate ${complete ? "ready" : ""}"
+                     data-drop="plate"
+                     data-index="${i}"
+                     data-source="plate"
+                     data-emoji="🍡"
+                     data-label="타코야끼">
 
                     <span class="plate-number">
                         ${i + 1}
@@ -1558,12 +1533,11 @@ function renderPlates() {
 function renderSupplies() {
     el("fillings").innerHTML =
         fillings.map((f, i) => `
-            <div
-                class="item"
-                data-source="filling"
-                data-index="${i}"
-                data-emoji="${f.emoji}"
-                data-label="${f.name}">
+            <div class="item"
+                 data-source="filling"
+                 data-index="${i}"
+                 data-emoji="${f.emoji}"
+                 data-label="${f.name}">
 
                 <span>${f.emoji}</span>
                 ${f.name}
@@ -1572,12 +1546,11 @@ function renderSupplies() {
 
     el("toppings").innerHTML =
         toppings.map((item, i) => `
-            <div
-                class="item"
-                data-source="topping"
-                data-index="${i}"
-                data-emoji="${item.emoji}"
-                data-label="${item.name}">
+            <div class="item"
+                 data-source="topping"
+                 data-index="${i}"
+                 data-emoji="${item.emoji}"
+                 data-label="${item.name}">
 
                 <span>${item.emoji}</span>
                 ${item.name}
@@ -1621,7 +1594,7 @@ function loseLife(message) {
 
 
 // ==========================================
-// 서빙
+// 손님 서빙
 // ==========================================
 
 function serve(customerIndex, plateIndex) {
@@ -1687,7 +1660,7 @@ function serve(customerIndex, plateIndex) {
 
 
 // ==========================================
-// 재료 드롭 처리
+// 드롭 처리
 // ==========================================
 
 function handleDrop(kind, index, target, targetIndex) {
@@ -1696,6 +1669,7 @@ function handleDrop(kind, index, target, targetIndex) {
     }
 
     // 반죽과 문어 / 치즈 추가
+
     if (
         kind === "filling" &&
         target === "grill"
@@ -1754,7 +1728,8 @@ function handleDrop(kind, index, target, targetIndex) {
         }
     }
 
-    // 익은 타코야끼를 접시로 이동
+    // 조리판에서 접시로 이동
+
     if (
         kind === "grill" &&
         target === "plate"
@@ -1792,7 +1767,8 @@ function handleDrop(kind, index, target, targetIndex) {
         return;
     }
 
-    // 가쓰오부시 / 소스
+    // 가쓰오부시와 소스
+
     if (
         kind === "topping" &&
         target === "plate"
@@ -1851,6 +1827,7 @@ function handleDrop(kind, index, target, targetIndex) {
     }
 
     // 손님에게 서빙
+
     if (
         kind === "plate" &&
         target === "customer"
@@ -1860,12 +1837,16 @@ function handleDrop(kind, index, target, targetIndex) {
     }
 
     // 휴지통
+
     if (target === "trash") {
         if (kind === "plate") {
             game.plates[index] = null;
             renderPlates();
 
-            tell("음식을 버렸습니다.", "info");
+            tell(
+                "음식을 버렸습니다.",
+                "info"
+            );
             return;
         }
 
@@ -1876,7 +1857,10 @@ function handleDrop(kind, index, target, targetIndex) {
 
             renderGrills();
 
-            tell("조리판을 비웠습니다.", "info");
+            tell(
+                "조리판을 비웠습니다.",
+                "info"
+            );
             return;
         }
     }
@@ -2061,7 +2045,7 @@ document.addEventListener(
 
 
 // ==========================================
-// 레벨 이동
+// 레벨 전환
 // ==========================================
 
 function nextLevel() {
@@ -2069,20 +2053,16 @@ function nextLevel() {
         return;
     }
 
-    // 5레벨 종료 시 최종 승리
     if (game.level === 5) {
         endGame(true);
         return;
     }
 
-    // 다음 레벨로 이동
     game.level++;
 
-    // 목숨 3개로 회복
+    // 레벨 이동 시 목숨 3개 회복
     game.lives = MAX_LIVES;
 
-    // 콤보는 유지, 점수도 유지
-    // 새 레벨의 조리대와 접시 초기화
     game.grills = Array.from(
         {length: 3},
         () => ({state: "empty"})
@@ -2098,7 +2078,6 @@ function nextLevel() {
     el("time").textContent =
         LEVEL_TIMES[game.level - 1];
 
-    // 레벨 안내와 3, 2, 1 카운트다운
     runLevelCountdown(true);
 }
 
@@ -2164,7 +2143,6 @@ function updateGrillBars(t) {
         let color = "#efc456";
         let message = "반죽을 넣어 주세요";
 
-        // 조리 중: 게이지 차오름
         if (g.state === "cooking") {
             const elapsed = t - g.born;
 
@@ -2184,7 +2162,6 @@ function updateGrillBars(t) {
             color = "#efc456";
         }
 
-        // 다 익은 후: 15초부터 감소
         else if (g.state === "ready") {
             const elapsed = t - g.born;
 
@@ -2239,7 +2216,7 @@ function updateGrillBars(t) {
 
 
 // ==========================================
-// 게임 타이머
+// 게임 진행 타이머
 // ==========================================
 
 function tick() {
@@ -2262,13 +2239,13 @@ function tick() {
     el("time").textContent =
         Math.ceil(remaining);
 
-    // 레벨 제한 시간 종료
     if (remaining <= 0) {
         nextLevel();
         return;
     }
 
     // 손님 대기 시간
+
     let customersChanged = false;
 
     for (
@@ -2308,6 +2285,7 @@ function tick() {
     updateCustomers(t);
 
     // 조리 상태 변화
+
     let grillsChanged = false;
 
     game.grills.forEach(g => {
@@ -2351,7 +2329,7 @@ function tick() {
 
 
 // ==========================================
-// 시작 전 화면
+// 게임 시작 전 화면
 // ==========================================
 
 function initializeScreen() {
@@ -2366,10 +2344,9 @@ function initializeScreen() {
                         게임 시작 후 주문이 나타나요!
                     </div>
 
-                    <img
-                        class="avatar"
-                        src="${imageFor(i + 1, "normal")}"
-                        draggable="false">
+                    <img class="avatar"
+                         src="${imageFor(i + 1, "normal")}"
+                         draggable="false">
 
                     <div class="customer-label">
                         영업 준비 중
@@ -2409,7 +2386,7 @@ function initializeScreen() {
 
 
 // ==========================================
-// 실행
+// 게임 실행
 // ==========================================
 
 initializeScreen();
@@ -2421,28 +2398,25 @@ setInterval(tick, 100);
 </html>
 """
 
-
 # ==========================================
-# Python → HTML 데이터 전달
+# Python 설정값을 게임에 전달
 # ==========================================
 
 GAME_HTML = GAME_HTML.replace(
     "__IMAGES__",
-    json.dumps(customer_images),
+    json.dumps(customer_images)
 )
 
 GAME_HTML = GAME_HTML.replace(
     "__BUBBLE__",
-    json.dumps(bubble),
+    json.dumps(bubble)
 )
 
-
 # ==========================================
-# 클리어 신호 수신
+# 타코야끼 클리어 신호 수신
 # ==========================================
 
 listen_for_takoyaki_clear()
-
 
 # ==========================================
 # 게임 출력
