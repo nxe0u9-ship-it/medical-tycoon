@@ -2,18 +2,25 @@
 import streamlit as st
 
 # ==========================================
-# 타코야끼 클리어 기록 관리
+# 와글와글 포장마차 - 게임 잠금 해제 관리
 # ==========================================
 
 CLEAR_KEY = "takoyaki_cleared"
 
 
-def is_takoyaki_cleared():
-    return st.session_state.get(
-        CLEAR_KEY,
-        False
-    )
+# ==========================================
+# 개발 중 임시 잠금 해제
+# ==========================================
 
+def is_takoyaki_cleared():
+    # 오코노미야끼 테스트를 위해
+    # 타코야끼 클리어 여부와 관계없이 입장 허용
+    return True
+
+
+# ==========================================
+# 타코야끼 클리어 기록 저장
+# ==========================================
 
 def mark_takoyaki_cleared():
     st.session_state[CLEAR_KEY] = True
@@ -43,7 +50,6 @@ export default function(component) {
             return;
         }
 
-        // 타코야끼 게임에서 보낸 신호인지 확인
         const gameFrames = document.querySelectorAll(
             "iframe"
         );
@@ -91,7 +97,7 @@ def listen_for_takoyaki_clear():
 
 
 # ==========================================
-# 기존 게임 HTML에 승리 신호 추가
+# 기존 게임 HTML에 클리어 신호 추가
 # ==========================================
 
 def add_takoyaki_clear_signal(game_html):
@@ -112,15 +118,14 @@ def add_takoyaki_clear_signal(game_html):
     }
     """
 
-    # 실제 게임 종료 함수에만 신호를 삽입
     function_start = game_html.find(
         "function endGame(won)"
     )
 
     if function_start == -1:
         raise ValueError(
-            "타코야끼 게임에서 endGame(won) "
-            "함수를 찾지 못했습니다."
+            "타코야끼 게임에서 "
+            "endGame(won) 함수를 찾지 못했습니다."
         )
 
     before = game_html[:function_start]
