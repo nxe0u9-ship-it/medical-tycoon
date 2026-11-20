@@ -1,3 +1,4 @@
+
 import streamlit as st
 
 # =====================================
@@ -17,6 +18,11 @@ if "game_entered" not in st.session_state:
 
 def enter_game():
     st.session_state.game_entered = True
+
+
+def return_home():
+    st.session_state.game_entered = False
+    st.switch_page(home_page)
 
 
 # =====================================
@@ -115,6 +121,8 @@ def render_home():
 
     .hero-title {
         display: inline-block;
+        max-width: 100%;
+
         margin: 10px auto 13px;
         padding: 12px 28px;
 
@@ -124,8 +132,9 @@ def render_home():
         background: #a84839;
         color: #fff2ca;
 
-        font-size: clamp(32px, 4vw, 50px);
+        font-size: clamp(28px, 3.5vw, 50px);
         font-weight: 900;
+        line-height: 1.3;
 
         text-shadow: 2px 3px #6d332c;
         box-shadow: 0 5px #74372c;
@@ -140,7 +149,9 @@ def render_home():
         line-height: 1.5;
     }
 
-    /* 포장마차 그림 */
+    /* =====================================
+       포장마차 그림
+    ===================================== */
 
     .stall {
         max-width: 650px;
@@ -363,7 +374,7 @@ def render_home():
         content: "나만의 포장마차를\A원하는 스타일로 꾸며 보세요!";
     }
 
-    /* 카드에 마우스를 올렸을 때 */
+    /* 마우스를 올렸을 때 */
 
     .st-key-card_taco button:hover,
     .st-key-card_okonomi button:hover,
@@ -377,7 +388,7 @@ def render_home():
         box-shadow: 0 10px 0 #c68b61 !important;
     }
 
-    /* 카드 클릭 효과 */
+    /* 클릭 효과 */
 
     .st-key-card_taco button:active,
     .st-key-card_okonomi button:active,
@@ -442,7 +453,7 @@ def render_home():
     }
 
     /* =====================================
-       모바일 화면
+       모바일
     ===================================== */
 
     @media (max-width: 700px) {
@@ -493,7 +504,44 @@ def render_home():
 
     if not st.session_state.game_entered:
 
-        # 사이드바를 숨기는 코드는 제거했음
+        # 첫 화면에만 표시되는 구분 요소
+        # 이 요소가 존재할 때만 사이드바를 숨김
+
+        st.html("""
+        <div
+            id="splash-screen-marker"
+            style="display:none;">
+        </div>
+
+        <style>
+
+        body:has(#splash-screen-marker)
+        [data-testid="stSidebar"] {
+            display: none !important;
+        }
+
+        body:has(#splash-screen-marker)
+        [data-testid="stSidebarCollapsedControl"] {
+            display: none !important;
+        }
+
+        body:has(#splash-screen-marker)
+        [data-testid="collapsedControl"] {
+            display: none !important;
+        }
+
+        /* 첫 화면에서는 본문을 전체 너비로 표시 */
+
+        body:has(#splash-screen-marker)
+        [data-testid="stAppViewContainer"] {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+
+        </style>
+        """)
+
+        # 첫 화면 포장마차 그림
 
         st.html("""
         <div class="hero">
@@ -545,6 +593,7 @@ def render_home():
         )
 
         with center:
+
             st.button(
                 "🎮 게임 시작하기",
                 key="game_start_button",
@@ -579,9 +628,7 @@ def render_home():
             gap="medium"
         )
 
-        # =====================================
         # 타코야끼 카드
-        # =====================================
 
         with col1:
 
@@ -592,9 +639,7 @@ def render_home():
             ):
                 st.switch_page(taco_page)
 
-        # =====================================
         # 오코노미야끼 카드
-        # =====================================
 
         with col2:
 
@@ -605,9 +650,7 @@ def render_home():
             ):
                 st.switch_page(okonomi_page)
 
-        # =====================================
         # 배경 꾸미기 카드
-        # =====================================
 
         with col3:
 
@@ -660,8 +703,8 @@ decorate_page = st.Page(
 # 페이지 이동 설정
 # =====================================
 
-# Streamlit의 자동 메뉴를 숨기고
-# 아래에서 직접 사이드바를 구성함
+# Streamlit의 기본 자동 메뉴는 숨기고
+# 아래에서 사이드바를 직접 구성함
 
 pg = st.navigation(
     [
@@ -678,14 +721,16 @@ pg = st.navigation(
 # 공통 사이드바
 # =====================================
 
-# 모든 페이지에서 사이드바 표시
-# 게임 시작 여부와 관계없이 출력
+# 사이드바는 모든 페이지에 생성하지만
+# 첫 화면에서는 CSS로만 숨김
 
 with st.sidebar:
 
     st.title("🏮 와글와글 포장마차")
 
-    st.caption("원하는 메뉴를 선택해 주세요!")
+    st.caption(
+        "원하는 메뉴를 선택해 주세요!"
+    )
 
     st.divider()
 
@@ -719,8 +764,8 @@ with st.sidebar:
         "🏠 처음 화면으로",
         use_container_width=True,
     ):
-        st.session_state.game_entered = False
-        st.switch_page(home_page)
+
+        return_home()
 
 
 # =====================================
