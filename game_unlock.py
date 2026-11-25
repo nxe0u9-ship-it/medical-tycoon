@@ -6,20 +6,32 @@ import streamlit as st
 # ==========================================
 
 CLEAR_KEY = "takoyaki_cleared"
+TEST_KEY = "okonomi_test_unlock"
 
 
 # ==========================================
-# 개발 중 임시 잠금 해제
+# 오코노미야끼 잠금 해제 여부
 # ==========================================
 
 def is_takoyaki_cleared():
-    # 오코노미야끼 테스트를 위해
-    # 타코야끼 클리어 여부와 관계없이 입장 허용
-    return True
+    # 실제 타코야끼 5레벨 클리어 기록
+    actually_cleared = st.session_state.get(
+        CLEAR_KEY,
+        False
+    )
+
+    # 개발 중 사이드바 테스트 스위치
+    test_unlocked = st.session_state.get(
+        TEST_KEY,
+        False
+    )
+
+    # 둘 중 하나라도 True이면 입장 허용
+    return actually_cleared or test_unlocked
 
 
 # ==========================================
-# 타코야끼 클리어 기록 저장
+# 실제 타코야끼 클리어 기록
 # ==========================================
 
 def mark_takoyaki_cleared():
