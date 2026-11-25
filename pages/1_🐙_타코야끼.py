@@ -2422,6 +2422,67 @@ listen_for_takoyaki_clear()
 # 게임 출력
 # ==========================================
 
+
+# ==========================================
+# 배경 꾸미기에서 선택한 이미지 적용
+# ==========================================
+
+BACKGROUND_FILES = {
+    "🌸 벚꽃 축제": "bg_spring.png",
+    "🎆 여름 축제": "bg_summer.png",
+    "🍁 가을 야시장": "bg_autumn.png",
+    "❄️ 겨울 포장마차": "bg_winter.png",
+}
+
+selected_background = st.session_state.get(
+    "saved_background",
+    "🌸 벚꽃 축제"
+)
+
+background_filename = BACKGROUND_FILES.get(
+    selected_background,
+    "bg_spring.png"
+)
+
+background_path = (
+    Path(__file__).resolve().parent.parent
+    / background_filename
+)
+
+if background_path.is_file():
+    encoded = base64.b64encode(
+        background_path.read_bytes()
+    ).decode("ascii")
+
+    background_url = "data:image/png;base64," + encoded
+
+    background_css = """
+    <style>
+    .game {
+        background-image: url("__BACKGROUND_URL__") !important;
+        background-position: center center !important;
+        background-size: cover !important;
+        background-repeat: no-repeat !important;
+    }
+    </style>
+    """
+
+    background_css = background_css.replace(
+        "__BACKGROUND_URL__",
+        background_url
+    )
+
+    GAME_HTML = GAME_HTML.replace(
+        "</head>",
+        background_css + "\n</head>",
+        1
+    )
+else:
+    st.warning(
+        f"배경 이미지 파일을 찾을 수 없어요: "
+        f"{background_filename}"
+    )
+
 components.html(
     GAME_HTML,
     height=700,
