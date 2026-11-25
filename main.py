@@ -3,7 +3,7 @@ import streamlit as st
 from game_unlock import is_takoyaki_cleared
 
 # =====================================
-# 기본 설정
+# 와글와글 포장마차 - 메인 화면
 # =====================================
 
 st.set_page_config(
@@ -13,9 +13,21 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+
+# =====================================
+# 세션 초기화
+# =====================================
+
 if "game_entered" not in st.session_state:
     st.session_state.game_entered = False
 
+if "okonomi_test_unlock" not in st.session_state:
+    st.session_state.okonomi_test_unlock = False
+
+
+# =====================================
+# 페이지 이동 함수
+# =====================================
 
 def enter_game():
     st.session_state.game_entered = True
@@ -96,12 +108,14 @@ def render_home():
         border-radius: 30px;
         padding: 22px 25px 28px;
         text-align: center;
+
         background: linear-gradient(
             180deg,
             #6684b3 0%,
             #f3ada0 55%,
             #ffdc9e 100%
         );
+
         box-shadow: 0 8px 0 #915637;
     }
 
@@ -114,6 +128,7 @@ def render_home():
         border-radius: 17px;
         background: #a84839;
         color: #fff2ca;
+
         font-size: clamp(28px, 3.5vw, 50px);
         font-weight: 900;
         line-height: 1.3;
@@ -142,11 +157,13 @@ def render_home():
     .stall-roof {
         padding: 10px;
         font-size: 29px;
+
         background: repeating-linear-gradient(
             90deg,
             #c95045 0 73px,
             #ffe8c7 73px 146px
         );
+
         border-bottom: 4px solid #965537;
     }
 
@@ -164,12 +181,6 @@ def render_home():
         font-size: 14px;
     }
 
-    .customers {
-        font-size: 35px;
-        margin-top: 17px;
-        letter-spacing: 10px;
-    }
-
     .game-info {
         text-align: center;
         margin: 13px auto 10px;
@@ -179,7 +190,7 @@ def render_home():
         color: #855337;
     }
 
-    /* 시작 버튼 */
+    /* 게임 시작 버튼 */
 
     .st-key-game_start_button button {
         background: linear-gradient(
@@ -187,6 +198,7 @@ def render_home():
             #ffb06e,
             #e5754b
         ) !important;
+
         color: white !important;
         border: 3px solid #ab542e !important;
         border-radius: 17px !important;
@@ -201,7 +213,7 @@ def render_home():
         transform: translateY(-2px);
     }
 
-    /* 홈 안내 */
+    /* 게임 선택 로비 */
 
     .lobby {
         background: #fff7e7;
@@ -227,7 +239,7 @@ def render_home():
         line-height: 1.8;
     }
 
-    /* 메뉴 카드 */
+    /* 게임 메뉴 카드 */
 
     .st-key-card_taco button,
     .st-key-card_okonomi button,
@@ -241,7 +253,6 @@ def render_home():
         width: 100% !important;
         min-height: 235px !important;
         padding: 20px 12px !important;
-
         border: 4px solid #e4b689 !important;
         border-radius: 24px !important;
         background: #fff8e9 !important;
@@ -336,7 +347,7 @@ def render_home():
         color: #87796d;
     }
 
-    /* 화면 높이가 낮은 경우 */
+    /* 낮은 화면 높이 */
 
     @media (max-height: 750px) {
         .block-container {
@@ -372,11 +383,6 @@ def render_home():
             font-size: 40px;
         }
 
-        .customers {
-            font-size: 29px;
-            margin-top: 9px;
-        }
-
         .game-info {
             font-size: 13px;
         }
@@ -386,6 +392,8 @@ def render_home():
             font-size: 18px !important;
         }
     }
+
+    /* 모바일 */
 
     @media (max-width: 700px) {
         .block-container {
@@ -409,11 +417,6 @@ def render_home():
             font-size: 35px;
         }
 
-        .customers {
-            letter-spacing: 3px;
-            font-size: 27px;
-        }
-
         .st-key-card_taco button,
         .st-key-card_okonomi button,
         .st-key-card_decorate button {
@@ -424,11 +427,12 @@ def render_home():
     """)
 
     # =====================================
-    # 게임 시작 전
+    # 게임 시작 전 화면
     # =====================================
 
     if not st.session_state.game_entered:
 
+        # 시작 전에는 사이드바 숨김
         st.html("""
         <div id="splash-screen-marker"
              style="display:none;"></div>
@@ -447,6 +451,7 @@ def render_home():
 
         st.html("""
         <div class="hero">
+
             <div class="hero-title">
                 🏮 와글와글 포장마차 🏮
             </div>
@@ -457,6 +462,7 @@ def render_home():
             </div>
 
             <div class="stall">
+
                 <div class="stall-roof">
                     🏮 🍡 🏮
                 </div>
@@ -468,9 +474,9 @@ def render_home():
                 <div class="stall-sign">
                     주문 폭주! 타임어택 요리 대작전
                 </div>
+
             </div>
 
-         
         </div>
         """)
 
@@ -502,11 +508,20 @@ def render_home():
 
     else:
 
-        if cleared:
+        # 테스트 잠금 해제 여부와
+        # 실제 클리어 기록을 함께 확인
+        if st.session_state.okonomi_test_unlock:
+            status_text = (
+                "🧪 테스트 잠금 해제 중! "
+                "오코노미야끼에 바로 입장할 수 있어요."
+            )
+
+        elif cleared:
             status_text = (
                 "🎉 타코야끼 클리어! "
                 "오코노미야끼 가게가 열렸어요!"
             )
+
         else:
             status_text = (
                 "🔒 타코야끼 5레벨을 클리어하면 "
@@ -515,6 +530,7 @@ def render_home():
 
         st.html("""
         <div class="lobby">
+
             <div class="lobby-title">
                 🏮 와글와글 포장마차
             </div>
@@ -524,6 +540,7 @@ def render_home():
                 오늘은 어떤 가게를 운영해 볼까요?<br><br>
                 플레이할 메뉴를 선택해 주세요!
             </div>
+
         </div>
         """)
 
@@ -635,14 +652,20 @@ with st.sidebar:
         use_container_width=True,
     )
 
+    # =====================================
+    # 테스트 설정을 반영한 잠금 판정
+    # =====================================
+
+    okonomi_unlocked = is_takoyaki_cleared()
+
     st.page_link(
         okonomi_page,
         label=(
             "오코노미야끼"
-            if is_takoyaki_cleared()
+            if okonomi_unlocked
             else "오코노미야끼 🔒"
         ),
-        disabled=not is_takoyaki_cleared(),
+        disabled=not okonomi_unlocked,
         use_container_width=True,
     )
 
@@ -660,22 +683,53 @@ with st.sidebar:
     ):
         return_home()
 
+    st.divider()
+
+    # =====================================
+    # 개발자 테스트용 임시 스위치
+    # 최종 제출 시 이 부분 삭제
+    # =====================================
+
+    st.toggle(
+        "🧪 오코노미야끼 테스트 잠금 해제",
+        key="okonomi_test_unlock",
+        help=(
+            "켜면 타코야끼 5레벨을 클리어하지 "
+            "않아도 오코노미야끼에 입장할 수 있어요."
+        ),
+    )
+
+    if st.session_state.okonomi_test_unlock:
+        st.caption(
+            "🟢 테스트 잠금 해제 ON"
+        )
+    else:
+        st.caption(
+            "🔒 테스트 잠금 해제 OFF"
+        )
+
+    st.caption(
+        "개발 중에만 사용하는 기능입니다."
+    )
+
 
 # =====================================
 # 선택한 페이지 실행
 # =====================================
 
-# 주소를 직접 입력해도 잠금 적용
+# 직접 주소로 접근해도 잠금 적용
 if (
     pg.url_path == okonomi_page.url_path
     and not is_takoyaki_cleared()
 ):
+
     st.warning(
         "🔒 오코노미야끼 가게는 아직 잠겨 있어요!"
     )
 
     st.info(
-        "타코야끼 게임의 5레벨을 클리어하면 "
+        "사이드바에서 개발용 테스트 잠금 해제를 "
+        "켜거나, 타코야끼 5레벨을 클리어하면 "
         "오코노미야끼를 플레이할 수 있어요."
     )
 
