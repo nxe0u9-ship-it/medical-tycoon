@@ -1,5 +1,6 @@
 
 import streamlit as st
+from pathlib import Path
 
 # ==========================================
 # 와글와글 포장마차 - 배경 꾸미기
@@ -15,6 +16,13 @@ BACKGROUNDS = [
     "🍁 가을 야시장",
     "❄️ 겨울 포장마차",
 ]
+
+BACKGROUND_FILES = {
+    "🌸 벚꽃 축제": "bg_spring.png",
+    "🎆 여름 축제": "bg_summer.png",
+    "🍁 가을 야시장": "bg_autumn.png",
+    "❄️ 겨울 포장마차": "bg_winter.png",
+}
 
 CUSTOMER_STYLES = [
     "🎆 축제 손님",
@@ -44,16 +52,26 @@ for key, value in DEFAULTS.items():
         st.session_state[key] = value
 
 # 기존 코믹 말풍선 설정을 새 이름으로 변경
-if (
-    st.session_state.get("saved_bubble_style")
-    == "💥 코믹 말풍선"
-):
-    st.session_state["saved_bubble_style"] = (
-        "✨ 강조 말풍선"
-    )
+if st.session_state.get("saved_bubble_style") == "💥 코믹 말풍선":
+    st.session_state["saved_bubble_style"] = "✨ 강조 말풍선"
 
 # ==========================================
-# 3. 화면 디자인
+# 3. 이미지 파일 경로
+# ==========================================
+
+# 이 파일이 pages 폴더 안에 있어도
+# GitHub 저장소의 최상위 폴더를 기준으로 찾음
+ROOT_DIR = Path(__file__).resolve().parent.parent
+
+def get_background_path(background_name):
+    filename = BACKGROUND_FILES.get(background_name)
+    if not filename:
+        return None
+
+    return ROOT_DIR / filename
+
+# ==========================================
+# 4. 화면 디자인
 # ==========================================
 
 st.html("""
@@ -78,10 +96,8 @@ st.html("""
     margin-bottom: 25px;
     border: 4px solid #d7a077;
     border-radius: 22px;
-
     background: #fff7e8;
     box-shadow: 0 6px #b9825d;
-
     text-align: center;
 }
 
@@ -106,33 +122,15 @@ st.html("""
     font-weight: 900;
 }
 
-.saved-settings {
-    padding: 20px;
+.preview-box {
+    padding: 12px 16px;
     margin-top: 8px;
-
     border: 3px solid #e8bb8f;
-    border-radius: 18px;
-
+    border-radius: 16px;
     background: #fff8ec;
-}
-
-.saved-settings h3 {
-    margin: 0 0 14px;
     color: #965438;
-    font-size: 20px;
-}
-
-.saved-item {
-    padding: 10px 0;
-    color: #795039;
-    font-size: 15px;
-    font-weight: 700;
-}
-
-.saved-label {
-    display: inline-block;
-    min-width: 130px;
-    color: #ad714e;
+    font-weight: 800;
+    text-align: center;
 }
 
 .stButton button[kind="primary"] {
@@ -147,7 +145,7 @@ st.html("""
 """)
 
 # ==========================================
-# 4. 페이지 제목
+# 5. 페이지 제목
 # ==========================================
 
 st.html("""
@@ -161,7 +159,7 @@ st.html("""
 """)
 
 # ==========================================
-# 5. 꾸미기 설정
+# 6. 꾸미기 설정
 # ==========================================
 
 st.html("""
@@ -179,6 +177,34 @@ background = st.selectbox(
         else BACKGROUNDS[0]
     ),
 )
+
+# ==========================================
+# 7. 배경 이미지 미리보기
+# ==========================================
+
+st.html("""
+<div class="preview-box">
+    🖼️ 선택한 포장마차 배경 미리보기
+</div>
+""")
+
+background_path = get_background_path(background)
+
+if background_path is not None and background_path.is_file():
+    st.image(
+        str(background_path),
+        use_container_width=True,
+    )
+else:
+    st.info(
+        "아직 배경 이미지가 등록되지 않았어요. "
+        "GitHub에 해당 이미지 파일을 추가하면 "
+        "이곳에 자동으로 표시돼요!"
+    )
+
+# ==========================================
+# 8. 손님 및 말풍선 선택
+# ==========================================
 
 customer_style = st.selectbox(
     "👥 손님 스타일",
@@ -202,6 +228,10 @@ bubble_style = st.selectbox(
 
 st.write("")
 
+# ==========================================
+# 9. 설정 저장
+# ==========================================
+
 if st.button(
     "💾 꾸미기 설정 저장하기",
     type="primary",
@@ -214,7 +244,7 @@ if st.button(
     st.success("꾸미기 설정이 저장되었어요!")
 
 # ==========================================
-# 6. 현재 저장된 설정
+# 10. 현재 저장된 설정
 # ==========================================
 
 st.divider()
