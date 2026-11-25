@@ -470,9 +470,7 @@ def render_home():
                 </div>
             </div>
 
-            <div class="customers">
-                🐱 🐰 🐻 🦊
-            </div>
+         
         </div>
         """)
 
