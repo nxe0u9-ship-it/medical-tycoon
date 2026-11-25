@@ -1652,7 +1652,7 @@ function updateCustomers(t) {
             percent <= 30
                 ? "너무 오래 기다렸어요!"
                 : percent <= 65
-                ? "조금 초조해요..."
+                ? "기다림이 길어지고 있어요..."
                 : "주문을 기다리는 중";
 
         bar.style.width = percent + "%";
