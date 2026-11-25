@@ -1253,7 +1253,7 @@ const FIRST_COOK_MS = 2200;
 const SECOND_COOK_MS = 2000;
 
 // 뒤집기 대기 및 완성 후 타기까지 시간
-const BURN_WAIT_MS = 4200;
+const BURN_WAIT_MS = 8000;
 
 // ==========================================
 // 재료
