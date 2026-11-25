@@ -1010,7 +1010,7 @@ const CUSTOMER_WAIT = [
     [30, 45]
 ];
 
-const COOK_MS = 2700;
+const COOK_MS = 6000;
 
 // 다 익은 후 15초가 지나면 탐
 const READY_TIME_MS = 15000;
