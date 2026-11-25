@@ -1273,9 +1273,9 @@ function renderGrills() {
     const messages = {
         empty: "반죽을 넣어 주세요",
         batter: "재료를 올려 주세요",
-        cooking: "첫 번째 면 굽는 중",
+        cooking: "앞면 굽는 중",
         flip: "뒤집개를 사용하세요!",
-        second: "두 번째 면 굽는 중",
+        second: "뒷면 굽는 중",
         ready: "다 익었어요!",
         burnt: "음식이 탔어요!"
     };
@@ -1541,7 +1541,7 @@ function handleDrop(kind, index, target, targetIndex) {
             renderGrills();
 
             tell(
-                "첫 번째 면을 굽고 있어요!",
+                "앞면을 굽고 있어요!",
                 "info"
             );
             return;
@@ -1581,7 +1581,7 @@ function handleDrop(kind, index, target, targetIndex) {
         renderGrills();
 
         tell(
-            "✅ 뒤집기 성공! 반대쪽을 굽습니다.",
+            "✅ 뒤집기 성공! 뒷면을 굽습니다.",
             "success"
         );
         return;
