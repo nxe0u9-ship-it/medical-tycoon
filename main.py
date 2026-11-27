@@ -2,7 +2,6 @@
 import streamlit as st
 from pathlib import Path
 import base64
-from html import escape
 
 from game_unlock import is_takoyaki_cleared
 
@@ -27,12 +26,6 @@ if "game_entered" not in st.session_state:
 
 if "okonomi_test_unlock" not in st.session_state:
     st.session_state.okonomi_test_unlock = False
-
-if "owner_name" not in st.session_state:
-    st.session_state.owner_name = ""
-
-if "stall_name" not in st.session_state:
-    st.session_state.stall_name = ""
 
 
 # ==========================================
@@ -154,14 +147,6 @@ st.html("""
 def render_home():
 
     cleared = is_takoyaki_cleared()
-
-    owner = escape(st.session_state.owner_name.strip())
-    stall = escape(st.session_state.stall_name.strip())
-    display_name = (
-        f"{owner}의 {stall}"
-        if owner and stall
-        else "와글와글 포장마차"
-    )
 
     # ======================================
     # 홈 화면 디자인
@@ -733,41 +718,11 @@ def render_home():
         )
 
         with center:
-            st.text_input(
-                "사장님 이름",
-                key="owner_name",
-                placeholder="예: 나을",
-                max_chars=12,
-            )
-
-            st.text_input(
-                "포장마차 이름",
-                key="stall_name",
-                placeholder="예: 달빛 포장마차",
-                max_chars=24,
-            )
-
-            owner_preview = escape(
-                st.session_state.owner_name.strip()
-            )
-            stall_preview = escape(
-                st.session_state.stall_name.strip()
-            )
-
-            if owner_preview and stall_preview:
-                st.markdown(
-                    f"**🏮 {owner_preview}의 {stall_preview} 🏮**"
-                )
-
             st.button(
                 "🎮 게임 시작하기",
                 key="game_start_button",
                 use_container_width=True,
                 on_click=enter_game,
-                disabled=not (
-                    st.session_state.owner_name.strip()
-                    and st.session_state.stall_name.strip()
-                ),
             )
 
     # ======================================
@@ -794,11 +749,11 @@ def render_home():
                 "오코노미야끼 가게가 열립니다!"
             )
 
-        st.html(f"""
+        st.html("""
         <div class="lobby">
 
             <div class="lobby-title">
-                🏮 {display_name} 🏮
+                🏮 와글와글 포장마차
             </div>
 
             <div class="lobby-description">
@@ -900,14 +855,7 @@ pg = st.navigation(
 
 with st.sidebar:
 
-    owner = st.session_state.owner_name.strip()
-    stall = st.session_state.stall_name.strip()
-    sidebar_name = (
-        f"{owner}의 {stall}"
-        if owner and stall
-        else "와글와글 포장마차"
-    )
-    st.title(f"🏮 {sidebar_name}")
+    st.title("🏮 와글와글 포장마차")
 
     st.caption("원하는 메뉴를 선택해 주세요!")
 
@@ -998,6 +946,8 @@ if (
         "플레이할 수 있어요."
     )
 
+    # 중복 문어 이모지 제거
+    # 페이지 아이콘(icon="🐙")이 자동 표시됨
     st.page_link(
         taco_page,
         label="타코야끼 도전하기",
