@@ -6,6 +6,7 @@ from html import escape
 
 from game_unlock import is_takoyaki_cleared
 
+
 # ==========================================
 # 와글와글 포장마차 - 메인 화면
 # ==========================================
@@ -154,6 +155,7 @@ st.html("""
 def render_home():
 
     cleared = is_takoyaki_cleared()
+
     unlocked = (
         cleared or
         st.session_state.okonomi_test_unlock
@@ -162,6 +164,7 @@ def render_home():
     owner = escape(
         st.session_state.owner_name.strip()
     )
+
     stall = escape(
         st.session_state.stall_name.strip()
     )
@@ -347,7 +350,8 @@ def render_home():
        게임 시작 버튼
     ===================================== */
 
-    .st-key-game_start_button button {
+    .st-key-game_start_button button,
+    [data-testid="stFormSubmitButton"] button {
         background: linear-gradient(
             180deg,
             #ffb06e,
@@ -368,7 +372,8 @@ def render_home():
             0 5px 0 #a05233 !important;
     }
 
-    .st-key-game_start_button button:hover {
+    .st-key-game_start_button button:hover,
+    [data-testid="stFormSubmitButton"] button:hover {
         background: #f58c56 !important;
         transform: translateY(-2px);
     }
@@ -608,7 +613,8 @@ def render_home():
             font-size: 13px;
         }
 
-        .st-key-game_start_button button {
+        .st-key-game_start_button button,
+        [data-testid="stFormSubmitButton"] button {
             min-height: 52px !important;
             font-size: 18px !important;
         }
@@ -741,39 +747,53 @@ def render_home():
             [1, 1.5, 1]
         )
 
+        # ==================================
+        # 이름 입력 및 게임 시작
+        # 버튼을 한 번만 누르면 바로 시작
+        # ==================================
+
         with center:
-            st.text_input(
-                "사장님 이름",
-                key="owner_name",
-                placeholder="예: 나을",
-                max_chars=12,
-            )
 
-            st.text_input(
-                "포장마차 이름",
-                key="stall_name",
-                placeholder="예: 달빛 포장마차",
-                max_chars=24,
-            )
+            with st.form("game_start_form"):
 
-            if (
-                st.session_state.owner_name.strip()
-                and st.session_state.stall_name.strip()
-            ):
-                st.markdown(
-                    f"**🏮 {owner}의 {stall} 🏮**"
+                owner_input = st.text_input(
+                    "사장님 이름",
+                    value=st.session_state.owner_name,
+                    placeholder="예: 나을",
+                    max_chars=12,
                 )
 
-            st.button(
-                "🎮 게임 시작하기",
-                key="game_start_button",
-                use_container_width=True,
-                on_click=enter_game,
-                disabled=not (
-                    st.session_state.owner_name.strip()
-                    and st.session_state.stall_name.strip()
-                ),
-            )
+                stall_input = st.text_input(
+                    "포장마차 이름",
+                    value=st.session_state.stall_name,
+                    placeholder="예: 와글와글 포장마차",
+                    max_chars=24,
+                )
+
+                submitted = st.form_submit_button(
+                    "🎮 게임 시작하기",
+                    use_container_width=True,
+                )
+
+            if submitted:
+
+                owner_name = owner_input.strip()
+                stall_name = stall_input.strip()
+
+                if not owner_name or not stall_name:
+
+                    st.warning(
+                        "사장님 이름과 포장마차 이름을 "
+                        "모두 입력해 주세요!"
+                    )
+
+                else:
+
+                    st.session_state.owner_name = owner_name
+                    st.session_state.stall_name = stall_name
+                    st.session_state.game_entered = True
+
+                    st.rerun()
 
     # ======================================
     # 게임 선택 로비
