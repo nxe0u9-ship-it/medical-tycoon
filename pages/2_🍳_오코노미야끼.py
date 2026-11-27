@@ -1555,7 +1555,7 @@ const FOOD_IMAGES = __FOODS__;
 const BUBBLE_STYLE = __BUBBLE__;
 
 const LEVEL_TIMES = [
-    60, 70, 80, 90, 100
+    50, 55, 60, 65, 70
 ];
 
 const CUSTOMER_COUNT = [
