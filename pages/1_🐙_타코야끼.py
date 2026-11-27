@@ -1108,16 +1108,16 @@ const INGREDIENT_IMAGES = __INGREDIENTS__;
 const FOOD_IMAGES = __FOODS__;
 const BUBBLE_STYLE = __BUBBLE__;
 
-const LEVEL_TIMES = [60, 70, 80, 90, 100];
+const LEVEL_TIMES = [50, 55, 60, 65, 70];
 const CUSTOMER_COUNT = [3, 3, 3, 4, 4];
 
 // 변경된 손님 대기 시간
 const CUSTOMER_WAIT = [
+    [45, 50],
+    [40, 45],
     [35, 40],
     [30, 35],
-    [25, 30],
-    [22, 27],
-    [20, 25]
+    [25, 30]
 ];
 
 const COOK_MS = 6000;
