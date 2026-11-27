@@ -21,8 +21,8 @@ CUSTOMER_STYLES = {
 BUBBLE_STYLES = {
     "💭 둥근 말풍선": "round",
     "✨ 강조 말풍선": "comic",
-    "💥 코믹 말풍선": "comic",
     "▫️ 심플 말풍선": "simple",
+    "💥 코믹 말풍선": "comic",
 }
 
 BACKGROUNDS = {
@@ -37,7 +37,7 @@ customer_theme = CUSTOMER_STYLES.get(
         "saved_customer_style",
         "🎆 축제 손님"
     ),
-    "festival"
+    "festival",
 )
 
 bubble_theme = BUBBLE_STYLES.get(
@@ -45,7 +45,7 @@ bubble_theme = BUBBLE_STYLES.get(
         "saved_bubble_style",
         "💭 둥근 말풍선"
     ),
-    "round"
+    "round",
 )
 
 background_file = BACKGROUNDS.get(
@@ -53,12 +53,12 @@ background_file = BACKGROUNDS.get(
         "saved_background",
         "🌸 벚꽃 축제"
     ),
-    "bg_spring.png"
+    "bg_spring.png",
 )
 
 
 # ==================================================
-# 이미지 파일 불러오기
+# 이미지 파일 읽기
 # ==================================================
 
 def to_data_url(path):
@@ -72,7 +72,6 @@ def to_data_url(path):
     return "data:image/png;base64," + encoded
 
 
-# 손님 이미지
 customer_images = {}
 
 customer_folder = (
@@ -84,7 +83,7 @@ for number in range(1, 6):
         "normal",
         "waiting",
         "angry",
-        "happy"
+        "happy",
     ):
         filename = (
             f"{customer_theme}_{number:02d}_{mood}.png"
@@ -95,7 +94,6 @@ for number in range(1, 6):
         )
 
 
-# 재료 및 조리 도구 이미지
 ingredient_files = [
     "batter.png",
     "pork.png",
@@ -114,7 +112,6 @@ ingredient_images = {
 }
 
 
-# 완성 음식 이미지 4종
 food_files = [
     "okonomiyaki_plain.png",
     "okonomiyaki_sauce.png",
@@ -133,19 +130,18 @@ background_url = to_data_url(
     ROOT / background_file
 )
 
-
 missing_files = [
     filename
     for filename, url in {
         **ingredient_images,
-        **food_images
+        **food_images,
     }.items()
     if not url
 ]
 
 if missing_files:
     st.warning(
-        "이미지 파일을 찾을 수 없습니다: "
+        "다음 이미지 파일을 찾을 수 없습니다: "
         + ", ".join(missing_files)
     )
 
@@ -166,24 +162,22 @@ st.html("""
 }
 
 iframe {
-    border: none !important;
     display: block;
+    border: none !important;
 }
 </style>
 """)
 
 
 # ==================================================
-# HTML 게임
+# 게임 HTML
 # ==================================================
 
 GAME_HTML = r"""
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
 <meta charset="UTF-8">
-
 <meta
     name="viewport"
     content="width=device-width, initial-scale=1"
@@ -192,19 +186,20 @@ GAME_HTML = r"""
 <style>
 
 /* ==================================================
-   기본
+   전체 화면
 ================================================== */
 
 * {
     box-sizing: border-box;
 }
 
-html, body {
-    margin: 0;
-    padding: 0;
-
+html,
+body {
     width: 100%;
     height: 100%;
+
+    margin: 0;
+    padding: 0;
 
     overflow: hidden;
 
@@ -219,8 +214,8 @@ html, body {
     height: 680px;
 
     padding: 8px 12px;
-
     overflow: hidden;
+
     border-radius: 18px;
 
     background: linear-gradient(
@@ -245,8 +240,8 @@ html, body {
     align-items: center;
     justify-content: space-between;
 
-    height: 45px;
     gap: 8px;
+    height: 45px;
 }
 
 .logo {
@@ -260,6 +255,7 @@ html, body {
 
     font-size: 16px;
     font-weight: 900;
+
     white-space: nowrap;
 }
 
@@ -314,11 +310,11 @@ html, body {
 
     padding: 8px 20px;
 
-    border: 2px solid #fff3d9;
-    border-radius: 12px;
-
     background: #8b5a3c;
     color: white;
+
+    border: 2px solid #fff3d9;
+    border-radius: 12px;
 
     font-size: 13px;
     font-weight: 900;
@@ -347,7 +343,7 @@ html, body {
 
 
 /* ==================================================
-   가게 간판
+   가게 이름
 ================================================== */
 
 .sign {
@@ -378,12 +374,13 @@ html, body {
     grid-template-columns:
         repeat(3, minmax(0, 1fr));
 
+    gap: 8px;
+
     width: 100%;
     max-width: 1050px;
     height: 160px;
 
     margin: 0 auto 7px;
-    gap: 8px;
 }
 
 .customer {
@@ -400,7 +397,7 @@ html, body {
 
 
 /* ==================================================
-   말풍선 디자인
+   말풍선
 ================================================== */
 
 .bubble {
@@ -454,7 +451,6 @@ html, body {
     height: 12px;
 
     background: inherit;
-
     transform: rotate(45deg);
 
     border-right: 2px solid #d9ab83;
@@ -463,7 +459,7 @@ html, body {
 
 
 /* ==================================================
-   주문 이미지
+   손님 주문 PNG
 ================================================== */
 
 .order-content,
@@ -508,6 +504,7 @@ html, body {
 
 .order-name {
     font-size: 10px;
+    font-weight: 900;
     white-space: nowrap;
 }
 
@@ -515,6 +512,7 @@ html, body {
     color: #c17b48;
     font-size: 15px;
     font-weight: 900;
+    flex-shrink: 0;
 }
 
 .customers.four .bubble {
@@ -545,7 +543,7 @@ html, body {
 
 
 /* ==================================================
-   손님 이미지 및 대기 상태
+   손님 이미지 / 대기 게이지
 ================================================== */
 
 .avatar {
@@ -592,7 +590,9 @@ html, body {
 }
 
 .customer.happy .avatar {
-    filter: drop-shadow(0 0 7px #ffe46a);
+    filter: drop-shadow(
+        0 0 7px #ffe46a
+    );
 }
 
 
@@ -622,7 +622,6 @@ html, body {
     margin: 0 0 6px;
 
     color: #fff5de;
-
     font-size: 15px;
     text-align: center;
 }
@@ -697,14 +696,16 @@ html, body {
 
 .grill small {
     min-height: 13px;
+
     font-size: 10px;
     font-weight: 900;
+
     pointer-events: none;
 }
 
 
 /* ==================================================
-   새 철판 PNG 디자인
+   철판 이미지
 ================================================== */
 
 .grill-visual {
@@ -770,7 +771,7 @@ html, body {
 
 
 /* ==================================================
-   조리 진행바
+   조리 게이지
 ================================================== */
 
 .bar {
@@ -871,18 +872,51 @@ html, body {
 
 .plate small {
     font-size: 9px;
+    line-height: 1.2;
+
     overflow-wrap: anywhere;
     pointer-events: none;
 }
 
 .plate-number {
     position: absolute;
+
     top: 2px;
     left: 4px;
 
     font-size: 9px;
     pointer-events: none;
 }
+
+
+/* ==================================================
+   수정: 타코야끼와 동일한 빈 접시 디자인
+================================================== */
+
+.empty-plate {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 3px;
+    width: 100%;
+}
+
+.empty-plate-icon {
+    font-size: 23px;
+    line-height: 1;
+}
+
+.empty-plate-text {
+    font-size: 10px;
+    line-height: 1.2;
+
+    font-weight: 900;
+    color: #75452e;
+}
+
+/* 완성 음식은 기존 PNG 사용 */
 
 .plate-food {
     display: block;
@@ -915,7 +949,7 @@ html, body {
 
 
 /* ==================================================
-   재료와 조리 도구
+   재료와 도구
 ================================================== */
 
 .supplies {
@@ -987,7 +1021,7 @@ html, body {
 
 
 /* ==================================================
-   새 조리 순서 안내
+   조리 순서 안내
 ================================================== */
 
 .help {
@@ -1055,7 +1089,6 @@ html, body {
 
 [data-source] {
     cursor: grab;
-
     touch-action: none;
     user-select: none;
 }
@@ -1174,7 +1207,6 @@ html, body {
 
     display: none;
     flex-direction: column;
-
     gap: 12px;
 
     color: #fff2bc;
@@ -1282,6 +1314,14 @@ html, body {
         width: 21px;
         height: 21px;
     }
+
+    .empty-plate-icon {
+        font-size: 21px;
+    }
+
+    .empty-plate-text {
+        font-size: 9px;
+    }
 }
 
 </style>
@@ -1325,7 +1365,7 @@ html, body {
     </div>
 
 
-    <!-- 알림 메시지 -->
+    <!-- 안내 메시지 -->
 
     <div class="notice-area">
         <div class="toast" id="toast"></div>
@@ -1397,31 +1437,27 @@ html, body {
     <div class="supplies">
 
         <div class="supply">
-
             <h3>① 반죽과 재료</h3>
 
             <div
                 class="items"
                 id="ingredients">
             </div>
-
         </div>
 
         <div class="supply">
-
             <h3>② 뒤집개와 토핑</h3>
 
             <div
                 class="items"
                 id="tools">
             </div>
-
         </div>
 
     </div>
 
 
-    <!-- 새 PNG 조리 안내 -->
+    <!-- 조리 안내 -->
 
     <div class="help">
 
@@ -1475,7 +1511,6 @@ html, body {
             </button>
 
         </div>
-
     </div>
 
 
@@ -1527,7 +1562,6 @@ const CUSTOMER_COUNT = [
     3, 3, 3, 4, 4
 ];
 
-// 최종 변경된 손님 대기 시간
 const CUSTOMER_WAIT = [
     [40, 45],
     [35, 40],
@@ -1544,7 +1578,7 @@ const MAX_LIVES = 3;
 
 
 // ==================================================
-// 재료와 도구
+// 재료 및 조리 도구
 // ==================================================
 
 const ingredients = [
@@ -1617,12 +1651,12 @@ const now = () =>
     performance.now();
 
 const sleep = ms =>
-    new Promise(resolve =>
-        setTimeout(resolve, ms)
-    );
+    new Promise(resolve => setTimeout(resolve, ms));
 
 const pick = array =>
-    array[Math.floor(Math.random() * array.length)];
+    array[
+        Math.floor(Math.random() * array.length)
+    ];
 
 let game = null;
 let drag = null;
@@ -1632,10 +1666,14 @@ let toastTimer = null;
 
 
 // ==================================================
-// 이미지 표시
+// 이미지 표시 함수
 // ==================================================
 
-function imageTag(url, className = "", alt = "") {
+function imageTag(
+    url,
+    className = "",
+    alt = ""
+) {
 
     if (!url) return "";
 
@@ -1667,7 +1705,7 @@ function ingredientMarkup(files) {
 
 
 // ==================================================
-// 음식 이미지 4종
+// 음식 PNG 4종
 // ==================================================
 
 function foodFilename(plate) {
@@ -1720,10 +1758,13 @@ function imageFor(number, mood) {
 
 
 // ==================================================
-// 새 조리 순서 안내
+// 조리 순서 안내
 // ==================================================
 
-function guideImage(filename, isFood = false) {
+function guideImage(
+    filename,
+    isFood = false
+) {
 
     const url = isFood
         ? FOOD_IMAGES[filename]
@@ -1802,7 +1843,7 @@ function renderGuide() {
 
 
 // ==================================================
-// 손님 주문 이미지
+// 주문 이미지
 // ==================================================
 
 function orderImages(files) {
@@ -1897,14 +1938,13 @@ function orderMarkup(customer) {
 
 
 // ==================================================
-// 새 알림 디자인
+// 알림
 // ==================================================
 
 function tell(message, type = "info") {
 
     const box = el("toast");
 
-    // 기존 음식·성공·실패 이모지 제거
     const cleanMessage = message
         .replace(/[✅❌🔥⚠️🍳🥣]/gu, "")
         .trim();
@@ -1974,9 +2014,7 @@ function createNewGame() {
 
         grills: Array.from(
             {length: 3},
-            () => ({
-                state: "empty"
-            })
+            () => ({state: "empty"})
         ),
 
         plates: [
@@ -2106,9 +2144,7 @@ function nextLevel() {
 
     game.grills = Array.from(
         {length: 3},
-        () => ({
-            state: "empty"
-        })
+        () => ({state: "empty"})
     );
 
     game.plates = [
@@ -2130,7 +2166,7 @@ function nextLevel() {
 
 
 // ==================================================
-// 상단 정보
+# 상단 정보
 // ==================================================
 
 function updateHud() {
@@ -2255,7 +2291,6 @@ function updateCustomers(t) {
                 return;
             }
 
-            // 주문 성공한 손님
             if (customer.happyUntil) {
 
                 if (
@@ -2299,7 +2334,6 @@ function updateCustomers(t) {
                 return;
             }
 
-            // 기다리는 손님
             const percent = Math.max(
                 0,
                 100 * (
@@ -2336,7 +2370,6 @@ function updateCustomers(t) {
                 percent <= 30
             );
 
-            // 주문 이미지는 계속 유지
             if (
                 bubble.dataset.state === "happy"
             ) {
@@ -2370,14 +2403,13 @@ function updateCustomers(t) {
 
 
 // ==================================================
-// 새 철판 이미지 표시
+// 철판 이미지
 // ==================================================
 
 function grillVisual(grill) {
 
     const state = grill.state;
 
-    // 빈 철판
     if (state === "empty") {
 
         return `
@@ -2387,7 +2419,6 @@ function grillVisual(grill) {
         `;
     }
 
-    // 반죽만 넣은 상태
     if (state === "batter") {
 
         const batterImage =
@@ -2408,7 +2439,6 @@ function grillVisual(grill) {
         `;
     }
 
-    // 나머지 조리 단계는 음식 PNG
     return `
         <div class="grill-visual">
 
@@ -2423,7 +2453,7 @@ function grillVisual(grill) {
 
 
 // ==================================================
-// 철판 3개 렌더링
+// 철판 표시
 // ==================================================
 
 function renderGrills() {
@@ -2485,7 +2515,7 @@ function renderGrills() {
 
 
 // ==================================================
-// 조리 게이지
+// 조리 시간
 // ==================================================
 
 function updateGrillBars(t) {
@@ -2620,7 +2650,41 @@ function updateGrillBars(t) {
 
 
 // ==================================================
-// 접시 이미지 4종
+// 수정: 빈 접시 디자인
+// ==================================================
+
+function emptyPlateMarkup(index, active = true) {
+
+    const dropAttributes = active
+        ? `data-drop="plate" data-index="${index}"`
+        : "";
+
+    return `
+        <div
+            class="plate"
+            ${dropAttributes}>
+
+            <span class="plate-number">
+                ${index + 1}
+            </span>
+
+            <div class="empty-plate">
+                <span class="empty-plate-icon">
+                    🍽️
+                </span>
+
+                <span class="empty-plate-text">
+                    빈 접시
+                </span>
+            </div>
+
+        </div>
+    `;
+}
+
+
+// ==================================================
+// 접시 표시
 // ==================================================
 
 function renderPlates() {
@@ -2631,17 +2695,7 @@ function renderPlates() {
 
         area.innerHTML = Array.from(
             {length: 3},
-            (_, i) => `
-                <div class="plate">
-
-                    <span class="plate-number">
-                        ${i + 1}
-                    </span>
-
-                    빈 접시
-
-                </div>
-            `
+            (_, i) => emptyPlateMarkup(i, false)
         ).join("");
 
         return;
@@ -2650,25 +2704,13 @@ function renderPlates() {
     area.innerHTML =
         game.plates.map((plate, i) => {
 
+            // 빈 접시
             if (!plate) {
 
-                return `
-                    <div
-                        class="plate"
-
-                        data-drop="plate"
-                        data-index="${i}">
-
-                        <span class="plate-number">
-                            ${i + 1}
-                        </span>
-
-                        빈 접시
-
-                    </div>
-                `;
+                return emptyPlateMarkup(i);
             }
 
+            // 완성 음식
             const filename =
                 foodFilename(plate);
 
@@ -2735,7 +2777,7 @@ function renderPlates() {
 
 
 // ==================================================
-// 재료와 도구 렌더링
+// 재료와 도구 표시
 // ==================================================
 
 function renderItems() {
@@ -2795,7 +2837,7 @@ function renderAll() {
 
 
 // ==================================================
-// 목숨
+// 목숨 감소
 // ==================================================
 
 function loseLife(message) {
@@ -2828,7 +2870,7 @@ function loseLife(message) {
 
 
 // ==================================================
-// 접시 토핑 조합
+// 토핑 조합 판정
 // ==================================================
 
 function plateToppingOrder(plate) {
@@ -2957,10 +2999,7 @@ function handleDrop(
     }
 
 
-    // ======================================
     // 반죽 / 재료 → 철판
-    // ======================================
-
     if (
         kind === "ingredient" &&
         target === "grill"
@@ -3024,10 +3063,7 @@ function handleDrop(
     }
 
 
-    // ======================================
     // 뒤집개 → 철판
-    // ======================================
-
     if (
         kind === "tool" &&
         target === "grill"
@@ -3069,10 +3105,7 @@ function handleDrop(
     }
 
 
-    // ======================================
-    // 철판 → 접시
-    // ======================================
-
+    // 철판 → 빈 접시
     if (
         kind === "grill" &&
         target === "plate"
@@ -3128,10 +3161,7 @@ function handleDrop(
     }
 
 
-    // ======================================
     // 소스 / 마요네즈 → 접시
-    // ======================================
-
     if (
         kind === "tool" &&
         target === "plate"
@@ -3220,10 +3250,7 @@ function handleDrop(
     }
 
 
-    // ======================================
     // 접시 → 손님
-    // ======================================
-
     if (
         kind === "plate" &&
         target === "customer"
@@ -3235,15 +3262,13 @@ function handleDrop(
     }
 
 
-    // ======================================
     // 휴지통
-    // ======================================
-
     if (target === "trash") {
 
         if (kind === "plate") {
 
             game.plates[index] = null;
+
             renderPlates();
 
             tell(
@@ -3279,7 +3304,7 @@ function handleDrop(
 
 
 // ==================================================
-// 드래그 표시
+// 드래그 위치
 // ==================================================
 
 function moveGhost(event) {
@@ -3293,6 +3318,7 @@ function moveGhost(event) {
         (event.clientY + 12) + "px";
 
     if (highlighted) {
+
         highlighted.classList.remove(
             "drop-over"
         );
@@ -3305,6 +3331,7 @@ function moveGhost(event) {
         )?.closest("[data-drop]");
 
     if (highlighted) {
+
         highlighted.classList.add(
             "drop-over"
         );
@@ -3435,7 +3462,7 @@ document.addEventListener(
 
 
 // ==================================================
-// 드래그 취소 함수
+// 드래그 취소
 // ==================================================
 
 function cancelDrag() {
@@ -3579,10 +3606,7 @@ function tick() {
     }
 
 
-    // ======================================
     // 조리 진행
-    // ======================================
-
     let grillsChanged = false;
 
     game.grills.forEach(grill => {
@@ -3600,7 +3624,6 @@ function tick() {
         const elapsed =
             t - grill.since;
 
-        // 앞면 완료
         if (
             grill.state === "cooking" &&
             elapsed >= FIRST_COOK_MS
@@ -3613,7 +3636,6 @@ function tick() {
             return;
         }
 
-        // 뒷면 완료
         if (
             grill.state === "second" &&
             elapsed >= SECOND_COOK_MS
@@ -3626,7 +3648,6 @@ function tick() {
             return;
         }
 
-        // 뒤집기 전 또는 완성 후 8초 경과
         if (
             ["flip", "ready"].includes(
                 grill.state
@@ -3661,10 +3682,7 @@ function tick() {
     updateGrillBars(t);
 
 
-    // ======================================
     // 손님 대기 시간
-    // ======================================
-
     let customersChanged = false;
 
     for (
@@ -3805,7 +3823,7 @@ setInterval(tick, 100);
 
 
 # ==================================================
-# HTML 이미지 데이터 연결
+# 이미지 데이터 연결
 # ==================================================
 
 GAME_HTML = GAME_HTML.replace(
@@ -3830,7 +3848,7 @@ GAME_HTML = GAME_HTML.replace(
 
 
 # ==================================================
-# 선택한 배경 적용
+# 배경 이미지 적용
 # ==================================================
 
 if background_url:
